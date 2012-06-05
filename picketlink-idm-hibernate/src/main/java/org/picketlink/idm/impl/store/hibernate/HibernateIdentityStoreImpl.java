@@ -1619,8 +1619,8 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
 
          if (criteria != null && criteria.isPaged())
          {
-            c.setFirstResult(criteria.getMaxResults());
-            if (criteria.getFirstResult() > 0)
+            c.setFirstResult(criteria.getFirstResult());
+            if (criteria.getMaxResults() > 0)
             {
                c.setMaxResults(criteria.getMaxResults());
             }

@@ -55,13 +55,15 @@ public class MinimalFlexibleConfigTestCase extends HibernateTestPOJO
 
    private RoleQueryTest roleQueryTest;
 
-   private IdentitySessionFactory identitySessionFactory;
+   protected IdentitySessionFactory identitySessionFactory;
+
+   private String identityConfigLocation = "minimal-flexible-identity-config.xml";
 
    public void setUp() throws Exception
    {
       super.start();
 
-      setIdentityConfig("minimal-flexible-identity-config.xml");
+      setIdentityConfig(identityConfigLocation);
       setRealmName("realm://FlexibleRealm");
 
       orgTest = new OrganizationTest(this);
@@ -138,6 +140,11 @@ public class MinimalFlexibleConfigTestCase extends HibernateTestPOJO
    public void testRoleQuery() throws Exception
    {
       roleQueryTest.testQuery(getRealmName());
+   }
+
+   protected void setIdentityConfigLocation(String identityConfigLocation)
+   {
+      this.identityConfigLocation = identityConfigLocation;
    }
 
 }

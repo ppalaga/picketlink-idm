@@ -101,6 +101,8 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
 
    public static final String ALLOW_NOT_CASE_SENSITIVE_SEARCH = "allowNotCaseSensitiveSearch";
 
+   public static final String LAZY_START_OF_HIBERNATE_TRANSACTION = "lazyStartOfHibernateTransaction";
+
    public static final String DEFAULT_REALM_NAME = HibernateIdentityStoreImpl.class.getName() + ".DEFAULT_REALM";
 
    public static final String CREDENTIAL_TYPE_PASSWORD = "PASSWORD";
@@ -120,6 +122,8 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
    private boolean isAllowNotDefinedIdentityObjectTypes = false;
 
    private boolean isAllowNotCaseSensitiveSearch = false;
+
+   private boolean lazyStartOfHibernateTransaction = false;
 
    private boolean isManageTransactionDuringBootstrap = true;
 
@@ -312,6 +316,13 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
          this.isAllowNotCaseSensitiveSearch = true;
       }
 
+      String lazyStartOfHibernateTransaction = configurationMD.getOptionSingleValue(LAZY_START_OF_HIBERNATE_TRANSACTION);
+
+      if (lazyStartOfHibernateTransaction != null && lazyStartOfHibernateTransaction.equalsIgnoreCase("true"))
+      {
+         this.lazyStartOfHibernateTransaction = true;
+      }
+
       // Default realm
 
       HibernateRealm realm = null;
@@ -473,7 +484,7 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
    {
       try
       {
-         return new HibernateIdentityStoreSessionImpl(sessionFactory);
+         return new HibernateIdentityStoreSessionImpl(sessionFactory, lazyStartOfHibernateTransaction);
       }
       catch (Exception e)
       {
@@ -2724,7 +2735,14 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
    {
       try
       {
-         return ((Session)ctx.getIdentityStoreSession().getSessionContext());
+         HibernateIdentityStoreSessionImpl hbIdentityStoreSession = (HibernateIdentityStoreSessionImpl)ctx.getIdentityStoreSession();
+
+         if (lazyStartOfHibernateTransaction)
+         {
+            hbIdentityStoreSession.startHibernateTransactionIfNotStartedYet();
+         }
+
+         return ((Session)hbIdentityStoreSession.getSessionContext());
       }
       catch (Exception e)
       {

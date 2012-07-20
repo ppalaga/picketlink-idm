@@ -35,9 +35,9 @@ import java.util.HashSet;
 
 
 /**
- * @author <a href="mailto:boleslaw.dawidowicz at redhat.com">Boleslaw Dawidowicz</a>
- * @version : 0.1 $
- */
+* @author <a href="mailto:boleslaw.dawidowicz at redhat.com">Boleslaw Dawidowicz</a>
+* @version : 0.1 $
+*/
 public class HibernateModelTestCase extends HibernateTestPOJO
 {
    public HibernateModelTestCase()

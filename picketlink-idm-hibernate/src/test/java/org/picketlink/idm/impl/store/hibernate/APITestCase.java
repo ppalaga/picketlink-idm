@@ -35,9 +35,9 @@ import org.picketlink.idm.test.support.hibernate.HibernateTestPOJO;
 
 
 /**
- * @author <a href="mailto:boleslaw.dawidowicz at redhat.com">Boleslaw Dawidowicz</a>
- * @version : 0.1 $
- */
+* @author <a href="mailto:boleslaw.dawidowicz at redhat.com">Boleslaw Dawidowicz</a>
+* @version : 0.1 $
+*/
 public class APITestCase extends HibernateTestPOJO
    implements APITestContext
 {
@@ -123,5 +123,5 @@ public class APITestCase extends HibernateTestPOJO
    {
       roleQueryTest.testQuery(getRealmName());
    }
-   
+
 }

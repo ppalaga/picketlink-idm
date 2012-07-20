@@ -1,17 +1,12 @@
 package org.picketlink.idm.test.support.hibernate;
 
-import org.jboss.portal.test.framework.embedded.ConnectionManagerSupport;
-import org.jboss.portal.test.framework.embedded.DataSourceSupport;
-import org.jboss.portal.test.framework.embedded.HibernateSupport;
-import org.jboss.portal.test.framework.embedded.JNDISupport;
-import org.jboss.portal.test.framework.embedded.TransactionManagerSupport;
-
 import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.Assert;
 import org.hibernate.SessionFactory;
 import org.picketlink.idm.test.support.IdentityTestPOJO;
+import org.picketlink.idm.test.support.JNDISupport;
 
 public class HibernateTestPOJO extends IdentityTestPOJO
 {
@@ -22,14 +17,6 @@ public class HibernateTestPOJO extends IdentityTestPOJO
 
    protected String datasources = "datasources/datasources.xml";
 
-   protected JNDISupport jndiSupport;
-
-   protected TransactionManagerSupport transactonManagerSupport;
-
-   protected ConnectionManagerSupport connectionManagerSupport;
-
-   protected DataSourceSupport dataSourceSupport;
-
    protected HibernateSupport hibernateSupport;
 
 
@@ -38,31 +25,19 @@ public class HibernateTestPOJO extends IdentityTestPOJO
    {
       overrideFromProperties();
 
+      JNDISupport jndiSupport = new JNDISupport();
+      jndiSupport.start();
+
+
       identityConfig = "hibernate-test-identity-config.xml";
 
-      jndiSupport = new JNDISupport();
-      jndiSupport.start();
-      transactonManagerSupport = new TransactionManagerSupport();
-      transactonManagerSupport.start();
-      connectionManagerSupport = new ConnectionManagerSupport();
-      connectionManagerSupport.setTransactionManager(transactonManagerSupport.getTransactionManager());
-      connectionManagerSupport.start();
-
-
-
-      DataSourceSupport.Config dataSourceConfig = DataSourceSupport.Config.obtainConfig(datasources, dataSourceName);
+      DataSourceConfig dataSourceConfig = DataSourceConfig.obtainConfig(datasources, dataSourceName);
 
       HibernateSupport.Config hibernateSupportConfig = HibernateSupport.getConfig(dataSourceName, hibernateConfig);
 
-      dataSourceSupport = new DataSourceSupport();
-      dataSourceSupport.setTransactionManager(transactonManagerSupport.getTransactionManager());
-      dataSourceSupport.setConnectionManagerReference(connectionManagerSupport.getConnectionManagerReference());
-      dataSourceSupport.setConfig(dataSourceConfig);
-      dataSourceSupport.start();
-
-//      hibernateSupport = new HibernateAnnotationsSupport();
       hibernateSupport = new HibernateSupport();
       hibernateSupport.setConfig(hibernateSupportConfig);
+      hibernateSupport.setDataSourceConfig(dataSourceConfig);
       hibernateSupport.setJNDIName("java:/jbossidentity/HibernateStoreSessionFactory");
 
       String prefix = "mappings/";
@@ -97,10 +72,6 @@ public class HibernateTestPOJO extends IdentityTestPOJO
    {
       hibernateSupport.getSessionFactory().getStatistics().logSummary();
       hibernateSupport.stop();
-      dataSourceSupport.stop();
-      connectionManagerSupport.stop();
-      transactonManagerSupport.stop();
-      jndiSupport.stop();
 
 
    }
@@ -158,7 +129,7 @@ public class HibernateTestPOJO extends IdentityTestPOJO
 
    public void begin()
    {
-      getHibernateSupport().openSession();
+      getHibernateSupport().getCurrentSession().getTransaction().begin();
    }
 
    public void commit()

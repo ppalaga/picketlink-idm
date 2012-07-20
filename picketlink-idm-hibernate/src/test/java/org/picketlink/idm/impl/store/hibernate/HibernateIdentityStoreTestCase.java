@@ -48,9 +48,9 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * @author <a href="mailto:boleslaw.dawidowicz at redhat.com">Boleslaw Dawidowicz</a>
- * @version : 0.1 $
- */
+* @author <a href="mailto:boleslaw.dawidowicz at redhat.com">Boleslaw Dawidowicz</a>
+* @version : 0.1 $
+*/
 public class HibernateIdentityStoreTestCase extends HibernateTestPOJO
    implements IdentityStoreTestContext
 {
@@ -143,7 +143,7 @@ public class HibernateIdentityStoreTestCase extends HibernateTestPOJO
 
    public void begin()
    {
-      getHibernateSupport().openSession();
+      getHibernateSupport().getCurrentSession().getTransaction().begin();
    }
 
    public void commit()

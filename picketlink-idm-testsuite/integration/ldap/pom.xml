@@ -35,6 +35,12 @@
       <groupId>org.picketlink.idm</groupId>
       <artifactId>picketlink-idm-cache</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.logging</groupId>
+          <artifactId>jboss-logging-spi</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.picketlink.idm</groupId>
@@ -93,64 +99,7 @@
       <!--<scope>test</scope>-->
     </dependency>
 
-    <dependency>
-      <groupId>org.jboss.unit</groupId>
-      <artifactId>portal-test</artifactId>
-      <version>1.2.2</version>
 
-      <!--<scope>test</scope>-->
-      <exclusions>
-        <exclusion>
-          <groupId>hibernate</groupId>
-          <artifactId>hibernate3</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>apache-slide</groupId>
-          <artifactId>webdavlib</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>apache-log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>apache-httpclient</groupId>
-          <artifactId>commons-httpclient</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>apache-xerces</groupId>
-          <artifactId>xml-apis</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>sun-opends</groupId>
-          <artifactId>opends-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>jboss.jbossas.core-libs</groupId>
-      <artifactId>jboss-local-jdbc</artifactId>
-      <version>4.0.4.GA</version>
-      <!--<scope>test</scope>-->
-    </dependency>
-    <dependency>
-      <groupId>jboss.jbossas.core-libs</groupId>
-      <artifactId>jboss-common-jdbc-wrapper</artifactId>
-      <version>4.0.4.GA</version>
-      <!--<scope>test</scope>-->
-    </dependency>
-    <dependency>
-      <groupId>jboss</groupId>
-      <artifactId>jboss-logging-log4j</artifactId>
-      <version>2.0.2.GA</version>
-      <!--<scope>test</scope>-->
-      <exclusions>
-        <exclusion>
-          <groupId>apache-log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <dependency>
       <groupId>net.sourceforge.jtds</groupId>
       <artifactId>jtds</artifactId>

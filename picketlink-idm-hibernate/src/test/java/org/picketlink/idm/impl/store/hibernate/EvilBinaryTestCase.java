@@ -32,11 +32,11 @@ import java.util.*;
 
 
 /**
- * Simple test to show binary/blob issues in database
- *
- * @author <a href="mailto:boleslaw.dawidowicz at redhat.com">Boleslaw Dawidowicz</a>
- * @version : 0.1 $
- */
+* Simple test to show binary/blob issues in database
+*
+* @author <a href="mailto:boleslaw.dawidowicz at redhat.com">Boleslaw Dawidowicz</a>
+* @version : 0.1 $
+*/
 public class EvilBinaryTestCase extends HibernateTestPOJO
 {
    public EvilBinaryTestCase()
@@ -140,24 +140,24 @@ public class EvilBinaryTestCase extends HibernateTestPOJO
 
       Assert.assertEquals(5, user1.getAttributes().size());
 
-      int binaryCount = ((Integer)session.createCriteria(HibernateIdentityObjectAttributeBinaryValue.class).
+      int binaryCount = ((Number)session.createCriteria(HibernateIdentityObjectAttributeBinaryValue.class).
          setProjection(Projections.rowCount()).uniqueResult()).intValue();
 
       Assert.assertEquals(2, binaryCount);
 
-      int attrCount = ((Integer)session.createCriteria(HibernateIdentityObjectAttribute.class).
+      int attrCount = ((Number)session.createCriteria(HibernateIdentityObjectAttribute.class).
          setProjection(Projections.rowCount()).uniqueResult()).intValue();
 
       Assert.assertEquals(5, attrCount);
 
       session.delete(user1);
 
-      attrCount = ((Integer)session.createCriteria(HibernateIdentityObjectAttribute.class).
+      attrCount = ((Number)session.createCriteria(HibernateIdentityObjectAttribute.class).
          setProjection(Projections.rowCount()).uniqueResult()).intValue();
 
       Assert.assertEquals(0, attrCount);
 
-      binaryCount = ((Integer)session.createCriteria(HibernateIdentityObjectAttributeBinaryValue.class).
+      binaryCount = ((Number)session.createCriteria(HibernateIdentityObjectAttributeBinaryValue.class).
          setProjection(Projections.rowCount()).uniqueResult()).intValue();
 
       Assert.assertEquals(0, binaryCount);

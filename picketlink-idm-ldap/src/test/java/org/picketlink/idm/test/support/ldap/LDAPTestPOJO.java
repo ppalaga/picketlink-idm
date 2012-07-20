@@ -23,7 +23,6 @@
 package org.picketlink.idm.test.support.ldap;
 
 import org.picketlink.idm.test.support.opends.OpenDSService;
-import org.jboss.portal.test.framework.embedded.DSConfig;
 
 import java.net.URL;
 import java.util.Hashtable;

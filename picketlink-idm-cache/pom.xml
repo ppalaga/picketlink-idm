@@ -38,7 +38,13 @@
     <dependency>
       <groupId>org.jboss.cache</groupId>
       <artifactId>jbosscache-core</artifactId>
-      <version>3.2.1.GA</version>
+      <version>3.2.7.GA</version>
+      <!--<exclusions>
+        <exclusion>
+          <groupId>org.jboss.logging</groupId>
+          <artifactId>jboss-logging-spi</artifactId>
+        </exclusion>
+      </exclusions>-->
     </dependency>
 
   </dependencies>

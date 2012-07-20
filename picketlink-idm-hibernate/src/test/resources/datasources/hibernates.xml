@@ -27,13 +27,21 @@
             <name>hibernate.transaction.flush_before_completion</name>
             <value>true</value>
          </property>
-         <property>
+         <!--<property>
             <name>hibernate.transaction.factory_class</name>
             <value>org.hibernate.transaction.JTATransactionFactory</value>
-         </property>
-         <property>
+         </property>-->
+         <!--<property>
             <name>hibernate.transaction.manager_lookup_class</name>
             <value>org.hibernate.transaction.JBossTransactionManagerLookup</value>
+         </property>-->
+        <!--<property>
+            <name>hibernate.transaction.jta.platform</name>
+            <value>org.picketlink.idm.test.support.hibernate.TestJtaPlatform</value>
+        </property>-->
+         <property>
+            <name>hibernate.current_session_context_class</name>
+            <value>thread</value>
          </property>
          <property>
             <name>hibernate.cache.provider_class</name>

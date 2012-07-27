@@ -6,14 +6,14 @@
   <description>PicketLink IDM Integration</description>
   <groupId>org.picketlink.idm</groupId>
   <artifactId>picketlink-idm-integration</artifactId>
-  <version>1.3.2.CR01-SNAPSHOT</version>
+  <version>1.4.0.M01-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <!-- Parent -->
   <parent>
     <groupId>org.picketlink.idm</groupId>
     <artifactId>picketlink-idm-parent</artifactId>
-    <version>1.3.2.CR01-SNAPSHOT</version>
+    <version>1.4.0.M01-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 

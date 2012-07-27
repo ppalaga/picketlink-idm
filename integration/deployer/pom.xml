@@ -6,12 +6,12 @@
   <description>PicketLink IDM JBoss5 deployer</description>
   <groupId>org.picketlink.idm.integration</groupId>
   <artifactId>picketlink-idm-jboss5-deployer</artifactId>
-  <version>1.3.2.CR01-SNAPSHOT</version>
+  <version>1.4.0.M01-SNAPSHOT</version>
   <packaging>jar</packaging>
   <parent>
     <groupId>org.picketlink.idm</groupId>
     <artifactId>picketlink-idm-integration</artifactId>
-    <version>1.3.2.CR01-SNAPSHOT</version>
+    <version>1.4.0.M01-SNAPSHOT</version>
   </parent>
 
   <properties>

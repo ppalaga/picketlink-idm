@@ -1,6 +1,11 @@
-package org.jboss.picketlink.idm.model;
+package org.jboss.picketlink.idm.query;
 
 import java.util.List;
+
+import org.jboss.picketlink.idm.model.Group;
+import org.jboss.picketlink.idm.model.Membership;
+import org.jboss.picketlink.idm.model.Role;
+import org.jboss.picketlink.idm.model.User;
 
 /**
  * MembershipQuery. All applied conditions will be resolved with logical AND.

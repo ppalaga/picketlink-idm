@@ -1,7 +1,17 @@
-package org.jboss.picketlink.idm.model;
+package org.jboss.picketlink.idm.spi;
 
 import java.util.List;
 import java.util.Map;
+
+import org.jboss.picketlink.idm.model.Group;
+import org.jboss.picketlink.idm.model.Membership;
+import org.jboss.picketlink.idm.model.Role;
+import org.jboss.picketlink.idm.model.User;
+import org.jboss.picketlink.idm.query.GroupQuery;
+import org.jboss.picketlink.idm.query.MembershipQuery;
+import org.jboss.picketlink.idm.query.Range;
+import org.jboss.picketlink.idm.query.RoleQuery;
+import org.jboss.picketlink.idm.query.UserQuery;
 
 /**
  * IdentityStore representation providing minimal SPI

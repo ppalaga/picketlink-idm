@@ -1,4 +1,4 @@
-package org.jboss.picketlink.idm.model;
+package org.jboss.picketlink.idm.query;
 
 /**
  * Represent range in paginated query

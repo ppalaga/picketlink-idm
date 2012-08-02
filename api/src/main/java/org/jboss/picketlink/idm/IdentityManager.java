@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.jboss.picketlink.idm.model.Group;
-import org.jboss.picketlink.idm.model.GroupQuery;
 import org.jboss.picketlink.idm.model.IdentityType;
-import org.jboss.picketlink.idm.model.MembershipQuery;
 import org.jboss.picketlink.idm.model.Role;
-import org.jboss.picketlink.idm.model.RoleQuery;
 import org.jboss.picketlink.idm.model.User;
-import org.jboss.picketlink.idm.model.UserQuery;
+import org.jboss.picketlink.idm.query.GroupQuery;
+import org.jboss.picketlink.idm.query.MembershipQuery;
+import org.jboss.picketlink.idm.query.RoleQuery;
+import org.jboss.picketlink.idm.query.UserQuery;
 
 /**
  * IdentityManager

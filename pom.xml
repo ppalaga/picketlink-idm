@@ -13,4 +13,20 @@
         <module>api</module>
         <module>impl</module>
     </modules>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.picketlink</groupId>
+                <artifactId>picketlink-idm-api</artifactId>
+                <version>${project.version}</version>            
+            </dependency>
+            
+            <dependency>
+                <groupId>org.jboss.picketlink</groupId>
+                <artifactId>picketlink-idm-impl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

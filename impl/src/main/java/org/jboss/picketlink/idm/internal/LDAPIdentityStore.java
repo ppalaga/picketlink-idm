@@ -1,4 +1,4 @@
-package org.jboss.picketlink.idm;
+package org.jboss.picketlink.idm.internal;
 
 import org.jboss.picketlink.idm.model.Group;
 import org.jboss.picketlink.idm.model.Membership;

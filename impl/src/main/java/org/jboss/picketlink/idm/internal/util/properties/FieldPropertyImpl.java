@@ -1,13 +1,13 @@
-package org.jboss.picketlink.idm.util.properties;
+package org.jboss.picketlink.idm.internal.util.properties;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Type;
 
-import org.jboss.picketlink.idm.util.reflection.Reflections;
+import org.jboss.picketlink.idm.internal.util.reflection.Reflections;
 
-import static org.jboss.picketlink.idm.util.reflection.Reflections.getFieldValue;
-import static org.jboss.picketlink.idm.util.reflection.Reflections.setFieldValue;
+import static org.jboss.picketlink.idm.internal.util.reflection.Reflections.getFieldValue;
+import static org.jboss.picketlink.idm.internal.util.reflection.Reflections.setFieldValue;
 
 /**
  * A bean property based on the value contained in a field

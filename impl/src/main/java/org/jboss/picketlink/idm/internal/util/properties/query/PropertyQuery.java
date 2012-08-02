@@ -1,13 +1,13 @@
-package org.jboss.picketlink.idm.util.properties.query;
+package org.jboss.picketlink.idm.internal.util.properties.query;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.picketlink.idm.util.properties.MethodProperty;
-import org.jboss.picketlink.idm.util.properties.Properties;
-import org.jboss.picketlink.idm.util.properties.Property;
+import org.jboss.picketlink.idm.internal.util.properties.MethodProperty;
+import org.jboss.picketlink.idm.internal.util.properties.Properties;
+import org.jboss.picketlink.idm.internal.util.properties.Property;
 
 /**
  * <p>

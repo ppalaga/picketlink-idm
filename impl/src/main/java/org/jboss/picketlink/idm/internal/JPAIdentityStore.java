@@ -1,4 +1,4 @@
-package org.jboss.picketlink.idm;
+package org.jboss.picketlink.idm.internal;
 
 import java.util.List;
 import java.util.Map;

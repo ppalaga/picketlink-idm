@@ -1,4 +1,4 @@
-package org.jboss.picketlink.idm.util.reflection;
+package org.jboss.picketlink.idm.internal.util.reflection;
 
 import java.lang.reflect.AccessibleObject;
 import java.security.PrivilegedAction;

@@ -1,13 +1,13 @@
-package org.jboss.picketlink.idm.util.properties;
+package org.jboss.picketlink.idm.internal.util.properties;
 
 import java.beans.Introspector;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-import org.jboss.picketlink.idm.util.reflection.Reflections;
+import org.jboss.picketlink.idm.internal.util.reflection.Reflections;
 
-import static org.jboss.picketlink.idm.util.reflection.Reflections.invokeMethod;
+import static org.jboss.picketlink.idm.internal.util.reflection.Reflections.invokeMethod;
 
 /**
  * A bean property based on the value represented by a getter/setter method pair

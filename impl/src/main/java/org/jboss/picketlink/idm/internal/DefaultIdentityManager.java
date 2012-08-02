@@ -1,8 +1,9 @@
-package org.jboss.picketlink.idm;
+package org.jboss.picketlink.idm.internal;
 
 import java.util.Collection;
 import java.util.Date;
 
+import org.jboss.picketlink.idm.IdentityManager;
 import org.jboss.picketlink.idm.model.Group;
 import org.jboss.picketlink.idm.model.IdentityType;
 import org.jboss.picketlink.idm.model.Role;

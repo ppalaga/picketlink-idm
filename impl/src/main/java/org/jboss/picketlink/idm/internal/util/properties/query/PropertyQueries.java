@@ -1,4 +1,4 @@
-package org.jboss.picketlink.idm.util.properties.query;
+package org.jboss.picketlink.idm.internal.util.properties.query;
 
 /**
  * Utilities for working with property queries

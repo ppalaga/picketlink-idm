@@ -1,4 +1,4 @@
-package org.jboss.picketlink.idm.util.properties;
+package org.jboss.picketlink.idm.internal.util.properties;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;

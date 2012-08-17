@@ -298,7 +298,7 @@
       <properties>
          <property>
             <name>hibernate.dialect</name>
-            <value>org.hibernate.dialect.SybaseDialect</value>
+            <value>org.hibernate.dialect.SybaseAnywhereDialect</value>
          </property>
       </properties>
    </configuration>

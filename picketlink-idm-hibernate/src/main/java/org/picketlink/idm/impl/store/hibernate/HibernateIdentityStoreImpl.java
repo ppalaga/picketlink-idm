@@ -1375,7 +1375,7 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
          return 0;
       }
 
-      return (Integer)result.next();
+      return Tools.convertToInt((Number)result.next());
 
    }
 

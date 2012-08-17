@@ -52,4 +52,13 @@ public class ToolsTestCase extends TestCase
       assertEquals("cn=some\\,\\,thin\\=g,ou=pl\\ at\\.form,o=gr\\=oup\\=,o=gatein", Tools.dnFormatWhitespaces(escapeCharsDn));
    }
 
+   public void testConvertToInt()
+   {
+      Integer i1 = 1456;
+      Long l1 = 14567897l;
+
+      assertTrue(Tools.convertToInt(i1) == 1456);
+      assertTrue(Tools.convertToInt(l1) == 14567897);
+   }
+
 }

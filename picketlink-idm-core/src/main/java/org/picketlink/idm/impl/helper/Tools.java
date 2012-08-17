@@ -331,5 +331,29 @@ public class Tools
       return result.toString();
    }
 
+   /**
+    * Converts argument to int. Argument can be either int (will be returned as it is) or long (will be cast to integer,
+    * so we can theoretically lose some information if long argument is bigger than Integer.MAX_VALUE)
+    *
+    * @param n int or long
+    * @return int
+    */
+   public static int convertToInt(Number n)
+   {
+      if (n instanceof Integer)
+      {
+         return (Integer)n;
+      }
+      else if (n instanceof Long)
+      {
+         long l = (Long)n;
+         return (int)l;
+      }
+      else
+      {
+         throw new IllegalArgumentException("Incorrect type for convert: " + n.getClass());
+      }
+   }
+
 
 }

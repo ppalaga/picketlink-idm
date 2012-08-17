@@ -175,6 +175,10 @@ public class RoleManagerTest extends Assert
       assertFalse(session.getRoleManager().hasRole(user1, group1, rt3));
       assertFalse(session.getRoleManager().hasRole(user1, group4, rt3));
 
+      //
+      assertEquals(2, session.getRoleManager().getRolesCount(group1, null, null));
+      assertEquals(1, session.getRoleManager().getRolesCount(group2, null, null));
+
       // Role properties
 
       assertEquals(0, session.getRoleManager().getProperties(role1).keySet().size());

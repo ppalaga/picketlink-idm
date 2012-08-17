@@ -29,6 +29,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.picketlink.idm.test.support.IOTools;
 import org.picketlink.idm.test.support.XMLTools;
@@ -189,6 +192,16 @@ public class HibernateSupport
 
    protected void createSchema()
    {
+      if (cfg.getProperty(Environment.DIALECT) == null)
+      {
+         // We need to update detected dialect from SessionFactory to cfg, because property hibernate.dialect is needed for schema export
+         Dialect detectedDialectFromFactory = ((SessionFactoryImplementor) factory).getDialect();
+         String dialectClassname = detectedDialectFromFactory.getClass().getName();
+
+         log.info("Dialect was not available in properties. Set detected dialect " + dialectClassname + " from factory to hibernate configuration");
+         cfg.setProperty(Environment.DIALECT, dialectClassname);
+      }
+
       SchemaExport export = new SchemaExport(cfg);
       export.create(false, true);
    }
@@ -434,13 +447,13 @@ public class HibernateSupport
 
    public synchronized static Config getConfig(String name, String hibernates) throws Exception
    {
+      // Fill configs with all configurations
       if (configs == null)
       {
          URL url = Thread.currentThread().getContextClassLoader().getResource(hibernates);
          configs = fromXML(url);
 
-         // Remove and merge default with all
-         Config defaultCfg = (Config)configs.remove("default");
+         Config defaultCfg = (Config)configs.get("default");
 
          //
          for (Iterator i = configs.values().iterator();i.hasNext();)
@@ -454,6 +467,17 @@ public class HibernateSupport
             }
          }
 
+      }
+
+      // Try to find our config in available configurations
+      Config ourConfig = (Config)configs.get(name);
+
+      // Use default properties if our config was not available in configuration file
+      if (ourConfig == null)
+      {
+         Config defaultCfg = (Config)configs.get("default");
+         ourConfig = new Config(name, defaultCfg.properties);
+         configs.put(name, ourConfig);
       }
 
       //

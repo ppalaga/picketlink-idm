@@ -26,6 +26,7 @@
                    fetch="join"
                    lazy="proxy">
          <column name="NAME"
+                 not-null="true"
                  unique-key="id"/>
       </many-to-one>
       <many-to-one name="toIdentityObject"

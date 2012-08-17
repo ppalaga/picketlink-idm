@@ -293,15 +293,15 @@
          <!--</property>-->
       <!--</properties>-->
    <!--</configuration>-->
-   <!--<configuration>-->
-      <!--<configuration-name>sybase-15-0-3_8kb</configuration-name>-->
-      <!--<properties>-->
-         <!--<property>-->
-            <!--<name>hibernate.dialect</name>-->
-            <!--<value>org.hibernate.dialect.SybaseDialect</value>-->
-         <!--</property>-->
-      <!--</properties>-->
-   <!--</configuration>-->
+   <configuration>
+      <configuration-name>sybase-15-0-3_8kb</configuration-name>
+      <properties>
+         <property>
+            <name>hibernate.dialect</name>
+            <value>org.hibernate.dialect.SybaseDialect</value>
+         </property>
+      </properties>
+   </configuration>
    <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
         <!--&lt;!&ndash;<configuration-name>sybase152-jtds</configuration-name>&ndash;&gt;-->
         <!--&lt;!&ndash;<properties>&ndash;&gt;-->

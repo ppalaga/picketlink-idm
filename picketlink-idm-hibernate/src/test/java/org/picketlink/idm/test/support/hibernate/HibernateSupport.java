@@ -190,28 +190,6 @@ public class HibernateSupport
       factory = cfg.buildSessionFactory();
    }
 
-   protected void createSchema()
-   {
-      if (cfg.getProperty(Environment.DIALECT) == null)
-      {
-         // We need to update detected dialect from SessionFactory to cfg, because property hibernate.dialect is needed for schema export
-         Dialect detectedDialectFromFactory = ((SessionFactoryImplementor) factory).getDialect();
-         String dialectClassname = detectedDialectFromFactory.getClass().getName();
-
-         log.info("Dialect was not available in properties. Set detected dialect " + dialectClassname + " from factory to hibernate configuration");
-         cfg.setProperty(Environment.DIALECT, dialectClassname);
-      }
-
-      SchemaExport export = new SchemaExport(cfg);
-      export.create(false, true);
-   }
-
-   protected void destroySchema()
-   {
-      SchemaExport export = new SchemaExport(cfg);
-      export.drop(false, true);
-   }
-
    protected void destroySessionFactory()
    {
       factory.close();
@@ -230,7 +208,6 @@ public class HibernateSupport
    {
       createConfiguration();
       createSessionFactory();
-      createSchema();
    }
 
    public void stop() throws Exception
@@ -255,7 +232,6 @@ public class HibernateSupport
       }
 
       //
-      destroySchema();
       destroySessionFactory();
       destroyConfiguration();
    }

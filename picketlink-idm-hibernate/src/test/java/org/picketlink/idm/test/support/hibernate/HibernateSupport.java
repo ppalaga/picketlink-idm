@@ -448,7 +448,7 @@ public class HibernateSupport
       // Try to find our config in available configurations
       Config ourConfig = (Config)configs.get(name);
 
-      // Use default properties if our config was not available in configuration file
+      // Use default properties if our config is not available in configuration file
       if (ourConfig == null)
       {
          Config defaultCfg = (Config)configs.get("default");

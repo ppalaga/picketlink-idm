@@ -320,14 +320,6 @@
           <version>9.7</version>
           <scope>test</scope>
         </dependency>
-        <!--
-        <dependency>
-          <groupId>com.ibm</groupId>
-          <artifactId>db2jcc_license_cu</artifactId>
-          <version>9.1</version>
-          <scope>test</scope>
-        </dependency>
-        -->
       </dependencies>
     </profile>
 
@@ -528,93 +520,6 @@
       </dependencies>
     </profile>
 
-
-      <!--Unused drivers:-->
-
-      <!--<profile>-->
-         <!--<id>hudson-postgresql-83</id>-->
-         <!--<dependencies>-->
-            <!--<dependency>-->
-               <!--<groupId>postgresql</groupId>-->
-               <!--<artifactId>postgresql</artifactId>-->
-               <!--<version>8.3-604</version>-->
-               <!--<classifier>jdbc3</classifier>-->
-               <!--<scope>test</scope>-->
-            <!--</dependency>-->
-         <!--</dependencies>-->
-      <!--</profile>-->
-      <!--<profile>-->
-         <!--<id>hudson-postgresql-83-jdbc4</id>-->
-         <!--<dependencies>-->
-            <!--<dependency>-->
-               <!--<groupId>postgresql</groupId>-->
-               <!--<artifactId>postgresql</artifactId>-->
-               <!--<version>8.3-604</version>-->
-               <!--<classifier>jdbc4</classifier>-->
-               <!--<scope>test</scope>-->
-            <!--</dependency>-->
-         <!--</dependencies>-->
-      <!--</profile>-->
-      <!--<profile>-->
-         <!--<id>hudson-db2jcc-357</id>-->
-         <!--<dependencies>-->
-            <!--<dependency>-->
-               <!--<groupId>com.ibm</groupId>-->
-               <!--<artifactId>db2jcc</artifactId>-->
-               <!--<version>3.57.86</version>-->
-               <!--<scope>test</scope>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-               <!--<groupId>com.ibm</groupId>-->
-               <!--<artifactId>db2jcc_license_cu</artifactId>-->
-               <!--<version>3.57.86</version>-->
-               <!--<scope>test</scope>-->
-            <!--</dependency>-->
-         <!--</dependencies>-->
-      <!--</profile>-->
-      <!--<profile>-->
-         <!--<id>hudson-db2jcc-31</id>-->
-         <!--<dependencies>-->
-            <!--<dependency>-->
-               <!--<groupId>com.ibm</groupId>-->
-               <!--<artifactId>db2jcc</artifactId>-->
-               <!--<version>3.1.57</version>-->
-               <!--<scope>test</scope>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-               <!--<groupId>com.ibm</groupId>-->
-               <!--<artifactId>db2jcc_license_cu</artifactId>-->
-               <!--<version>3.1.57</version>-->
-               <!--<scope>test</scope>-->
-            <!--</dependency>-->
-         <!--</dependencies>-->
-      <!--</profile>-->
-      <!--<profile>-->
-         <!--<id>hudson-ojdbc6</id>-->
-         <!--<dependencies>-->
-            <!--<dependency>-->
-               <!--<groupId>com.oracle</groupId>-->
-               <!--<artifactId>ojdbc6</artifactId>-->
-               <!--<version>11.1.0.7.0</version>-->
-               <!--<scope>test</scope>-->
-            <!--</dependency>-->
-         <!--</dependencies>-->
-      <!--</profile>-->
-
-      <!--Useful to pass additional driver from FS-->
-
-      <!--<profile>-->
-         <!--<id>provided-jdbc-driver</id>-->
-         <!--<dependencies>-->
-            <!--<dependency>-->
-               <!--<groupId>privided</groupId>-->
-               <!--<artifactId>jdbc-driver</artifactId>-->
-               <!--<version>NA</version>-->
-               <!--<scope>system</scope>-->
-               <!--<systemPath>${provided.jdbc.driver.path}</systemPath>-->
-            <!--</dependency>-->
-         <!--</dependencies>-->
-      <!--</profile>-->
   </profiles>
   
   <repositories>

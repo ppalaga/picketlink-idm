@@ -54,4 +54,9 @@ public class SimpleUser extends AbstractIdentityType implements User
     {
         this.email = email;
     }
+
+    public String getKey() 
+    {
+        return String.format("%d%d", KEY_PREFIX, id);
+    }
 }

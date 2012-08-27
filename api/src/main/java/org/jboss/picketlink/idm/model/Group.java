@@ -6,6 +6,8 @@ package org.jboss.picketlink.idm.model;
  */
 public interface Group extends IdentityType
 {
+    static final String KEY_PREFIX = "GROUP://";
+    
     //TODO: Javadocs
     //TODO: Exceptions
 

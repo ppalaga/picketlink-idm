@@ -6,6 +6,7 @@ package org.jboss.picketlink.idm.model;
  */
 public interface Role extends IdentityType
 {
+    static final String KEY_PREFIX = "ROLE://";
     // Self
 
     String getName();

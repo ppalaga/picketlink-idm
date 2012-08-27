@@ -5,6 +5,8 @@ package org.jboss.picketlink.idm.model;
  */
 public interface User extends IdentityType
 {
+    static final String KEY_PREFIX = "USER://";
+    
     //TODO: Javadocs
     //TODO: Exceptions
 

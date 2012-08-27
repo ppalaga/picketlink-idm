@@ -10,16 +10,10 @@ import java.util.Map;
  */
 public abstract class AbstractIdentityType implements IdentityType
 {
-    private String key;
     private boolean enabled = true;
     private Date creationDate = null;
     private Date expirationDate = null;
     private Map<String,String[]> attributes = new HashMap<String,String[]>();
-    
-    public String getKey()
-    {
-        return this.key;
-    }
 
     public boolean isEnabled()
     {

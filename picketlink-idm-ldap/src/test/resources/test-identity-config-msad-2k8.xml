@@ -513,11 +513,11 @@
                         <name>passwordAttributeName</name>
                         <value>unicodePwd</value>
                      </option>
-                      <option>
+                     <option>
                         <name>enclosePasswordWith</name>
                         <value>"</value>
                      </option>
-                      <option>
+                     <option>
                         <name>passwordEncoding</name>
                         <value>UTF-16LE</value>
                      </option>
@@ -866,7 +866,7 @@
             <options>
                <option>
                   <name>providerURL</name>
-                  <value>ldap://vmg13.mw.lab.eng.bos.redhat.com:636</value>
+                  <value>ldaps://vmg13.mw.lab.eng.bos.redhat.com:636</value>
                </option>
                <option>
                   <name>adminDN</name>
@@ -880,31 +880,31 @@
                   <name>authenticationMethod</name>
                   <value>simple</value>
                </option>
-               <!--<option>-->
-                  <!--<name>customSystemProperties</name>-->
-                  <!--<value>javax.net.ssl.trustStore=d:\Workshop\vmg13-msad.truststore</value>-->
-                  <!--<value>javax.net.ssl.trustStorePassword=password</value>-->
-               <!--</option>-->
+               <option>
+                  <name>customSystemProperties</name>
+                  <value>javax.net.ssl.trustStore=/qa/home/hudson/configs/portal/vmg13-msad.truststore</value>
+                  <value>javax.net.ssl.trustStorePassword=password</value>
+               </option>
                <option>
                   <name>searchTimeLimit</name>
                   <value>10000</value>
                </option>
-              <option>
-                <name>cache.providerClass</name>
-                <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
-              </option>
-              <option>
-                <name>cache.configFile</name>
-                <value>jboss-cache.xml</value>
-              </option>
-              <option>
-                <name>pagedResultsExtensionSupported</name>
-                <value>true</value>
-              </option>
-              <option>
-                <name>pagedResultsExtensionSize</name>
-                <value>1</value>
-              </option>
+               <option>
+                  <name>cache.providerClass</name>
+                  <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
+               </option>
+               <option>
+                  <name>cache.configFile</name>
+                  <value>jboss-cache.xml</value>
+               </option>
+               <option>
+                  <name>pagedResultsExtensionSupported</name>
+                  <value>true</value>
+               </option>
+               <option>
+                  <name>pagedResultsExtensionSize</name>
+                  <value>1</value>
+               </option>
             </options>
          </identity-store>
       </identity-stores>

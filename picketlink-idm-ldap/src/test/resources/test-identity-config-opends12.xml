@@ -899,22 +899,22 @@
                   <name>searchTimeLimit</name>
                   <value>10000</value>
                </option>
-              <option>
-                <name>cache.providerClass</name>
-                <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
-              </option>
-              <option>
-                <name>cache.configFile</name>
-                <value>jboss-cache.xml</value>
-              </option>
-              <option>
-                <name>pagedResultsExtensionSupported</name>
-                <value>true</value>
-              </option>
-              <option>
-                <name>pagedResultsExtensionSize</name>
-                <value>1</value>
-              </option>
+               <option>
+                  <name>cache.providerClass</name>
+                  <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
+               </option>
+               <option>
+                  <name>cache.configFile</name>
+                  <value>jboss-cache.xml</value>
+               </option>
+               <option>
+                  <name>pagedResultsExtensionSupported</name>
+                  <value>true</value>
+               </option>
+               <option>
+                  <name>pagedResultsExtensionSize</name>
+                  <value>1</value>
+               </option>
             </options>
          </identity-store>
       </identity-stores>

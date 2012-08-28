@@ -523,7 +523,7 @@
                         <type>text</type>
                         <isRequired>false</isRequired>
                         <isMultivalued>false</isMultivalued>
-                        <isReadOnly>false</isReadOnly>
+                        <isReadOnly>true</isReadOnly>
                      </attribute>
                      <attribute>
                         <name>carLicense</name>
@@ -531,7 +531,7 @@
                         <type>text</type>
                         <isRequired>false</isRequired>
                         <isMultivalued>false</isMultivalued>
-                        <isReadOnly>true</isReadOnly>
+                        <isReadOnly>false</isReadOnly>
                      </attribute>
                      <attribute>
                         <name>email</name>
@@ -899,22 +899,22 @@
                   <name>searchTimeLimit</name>
                   <value>10000</value>
                </option>
-              <option>
-                <name>cache.providerClass</name>
-                <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
-              </option>
-              <option>
-                <name>cache.configFile</name>
-                <value>jboss-cache.xml</value>
-              </option>
-              <option>
-                <name>pagedResultsExtensionSupported</name>
-                <value>true</value>
-              </option>
-              <option>
-                <name>pagedResultsExtensionSize</name>
-                <value>1</value>
-              </option>
+               <option>
+                  <name>cache.providerClass</name>
+                  <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
+               </option>
+               <option>
+                  <name>cache.configFile</name>
+                  <value>jboss-cache.xml</value>
+               </option>
+               <option>
+                  <name>pagedResultsExtensionSupported</name>
+                  <value>true</value>
+               </option>
+               <option>
+                  <name>pagedResultsExtensionSize</name>
+                  <value>1</value>
+               </option>
             </options>
          </identity-store>
       </identity-stores>

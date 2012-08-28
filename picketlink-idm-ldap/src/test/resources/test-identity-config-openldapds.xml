@@ -894,14 +894,14 @@
                   <name>sortExtensionSupported</name>
                   <value>false</value>
                </option>
-              <option>
-                <name>cache.providerClass</name>
-                <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
-              </option>
-              <option>
-                <name>cache.configFile</name>
-                <value>jboss-cache.xml</value>
-              </option>
+               <option>
+                  <name>cache.providerClass</name>
+                  <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
+               </option>
+               <option>
+                  <name>cache.configFile</name>
+                  <value>jboss-cache.xml</value>
+               </option>
             </options>
          </identity-store>
       </identity-stores>

@@ -149,7 +149,34 @@
                <identity-object-type>
                   <name>USER</name>
                   <relationships>
-
+                     <!--<relationship>-->
+                     <!--<relationship-type-ref>JBOSS_IDENTITY_ROLE</relationship-type-ref>-->
+                     <!--<identity-object-type-ref>ORGANIZATION</identity-object-type-ref>-->
+                     <!--</relationship>-->
+                     <!--<relationship>-->
+                     <!--<relationship-type-ref>JBOSS_IDENTITY_ROLE</relationship-type-ref>-->
+                     <!--<identity-object-type-ref>COMMUNITY</identity-object-type-ref>-->
+                     <!--</relationship>-->
+                     <!--<relationship>-->
+                     <!--<relationship-type-ref>JBOSS_IDENTITY_ROLE</relationship-type-ref>-->
+                     <!--<identity-object-type-ref>OFFICE</identity-object-type-ref>-->
+                     <!--</relationship>-->
+                     <!--<relationship>-->
+                     <!--<relationship-type-ref>JBOSS_IDENTITY_ROLE</relationship-type-ref>-->
+                     <!--<identity-object-type-ref>SECURITY</identity-object-type-ref>-->
+                     <!--</relationship>-->
+                     <!--<relationship>-->
+                     <!--<relationship-type-ref>JBOSS_IDENTITY_ROLE</relationship-type-ref>-->
+                     <!--<identity-object-type-ref>ORGANIZATION_UNIT</identity-object-type-ref>-->
+                     <!--</relationship>-->
+                     <!--<relationship>-->
+                     <!--<relationship-type-ref>JBOSS_IDENTITY_ROLE</relationship-type-ref>-->
+                     <!--<identity-object-type-ref>PROJECT</identity-object-type-ref>-->
+                     <!--</relationship>-->
+                     <!--<relationship>-->
+                     <!--<relationship-type-ref>JBOSS_IDENTITY_ROLE</relationship-type-ref>-->
+                     <!--<identity-object-type-ref>PEOPLE</identity-object-type-ref>-->
+                     <!--</relationship>-->
                   </relationships>
                   <credentials>
                      <credential-type>PASSWORD</credential-type>
@@ -861,14 +888,14 @@
                   <name>searchTimeLimit</name>
                   <value>10000</value>
                </option>
-              <option>
-                <name>cache.providerClass</name>
-                <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
-              </option>
-              <option>
-                <name>cache.configFile</name>
-                <value>jboss-cache.xml</value>
-              </option>
+               <option>
+                  <name>cache.providerClass</name>
+                  <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
+               </option>
+               <option>
+                  <name>cache.configFile</name>
+                  <value>jboss-cache.xml</value>
+               </option>
             </options>
          </identity-store>
       </identity-stores>

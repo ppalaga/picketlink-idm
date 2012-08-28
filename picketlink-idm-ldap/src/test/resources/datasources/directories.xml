@@ -43,7 +43,7 @@
       <description>ldap://dev39.mw.lab.eng.bos.redhat.com:2389</description>
       <!--identity configuration file-->
       <config-file>test-identity-config-opends20.xml</config-file>
-      <host>perf15.mw.lab.eng.bos.redhat.com</host>
+      <host>dev39.mw.lab.eng.bos.redhat.com</host>
       <port>2389</port>
       <context-factory>com.sun.jndi.ldap.LdapCtxFactory</context-factory>
       <admin-dn>cn=Directory Manager</admin-dn>

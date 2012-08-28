@@ -19,6 +19,6 @@ public class SimpleRole extends AbstractIdentityType implements Role
 
     public String getKey() 
     {
-        return String.format("%d%d", KEY_PREFIX, name);
+        return String.format("%s%s", KEY_PREFIX, name);
     }
 }

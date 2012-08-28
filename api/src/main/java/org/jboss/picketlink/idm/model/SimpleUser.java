@@ -57,6 +57,6 @@ public class SimpleUser extends AbstractIdentityType implements User
 
     public String getKey() 
     {
-        return String.format("%d%d", KEY_PREFIX, id);
+        return String.format("%s%s", KEY_PREFIX, id);
     }
 }

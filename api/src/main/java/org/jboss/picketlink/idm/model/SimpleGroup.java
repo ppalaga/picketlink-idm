@@ -34,6 +34,6 @@ public class SimpleGroup extends AbstractIdentityType implements Group
     
     public String getKey() 
     {
-        return String.format("%d%d", KEY_PREFIX, id);
+        return String.format("%s%s", KEY_PREFIX, id);
     }    
 }

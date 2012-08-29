@@ -22,8 +22,10 @@
 
 package org.picketlink.idm.impl.api;
 
+import org.picketlink.idm.api.IdentitySearchCriteria;
 import org.picketlink.idm.api.IdentitySession;
 import org.picketlink.idm.api.Group;
+import org.picketlink.idm.api.SortOrder;
 import org.picketlink.idm.api.User;
 import org.picketlink.idm.api.RoleType;
 import org.picketlink.idm.api.IdentitySessionFactory;
@@ -152,6 +154,14 @@ public class RoleManagerTest extends Assert
       assertEquals(1, session.getRoleManager().findRoles(group1.getKey(), "rt1").size());
       assertEquals(1, session.getRoleManager().findRoles(group1, rt1).size());
 
+      // Some testing with search criteria and null roleType
+
+      IdentitySearchCriteria crit = new IdentitySearchCriteriaImpl().page(0, 5);
+      crit.sort(SortOrder.ASCENDING);
+      assertEquals(3, session.getRoleManager().findRoles(user1, null, crit).size());
+      assertEquals(2, session.getRoleManager().findRoles(group1, null, crit).size());
+      assertEquals(1, session.getRoleManager().findRoles(group2, null, crit).size());
+
       //
 
       assertEquals(2, session.getRoleManager().findGroupsWithRelatedRole(user1, null).size());
@@ -261,6 +271,12 @@ public class RoleManagerTest extends Assert
       assertEquals(0, session.getRoleManager().findRoles(user1.getKey(), "rt2").size());
       assertEquals(0, session.getRoleManager().findRoles(group1.getKey(), "rt1").size());
       assertEquals(0, session.getRoleManager().findRoles(group1, rt1).size());
+
+      // Some testing with criteria and null roleType
+
+      assertEquals(0, session.getRoleManager().findRoles(user1, null, crit).size());
+      assertEquals(0, session.getRoleManager().findRoles(group1, null, crit).size());
+      assertEquals(0, session.getRoleManager().findRoles(group2, null, crit).size());
 
       //
 

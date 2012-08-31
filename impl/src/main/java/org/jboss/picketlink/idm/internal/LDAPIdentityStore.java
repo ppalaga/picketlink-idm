@@ -21,6 +21,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
+import org.jboss.picketlink.idm.internal.ldap.LDAPRole;
 import org.jboss.picketlink.idm.internal.ldap.LDAPUser;
 import org.jboss.picketlink.idm.model.Group;
 import org.jboss.picketlink.idm.model.Membership;
@@ -182,22 +183,45 @@ public class LDAPIdentityStore implements IdentityStore
     @Override
     public Role createRole(String name)
     {
-        // TODO Auto-generated method stub
-        return null;
+        LDAPRole role = new LDAPRole();
+        role.setName(name);
+        
+        try {
+            ctx.bind(CN + "="+ name + COMMA + roleDNSuffix, role);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+        return role;
     }
 
     @Override
     public void removeRole(Role role)
-    {
-        // TODO Auto-generated method stub
-
+    { 
+        try {
+            ctx.destroySubcontext(CN + "="+ role.getName() + COMMA + roleDNSuffix);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Role getRole(String role)
     {
-        // TODO Auto-generated method stub
-        return null;
+        LDAPRole ldapRole = null;
+        try {
+            Attributes matchAttrs = new BasicAttributes(true); // ignore attribute name case
+            matchAttrs.put(new BasicAttribute(CN, role));
+            
+            NamingEnumeration<SearchResult> answer = ctx.search(roleDNSuffix, matchAttrs);
+            while (answer.hasMore()) {
+                SearchResult sr = answer.next();
+                Attributes attributes = sr.getAttributes();
+                ldapRole = LDAPRole.create(attributes);
+            }
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+        return ldapRole;
     }
 
     @Override

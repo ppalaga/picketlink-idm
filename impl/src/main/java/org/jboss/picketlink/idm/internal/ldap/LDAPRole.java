@@ -21,6 +21,15 @@
  */
 package org.jboss.picketlink.idm.internal.ldap;
 
+import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.CN;
+import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.MEMBER;
+import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.OBJECT_CLASS;
+
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+
 import org.jboss.picketlink.idm.model.Role;
 
 /**
@@ -30,8 +39,40 @@ import org.jboss.picketlink.idm.model.Role;
  */
 public class LDAPRole extends DirContextAdaptor implements Role {
 
+    private String roleName;
+    
+    public LDAPRole(){
+        Attribute oc = new BasicAttribute(OBJECT_CLASS); 
+        oc.add("top");
+        oc.add("groupOfNames");
+        attributes.put(oc);
+    }
+    
+    public void setName(String roleName){
+        this.roleName = roleName;
+        Attribute theAttribute = attributes.get(CN);
+        if(theAttribute == null){
+            attributes.put(CN, roleName);
+        } else {
+            theAttribute.set(0, roleName);
+        }
+        attributes.put(MEMBER, " "); //Dummy member for now
+    }
     @Override
     public String getName() {
-        return null;
+        return roleName;
+    }
+    
+    public static LDAPRole create(Attributes attributes){
+        LDAPRole role = new LDAPRole();
+        
+        try{
+            //Get the common name
+            Attribute cn =  attributes.get(CN);
+            role.setName((String) cn.get());
+        } catch(NamingException e){
+            e.printStackTrace();
+        }
+        return role;
     }
 }

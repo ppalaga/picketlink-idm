@@ -54,6 +54,16 @@ public class LDAPUser extends DirContextAdaptor implements User {
         attributes.put(oc);
     } 
 
+    public void setId(String id){
+        this.userid = id;
+        Attribute theAttribute = attributes.get(UID);
+        if(theAttribute == null){
+            attributes.put(UID, id);
+        } else {
+            theAttribute.set(0, id);
+        }
+    }
+    
     @Override
     public String getId() {
         Attribute theAttribute = attributes.get(UID);
@@ -87,7 +97,7 @@ public class LDAPUser extends DirContextAdaptor implements User {
         this.firstName = firstName;
         Attribute theAttribute = attributes.get(GIVENNAME);
         if(theAttribute == null){
-            attributes.put("givenname", firstName);
+            attributes.put(GIVENNAME, firstName);
         } else {
             theAttribute.set(0, firstName);
         }
@@ -113,7 +123,7 @@ public class LDAPUser extends DirContextAdaptor implements User {
         this.lastName = lastName;
         Attribute theAttribute = attributes.get(SN);
         if(theAttribute == null){
-            attributes.put("sn", lastName);
+            attributes.put(SN, lastName);
         } else {
             theAttribute.set(0, lastName);
         }
@@ -136,9 +146,9 @@ public class LDAPUser extends DirContextAdaptor implements User {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-        Attribute theAttribute = attributes.get("cn");
+        Attribute theAttribute = attributes.get(CN);
         if(theAttribute == null){
-            attributes.put("cn", fullName);
+            attributes.put(CN, fullName);
         } else {
             theAttribute.set(0, fullName);
         }
@@ -164,7 +174,7 @@ public class LDAPUser extends DirContextAdaptor implements User {
         this.email = email;
         Attribute theAttribute = attributes.get(EMAIL);
         if(theAttribute == null){
-            attributes.put("mail", email);
+            attributes.put(EMAIL, email);
         } else {
             theAttribute.set(0, email);
         }
@@ -174,6 +184,10 @@ public class LDAPUser extends DirContextAdaptor implements User {
         LDAPUser user = new LDAPUser();
         
         try{
+            //Get the UID
+            Attribute uid =  attributes.get(UID);
+            user.setId((String) uid.get());
+            
             //Get the common name
             Attribute cn =  attributes.get(CN);
             user.setFullName((String) cn.get());

@@ -31,6 +31,7 @@ public interface LDAPConstants {
     String CN = "cn";
     String SN = "sn";
     String EMAIL = "mail";
+    String MEMBER = "member";
     String OBJECT_CLASS = "objectclass";
     String UID = "uid";
 }

@@ -23,11 +23,13 @@ package org.jboss.picketlink.test.idm.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.picketlink.idm.internal.LDAPIdentityStore;
+import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
 import org.picketbox.test.ldap.AbstractLDAPTest;
 
@@ -50,10 +52,10 @@ public class LDAPIdentityStoreTestCase extends AbstractLDAPTest {
         LDAPIdentityStore store = new LDAPIdentityStore();
         Map<String,String> config = new HashMap<String,String>();
         config.put("userDNSuffix", "ou=People,dc=jboss,dc=org");
+        config.put("roleDNSuffix", "ou=Roles,dc=jboss,dc=org");
         config.put("url", "ldap://localhost:10389");
         config.put("bindDN", adminDN);
         config.put("password", adminPW);
-        
         
         store.config(config);
         
@@ -65,5 +67,23 @@ public class LDAPIdentityStoreTestCase extends AbstractLDAPTest {
         assertEquals("Pedro Silva", pedro.getFullName());
         assertEquals("Pedro", pedro.getFirstName());
         assertEquals("Silva", pedro.getLastName());
+        
+        //Add a role
+        Role role = store.createRole("testRole");
+        assertNotNull(role);
+        assertEquals("testRole", role.getName());
+        
+        Role ldapRole = store.getRole("testRole");
+        assertNotNull(ldapRole);
+        assertEquals("testRole", ldapRole.getName());
+        
+        //Deal with removal of users and roles
+        store.removeUser(pedro);
+        store.removeRole(ldapRole);
+        
+        pedro = store.getUser("Pedro Silva");
+        assertNull(pedro);
+        ldapRole = store.getRole("testRole");
+        assertNull(ldapRole);
     }
 }

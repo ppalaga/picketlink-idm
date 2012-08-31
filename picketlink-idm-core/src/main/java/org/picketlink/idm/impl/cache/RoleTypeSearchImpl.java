@@ -25,6 +25,7 @@ package org.picketlink.idm.impl.cache;
 
 import java.io.Serializable;
 
+import org.picketlink.idm.api.IdentitySearchCriteria;
 import org.picketlink.idm.cache.RoleTypeSearch;
 import org.picketlink.idm.api.Group;
 import org.picketlink.idm.api.User;
@@ -58,11 +59,7 @@ public class RoleTypeSearchImpl extends AbstractSearch implements RoleTypeSearch
    @Override
    public boolean equals(Object o)
    {
-      if (this == o)
-      {
-         return true;
-      }
-      if (o == null || getClass() != o.getClass())
+      if (super.equals(o) == false)
       {
          return false;
       }

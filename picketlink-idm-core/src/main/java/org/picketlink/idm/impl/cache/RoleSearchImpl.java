@@ -58,11 +58,7 @@ public class RoleSearchImpl extends AbstractSearch implements RoleSearch, Serial
    @Override
    public boolean equals(Object o)
    {
-      if (this == o)
-      {
-         return true;
-      }
-      if (o == null || getClass() != o.getClass())
+      if (super.equals(o) == false)
       {
          return false;
       }

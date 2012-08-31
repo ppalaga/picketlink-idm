@@ -41,6 +41,29 @@ public abstract class AbstractSearch implements Serializable
       this.searchCriteria = searchCriteria;
    }
 
+   public boolean equals(Object o)
+   {
+      if (this == o)
+      {
+         return true;
+      }
+      if (o == null || getClass() != o.getClass())
+      {
+         return false;
+      }
+
+      AbstractSearch that = (AbstractSearch)o;
+
+      IdentitySearchCriteria criteria = getSearchCriteria();
+      IdentitySearchCriteria thatcriteria = that.getSearchCriteria();
+      if (criteria != null ? !criteria.equals(thatcriteria) : thatcriteria != null)
+      {
+         return false;
+      }
+
+      return true;
+   }
+
    @Override
    public int hashCode()
    {

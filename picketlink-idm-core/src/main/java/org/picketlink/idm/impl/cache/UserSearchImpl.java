@@ -127,11 +127,7 @@ public class UserSearchImpl extends AbstractSearch implements UserSearch, Serial
    @Override
    public boolean equals(Object o)
    {
-      if (this == o)
-      {
-         return true;
-      }
-      if (o == null || getClass() != o.getClass())
+      if (super.equals(o) == false)
       {
          return false;
       }

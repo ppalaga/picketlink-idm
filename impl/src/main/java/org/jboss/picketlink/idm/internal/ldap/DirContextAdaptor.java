@@ -21,7 +21,10 @@
  */
 package org.jboss.picketlink.idm.internal.ldap;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -39,16 +42,17 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import org.jboss.picketlink.idm.model.IdentityType;
+
 /**
  * An adaptor class that provides barebones implementation
  * of the {@link DirContext}
  * @author anil saldhana
  * @since Aug 30, 2012
  */
-public class DirContextAdaptor implements DirContext {
-    
-    //User attributes are collected in ldap form
-    protected Attributes userAttributes = new BasicAttributes(true);
+public class DirContextAdaptor implements DirContext, IdentityType {
+     
+    protected Attributes attributes = new BasicAttributes(true);
 
     @Override
     public Object lookup(Name name) throws NamingException {
@@ -191,7 +195,7 @@ public class DirContextAdaptor implements DirContext {
 
     @Override
     public Attributes getAttributes(String name) throws NamingException {
-        return userAttributes;
+        return attributes;
     }
 
     @Override
@@ -206,7 +210,7 @@ public class DirContextAdaptor implements DirContext {
          Attributes answer = new BasicAttributes(true);
          Attribute target;
          for (int i = 0; i < ids.length; i++){
-            target = userAttributes.get(ids[i]);
+            target = attributes.get(ids[i]);
             if (target != null){
                answer.put(target);
             }
@@ -318,5 +322,75 @@ public class DirContextAdaptor implements DirContext {
     public NamingEnumeration<SearchResult> search(String name, String filterExpr, Object[] filterArgs, SearchControls cons)
             throws NamingException {
         return null;
+    }
+
+    @Override
+    public String getKey() {
+        return null;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
+    @Override
+    public Date getExpirationDate() {
+        return null;
+    }
+
+    @Override
+    public Date getCreationDate() {
+        return null;
+    }
+
+    @Override
+    public void setAttribute(String name, String value) {
+        attributes.put(name, value);
+    }
+
+    @Override
+    public void setAttribute(String name, String[] values) {
+        attributes.put(name, values);
+    }
+
+    @Override
+    public void removeAttribute(String name) {
+        attributes.remove(name);
+    }
+
+    @Override
+    public String getAttribute(String name) {
+        try {
+            Attribute theAttribute = attributes.get(name);
+            return (String) theAttribute.get();
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String[] getAttributeValues(String name) {
+        try {
+            Attribute theAttribute = attributes.get(name);
+            return (String[]) theAttribute.get();
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Map<String, String[]> getAttributes() {
+        try {
+            Map<String,String[]> map = new HashMap<String,String[]>();
+            NamingEnumeration<? extends Attribute> theAttributes = attributes.getAll();
+            while(theAttributes.hasMore()){
+                Attribute anAttribute = theAttributes.next();
+                map.put(anAttribute.getID(), (String[]) anAttribute.get());
+            }
+            return map;
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

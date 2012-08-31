@@ -1,5 +1,12 @@
 package org.jboss.picketlink.idm.internal;
 
+import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.CN;
+import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.EMAIL;
+import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.GIVENNAME;
+import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.OBJECT_CLASS;
+import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.SN;
+import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.UID;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -37,7 +44,7 @@ public class LDAPIdentityStore implements IdentityStore
     public final String COMMA = ",";
     
     protected DirContext ctx = null;
-    protected String userDNSuffix;
+    protected String userDNSuffix, roleDNSuffix;
 
     /**
      * WE NEED A PROPER BUILDER TO REPLACE THIS
@@ -45,6 +52,7 @@ public class LDAPIdentityStore implements IdentityStore
      */
     public void config(Map<String,String> config){
         userDNSuffix = config.get("userDNSuffix");
+        roleDNSuffix = config.get("roleDNSuffix");
 
         //Construct the dir ctx
         Properties env = new Properties();
@@ -124,7 +132,7 @@ public class LDAPIdentityStore implements IdentityStore
     public void removeUser(User user)
     { 
         try {
-            ctx.destroySubcontext("uid="+ user.getId() + COMMA + userDNSuffix);
+            ctx.destroySubcontext(UID + "="+ user.getId() + COMMA + userDNSuffix);
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
@@ -136,7 +144,7 @@ public class LDAPIdentityStore implements IdentityStore
         LDAPUser user  = null;
         try {
             Attributes matchAttrs = new BasicAttributes(true); // ignore attribute name case
-            matchAttrs.put(new BasicAttribute("cn", name));
+            matchAttrs.put(new BasicAttribute(CN, name));
             
             NamingEnumeration<SearchResult> answer = ctx.search(userDNSuffix, matchAttrs);
             while (answer.hasMore()) {
@@ -244,29 +252,41 @@ public class LDAPIdentityStore implements IdentityStore
     @Override
     public void setAttribute(User user, String name, String[] values)
     {
-        // TODO Auto-generated method stub
-
+        if(user instanceof LDAPUser == false){
+            throw new RuntimeException("Wrong type:" + user);
+        }
+        LDAPUser ldapUser = (LDAPUser) user;
+        ldapUser.setAttribute(name, values);
     }
 
     @Override
     public void removeAttribute(User user, String name)
-    {
-        // TODO Auto-generated method stub
-
+    { 
+        if(user instanceof LDAPUser == false){
+            throw new RuntimeException("Wrong type:" + user);
+        }
+        LDAPUser ldapUser = (LDAPUser) user;
+        ldapUser.removeAttribute(name);
     }
 
     @Override
     public String[] getAttributeValues(User user, String name)
-    {
-        // TODO Auto-generated method stub
-        return null;
+    { 
+        if(user instanceof LDAPUser == false){
+            throw new RuntimeException("Wrong type:" + user);
+        }
+        LDAPUser ldapUser = (LDAPUser) user;
+        return ldapUser.getAttributeValues(name);
     }
 
     @Override
     public Map<String, String[]> getAttributes(User user)
     {
-        // TODO Auto-generated method stub
-        return null;
+        if(user instanceof LDAPUser == false){
+            throw new RuntimeException("Wrong type:" + user);
+        }
+        LDAPUser ldapUser = (LDAPUser) user;
+        return ldapUser.getAttributes();
     }
 
     @Override

@@ -156,9 +156,11 @@ public class RoleManagerTest extends Assert
 
       // Some testing with search criteria and null roleType
 
-      IdentitySearchCriteria crit = new IdentitySearchCriteriaImpl().page(0, 5);
+      IdentitySearchCriteria crit = new IdentitySearchCriteriaImpl().page(0, 2);
       crit.sort(SortOrder.ASCENDING);
-      assertEquals(3, session.getRoleManager().findRoles(user1, null, crit).size());
+      assertEquals(3, session.getRoleManager().findRoles(user1, null, null).size());
+      assertEquals(2, session.getRoleManager().findRoles(user1, null, crit).size());
+      assertEquals(2, session.getRoleManager().findRoles(group1, null, null).size());
       assertEquals(2, session.getRoleManager().findRoles(group1, null, crit).size());
       assertEquals(1, session.getRoleManager().findRoles(group2, null, crit).size());
 

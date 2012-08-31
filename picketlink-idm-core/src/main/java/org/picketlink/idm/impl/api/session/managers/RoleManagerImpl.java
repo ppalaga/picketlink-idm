@@ -918,6 +918,7 @@ public class RoleManagerImpl extends AbstractManager implements RoleManager, Ser
          RoleSearchImpl search = new RoleSearchImpl();
          search.setIdentityTypeId(identityType.getKey());
          search.setRoleType(roleType);
+         search.setSearchCriteria(criteria);
 
          Collection<Role> results = cache.getRoleSearch(cacheNS, search);
          if (results != null)
@@ -975,6 +976,7 @@ public class RoleManagerImpl extends AbstractManager implements RoleManager, Ser
          RoleSearchImpl search = new RoleSearchImpl();
          search.setIdentityTypeId(identityType.getKey());
          search.setRoleType(roleType);
+         search.setSearchCriteria(criteria);
 
           cache.putRoleSearch(cacheNS, search, roles);
          

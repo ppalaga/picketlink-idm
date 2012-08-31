@@ -121,7 +121,7 @@ public class LDAPIdentityStore implements IdentityStore
         String userid = generateUserID(firstName, lastName);
         
         try {
-            ctx.bind("uid="+ userid + COMMA + userDNSuffix, user);
+            ctx.bind(UID + "="+ userid + COMMA + userDNSuffix, user);
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }

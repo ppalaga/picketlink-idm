@@ -39,13 +39,21 @@ import org.jboss.picketlink.idm.model.Role;
  */
 public class LDAPRole extends DirContextAdaptor implements Role {
 
-    private String roleName;
+    private String roleName, roleDNSuffix;
     
     public LDAPRole(){
         Attribute oc = new BasicAttribute(OBJECT_CLASS); 
         oc.add("top");
         oc.add("groupOfNames");
         attributes.put(oc);
+    } 
+    
+    public void setRoleDNSuffix(String rdns){
+        this.roleDNSuffix = rdns;
+    }
+    
+    public String getDN(){
+        return CN + EQUAL + roleName + COMMA + roleDNSuffix;
     }
     
     public void setName(String roleName){
@@ -63,8 +71,32 @@ public class LDAPRole extends DirContextAdaptor implements Role {
         return roleName;
     }
     
-    public static LDAPRole create(Attributes attributes){
+    public void addUser(LDAPUser user){
+        Attribute memberAttribute = attributes.get(MEMBER);
+        if(memberAttribute != null ){
+            if(memberAttribute.contains(SPACE_STRING)){
+                memberAttribute.remove(SPACE_STRING);
+            }
+        } else {
+            memberAttribute = new BasicAttribute(OBJECT_CLASS);
+            memberAttribute.add("inetOrgPerson");
+            memberAttribute.add("organizationalPerson");
+            memberAttribute.add("person");
+            memberAttribute.add("top");
+        }
+        memberAttribute.add(user.getDN());
+    }
+    
+    public void removeUser(LDAPUser user){
+        Attribute memberAttribute = attributes.get(MEMBER);
+        if(memberAttribute != null ){
+            memberAttribute.remove(user.getDN());
+        }
+    }
+    
+    public static LDAPRole create(Attributes attributes, String roleDNSuffix){
         LDAPRole role = new LDAPRole();
+        role.setRoleDNSuffix(roleDNSuffix);
         
         try{
             //Get the common name

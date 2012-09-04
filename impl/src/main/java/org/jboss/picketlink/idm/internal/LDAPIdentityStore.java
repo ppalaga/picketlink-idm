@@ -21,7 +21,9 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
+import org.jboss.picketlink.idm.internal.ldap.LDAPChangeNotificationHandler;
 import org.jboss.picketlink.idm.internal.ldap.LDAPGroup;
+import org.jboss.picketlink.idm.internal.ldap.LDAPObjectChangedNotification;
 import org.jboss.picketlink.idm.internal.ldap.LDAPRole;
 import org.jboss.picketlink.idm.internal.ldap.LDAPUser;
 import org.jboss.picketlink.idm.model.Group;
@@ -41,7 +43,7 @@ import org.jboss.picketlink.idm.spi.IdentityStore;
  * @author Shane Bryzak
  * @author Anil Saldhana
  */
-public class LDAPIdentityStore implements IdentityStore
+public class LDAPIdentityStore implements IdentityStore, LDAPChangeNotificationHandler
 {
     public final String COMMA = ",";
     public final String EQUAL = "=";
@@ -114,6 +116,8 @@ public class LDAPIdentityStore implements IdentityStore
     public User createUser(String name)
     {
         LDAPUser user = new LDAPUser();
+        user.setLDAPChangeNotificationHandler(this);
+        
         user.setFullName(name); 
         String firstName = getFirstName(name);
         String lastName = getLastName(name);
@@ -154,7 +158,8 @@ public class LDAPIdentityStore implements IdentityStore
             while (answer.hasMore()) {
                 SearchResult sr = answer.next();
                 Attributes attributes = sr.getAttributes();
-                user = LDAPUser.create(attributes);
+                user = LDAPUser.create(attributes,userDNSuffix);
+                user.setLDAPChangeNotificationHandler(this);
             }
         } catch (NamingException e) {
             throw new RuntimeException(e);
@@ -167,6 +172,8 @@ public class LDAPIdentityStore implements IdentityStore
     {
         ensureGroupDNExists();
         LDAPGroup ldapGroup = new LDAPGroup();
+        ldapGroup.setLDAPChangeNotificationHandler(this);
+        
         ldapGroup.setName(name);
         ldapGroup.setGroupDNSuffix(groupDNSuffix);
 
@@ -219,6 +226,7 @@ public class LDAPIdentityStore implements IdentityStore
                 if(parentGroup != null){
                     ldapGroup.setParentGroup(parentGroup);
                 }
+                ldapGroup.setLDAPChangeNotificationHandler(this);
             }
         } catch (NamingException e) {
             throw new RuntimeException(e);
@@ -230,7 +238,10 @@ public class LDAPIdentityStore implements IdentityStore
     public Role createRole(String name)
     {
         LDAPRole role = new LDAPRole();
+        role.setLDAPChangeNotificationHandler(this);
+        
         role.setName(name);
+        role.setRoleDNSuffix(roleDNSuffix);
 
         try {
             ctx.bind(CN + "="+ name + COMMA + roleDNSuffix, role);
@@ -262,7 +273,8 @@ public class LDAPIdentityStore implements IdentityStore
             while (answer.hasMore()) {
                 SearchResult sr = answer.next();
                 Attributes attributes = sr.getAttributes();
-                ldapRole = LDAPRole.create(attributes);
+                ldapRole = LDAPRole.create(attributes, roleDNSuffix);
+                ldapRole.setLDAPChangeNotificationHandler(this);
             }
         } catch (NamingException e) {
             throw new RuntimeException(e);
@@ -273,15 +285,24 @@ public class LDAPIdentityStore implements IdentityStore
     @Override
     public Membership createMembership(Role role, User user, Group group)
     {
-        // TODO Auto-generated method stub
-        return null;
+        final LDAPRole ldapRole = (LDAPRole) getRole(role.getName());
+        final LDAPUser ldapUser = (LDAPUser) getUser(user.getFullName());
+        final LDAPGroup ldapGroup = (LDAPGroup) getGroup(group.getName());
+        
+        ldapRole.addUser(ldapUser);
+        ldapGroup.addRole(ldapRole);
+        return new DefaultMembership(ldapUser,ldapRole,ldapGroup);
     }
 
     @Override
     public void removeMembership(Role role, User user, Group group)
-    {
-        // TODO Auto-generated method stub
+    { 
+        final LDAPRole ldapRole = (LDAPRole) getRole(role.getName());
+        final LDAPUser ldapUser = (LDAPUser) getUser(user.getFullName());
+        final LDAPGroup ldapGroup = (LDAPGroup) getGroup(group.getName());
 
+        ldapRole.removeUser(ldapUser);
+        ldapGroup.removeRole(ldapRole);
     }
 
     @Override
@@ -543,5 +564,18 @@ public class LDAPIdentityStore implements IdentityStore
             throw new RuntimeException(e);
         } 
         return null;
+    }
+
+    @Override
+    public void handle(LDAPObjectChangedNotification notification) {
+        DirContext object = notification.getLDAPObject();
+        if(object instanceof LDAPUser){
+            LDAPUser user = (LDAPUser) object;
+            try {
+                ctx.rebind(user.getDN(), object);
+            } catch (NamingException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

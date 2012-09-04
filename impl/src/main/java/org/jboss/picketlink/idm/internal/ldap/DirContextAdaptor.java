@@ -21,9 +21,11 @@
  */
 package org.jboss.picketlink.idm.internal.ldap;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.Binding;
@@ -51,13 +53,21 @@ import org.jboss.picketlink.idm.model.IdentityType;
  * @since Aug 30, 2012
  */
 public class DirContextAdaptor implements DirContext, IdentityType {
-    
+
+    public static final String COMMA = ",";
+    public static final String EQUAL = "=";
     public static final String SPACE_STRING = " ";
     protected Attributes attributes = new BasicAttributes(true);
+    
+    protected LDAPChangeNotificationHandler handler = null;
 
     @Override
     public Object lookup(Name name) throws NamingException {
         return null;
+    }
+    
+    public void setLDAPChangeNotificationHandler(LDAPChangeNotificationHandler lh){
+        this.handler = lh;
     }
 
     @Override
@@ -348,16 +358,25 @@ public class DirContextAdaptor implements DirContext, IdentityType {
     @Override
     public void setAttribute(String name, String value) {
         attributes.put(name, value);
+        if(handler != null){
+            handler.handle(new LDAPObjectChangedNotification(this));
+        }
     }
 
     @Override
     public void setAttribute(String name, String[] values) {
         attributes.put(name, values);
+        if(handler != null){
+            handler.handle(new LDAPObjectChangedNotification(this));
+        }
     }
 
     @Override
     public void removeAttribute(String name) {
         attributes.remove(name);
+        if(handler != null){
+            handler.handle(new LDAPObjectChangedNotification(this));
+        }
     }
 
     @Override
@@ -387,7 +406,17 @@ public class DirContextAdaptor implements DirContext, IdentityType {
             NamingEnumeration<? extends Attribute> theAttributes = attributes.getAll();
             while(theAttributes.hasMore()){
                 Attribute anAttribute = theAttributes.next();
-                map.put(anAttribute.getID(), (String[]) anAttribute.get());
+                NamingEnumeration ne = anAttribute.getAll();
+                
+                List<String> theList = new ArrayList<String>();
+                while(ne.hasMoreElements()){
+                    String val = (String) ne.nextElement();
+                    theList.add(val);
+                }
+                String[] valuesArr = new String[theList.size()];
+                theList.toArray(valuesArr);
+                
+                map.put(anAttribute.getID(), valuesArr);
             }
             return map;
         } catch (NamingException e) {

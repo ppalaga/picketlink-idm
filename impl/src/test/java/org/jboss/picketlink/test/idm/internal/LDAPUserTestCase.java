@@ -25,22 +25,27 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.picketlink.idm.internal.LDAPIdentityStore;
-import org.jboss.picketlink.idm.model.Group;
-import org.jboss.picketlink.idm.model.Role;
+import org.jboss.picketlink.idm.internal.ldap.LDAPUser;
+import org.jboss.picketlink.idm.internal.util.Base64;
 import org.jboss.picketlink.idm.model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.picketbox.test.ldap.AbstractLDAPTest;
+
 /**
- * Unit test the {@link LDAPIdentityStore}
+ * Unit test the {@link LDAPUser} construct
  * @author anil saldhana
- * @since Aug 30, 2012
+ * @since Sep 4, 2012
  */
-public class LDAPIdentityStoreTestCase extends AbstractLDAPTest {
+public class LDAPUserTestCase extends AbstractLDAPTest {
     @Before
     public void setup() throws Exception {
         super.setup();
@@ -60,7 +65,7 @@ public class LDAPIdentityStoreTestCase extends AbstractLDAPTest {
         
         store.config(config);
         
-        //Users
+        //Let us create an user
         User user = store.createUser("Anil Saldhana");
         assertNotNull(user);
         
@@ -70,45 +75,42 @@ public class LDAPIdentityStoreTestCase extends AbstractLDAPTest {
         assertEquals("Anil", anil.getFirstName());
         assertEquals("Saldhana", anil.getLastName());
         
-        //Roles
-        Role role = store.createRole("testRole");
-        assertNotNull(role);
-        assertEquals("testRole", role.getName());
+        //Deal with Anil's attributes
+        anil.setAttribute("QuestionTotal", "2");
+        anil.setAttribute("Question1", "What is favorite toy?");
+        anil.setAttribute("Question1Answer", "Gum");
+
+        anil.setAttribute("Question2", "What is favorite word?");
+        anil.setAttribute("Question2Answer", "Hi");
         
-        Role ldapRole = store.getRole("testRole");
-        assertNotNull(ldapRole);
-        assertEquals("testRole", ldapRole.getName());
+        // Certificate
+        InputStream bis = getClass().getClassLoader().getResourceAsStream("cert/servercert.txt");
+
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        X509Certificate cert = (X509Certificate) cf.generateCertificate(bis);
+        bis.close();
+
+        String encodedCert = Base64.encodeBytes(cert.getEncoded());
+        anil.setAttribute("x509", encodedCert);
         
+        //let us retrieve the attributes from ldap store and see if they are the same
+        Map<String,String[]> attributes = store.getAttributes(anil);
+        assertNotNull(attributes);
         
-        //Groups
-        Group ldapGroup = store.createGroup("PicketBox Team", null);
-        assertNotNull(ldapGroup);
+        assertEquals("2", attributes.get("QuestionTotal")[0]);
+        assertEquals("What is favorite toy?", attributes.get("Question1")[0]);
+        assertEquals("Gum", attributes.get("Question1Answer")[0]);
+        assertEquals("What is favorite word?", attributes.get("Question2")[0]);
+        assertEquals("Hi", attributes.get("Question2Answer")[0]);
         
-        Group retrievedLDAPGroup = store.getGroup("PicketBox Team");
-        assertNotNull(retrievedLDAPGroup);
-        assertNull(retrievedLDAPGroup.getParentGroup());
+        String loadedCert = attributes.get("x509")[0];
+        byte[] certBytes = Base64.decode(loadedCert);
+
+        cert = (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(certBytes));
+        assertNotNull(cert);
         
-        //Parent Groups Now
-        Group devGroup = store.createGroup("Dev", ldapGroup);
-        assertNotNull(devGroup);
-        
-        Group retrievedDevGroup = store.getGroup("Dev");
-        assertNotNull(retrievedDevGroup);
-        Group parentOfDevGroup = retrievedDevGroup.getParentGroup();
-        assertNotNull(parentOfDevGroup);
-        assertEquals("PicketBox Team", parentOfDevGroup.getName());
-        
-        //Deal with removal of users, roles and groups
         store.removeUser(anil);
-        store.removeRole(ldapRole);
-        store.removeGroup(ldapGroup);
-        store.removeGroup(devGroup);
-        
-        anil = store.getUser("Pedro Silva");
+        anil = store.getUser("Anil Saldhana");
         assertNull(anil);
-        ldapRole = store.getRole("testRole");
-        assertNull(ldapRole);
-        assertNull(store.getGroup("Dev"));
-        assertNull(store.getGroup("PicketBox Team"));
     }
 }

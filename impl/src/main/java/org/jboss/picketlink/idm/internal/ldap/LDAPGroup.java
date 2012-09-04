@@ -52,6 +52,31 @@ public class LDAPGroup extends DirContextAdaptor implements Group {
         attributes.put(oc);
     }
     
+    public String getDN(){
+        return CN + EQUAL + groupName + COMMA + groupDNSuffix;
+    }
+    
+    public void addRole(LDAPRole role){
+        Attribute memberAttribute = attributes.get(MEMBER);
+        if(memberAttribute != null ){
+            if(memberAttribute.contains(SPACE_STRING)){
+                memberAttribute.remove(SPACE_STRING);
+            }
+        } else {
+            memberAttribute = new BasicAttribute(OBJECT_CLASS); 
+            memberAttribute.add("top");
+            memberAttribute.add("groupOfNames");
+        }
+        memberAttribute.add(role.getDN());
+    }
+    
+    public void removeRole(LDAPRole role){
+        Attribute memberAttribute = attributes.get(MEMBER);
+        if(memberAttribute != null ){
+            memberAttribute.remove(role.getDN());
+        }
+    }
+    
     @Override
     public String getId() {
         return null;

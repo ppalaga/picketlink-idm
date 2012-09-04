@@ -42,7 +42,7 @@ import org.jboss.picketlink.idm.model.User;
  */
 public class LDAPUser extends DirContextAdaptor implements User {
 
-    protected String userid, firstName, lastName, fullName,email;
+    protected String userid, firstName, lastName, fullName,email, userDNSuffix;
 
     public LDAPUser(){ 
         Attribute oc = new BasicAttribute(OBJECT_CLASS);
@@ -53,6 +53,14 @@ public class LDAPUser extends DirContextAdaptor implements User {
 
         attributes.put(oc);
     } 
+    
+    public void setUserDNSuffix(String udn){
+        this.userDNSuffix = udn;
+    }
+    
+    public String getDN(){
+        return UID + EQUAL + userid + COMMA + userDNSuffix;
+    }
 
     public void setId(String id){
         this.userid = id;
@@ -180,8 +188,9 @@ public class LDAPUser extends DirContextAdaptor implements User {
         }
     }
 
-    public static LDAPUser create(Attributes attributes){
+    public static LDAPUser create(Attributes attributes, String userDNSuffix){
         LDAPUser user = new LDAPUser();
+        user.setUserDNSuffix(userDNSuffix);
         
         try{
             //Get the UID

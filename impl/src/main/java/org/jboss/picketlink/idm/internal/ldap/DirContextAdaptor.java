@@ -51,7 +51,8 @@ import org.jboss.picketlink.idm.model.IdentityType;
  * @since Aug 30, 2012
  */
 public class DirContextAdaptor implements DirContext, IdentityType {
-     
+    
+    public static final String SPACE_STRING = " ";
     protected Attributes attributes = new BasicAttributes(true);
 
     @Override

@@ -199,7 +199,7 @@ public class LDAPUser extends DirContextAdaptor implements User {
             Attribute sn = attributes.get(SN);
             user.setLastName((String) sn.get());
         } catch(NamingException e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return user;
     }

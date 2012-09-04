@@ -30,49 +30,93 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 
-import org.jboss.picketlink.idm.model.Role;
+import org.jboss.picketlink.idm.model.Group;
 
 /**
- * Implementation of {@link Role} for storage in ldap
+ * LDAP Representation of the {@link Group}
  * @author anil saldhana
- * @since Aug 31, 2012
+ * @since Sep 4, 2012
  */
-public class LDAPRole extends DirContextAdaptor implements Role {
+public class LDAPGroup extends DirContextAdaptor implements Group {
 
-    private String roleName;
+    public final String COMMA = ",";
+    private LDAPGroup parent;
+    private String groupName;
     
-    public LDAPRole(){
+    private String groupDNSuffix;
+    
+    public LDAPGroup(){
         Attribute oc = new BasicAttribute(OBJECT_CLASS); 
         oc.add("top");
         oc.add("groupOfNames");
         attributes.put(oc);
     }
     
-    public void setName(String roleName){
-        this.roleName = roleName;
+    @Override
+    public String getId() {
+        return null;
+    }
+
+    public void setName(String name){
+        this.groupName = name;
         Attribute theAttribute = attributes.get(CN);
         if(theAttribute == null){
-            attributes.put(CN, roleName);
+            attributes.put(CN, groupName);
         } else {
-            theAttribute.set(0, roleName);
+            theAttribute.set(0, groupName);
         }
         attributes.put(MEMBER, SPACE_STRING); //Dummy member for now
     }
+    
     @Override
     public String getName() {
-        return roleName;
+        return groupName;
+    }
+
+    public void setParentGroup(Group parent){
+        if(parent instanceof LDAPGroup == false){
+            throw new RuntimeException("Wrong type:" + parent.getClass());
+        }
+        LDAPGroup parentGroup = (LDAPGroup) parent;
+        this.parent = parentGroup;
     }
     
-    public static LDAPRole create(Attributes attributes){
-        LDAPRole role = new LDAPRole();
+    @Override
+    public Group getParentGroup() {
+        return parent;
+    }
+    
+    public void addChildGroup(LDAPGroup childGroup){
+        //Deal with attributes
+        Attribute memberAttribute = attributes.get(MEMBER);
+        if(memberAttribute != null){
+            if(memberAttribute.contains(SPACE_STRING)){
+                memberAttribute.remove(SPACE_STRING);
+            }
+            
+            memberAttribute.add(CN + "=" + childGroup.getName() + COMMA + groupDNSuffix );
+        }
+    }
+
+    public String getGroupDNSuffix() {
+        return groupDNSuffix;
+    }
+
+    public void setGroupDNSuffix(String groupDNSuffix) {
+        this.groupDNSuffix = groupDNSuffix;
+    }
+    
+    public static LDAPGroup create(Attributes attributes, String groupDNSuffix){
+        LDAPGroup ldapGroup = new LDAPGroup();
+        ldapGroup.setGroupDNSuffix(groupDNSuffix);
         
         try{
             //Get the common name
             Attribute cn =  attributes.get(CN);
-            role.setName((String) cn.get());
+            ldapGroup.setName((String) cn.get());
         } catch(NamingException e){
             throw new RuntimeException(e);
         }
-        return role;
+        return ldapGroup;
     }
 }

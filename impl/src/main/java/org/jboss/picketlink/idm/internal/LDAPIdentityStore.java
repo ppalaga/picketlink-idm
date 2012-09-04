@@ -1,10 +1,8 @@
 package org.jboss.picketlink.idm.internal;
 
 import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.CN;
-import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.EMAIL;
-import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.GIVENNAME;
+import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.MEMBER;
 import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.OBJECT_CLASS;
-import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.SN;
 import static org.jboss.picketlink.idm.internal.ldap.LDAPConstants.UID;
 
 import java.util.List;
@@ -12,8 +10,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.naming.Context;
+import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
@@ -21,6 +21,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
+import org.jboss.picketlink.idm.internal.ldap.LDAPGroup;
 import org.jboss.picketlink.idm.internal.ldap.LDAPRole;
 import org.jboss.picketlink.idm.internal.ldap.LDAPUser;
 import org.jboss.picketlink.idm.model.Group;
@@ -43,9 +44,10 @@ import org.jboss.picketlink.idm.spi.IdentityStore;
 public class LDAPIdentityStore implements IdentityStore
 {
     public final String COMMA = ",";
-    
+    public final String EQUAL = "=";
+
     protected DirContext ctx = null;
-    protected String userDNSuffix, roleDNSuffix;
+    protected String userDNSuffix, roleDNSuffix, groupDNSuffix;
 
     /**
      * WE NEED A PROPER BUILDER TO REPLACE THIS
@@ -54,6 +56,7 @@ public class LDAPIdentityStore implements IdentityStore
     public void config(Map<String,String> config){
         userDNSuffix = config.get("userDNSuffix");
         roleDNSuffix = config.get("roleDNSuffix");
+        groupDNSuffix = config.get("groupDNSuffix");
 
         //Construct the dir ctx
         Properties env = new Properties();
@@ -114,13 +117,13 @@ public class LDAPIdentityStore implements IdentityStore
         user.setFullName(name); 
         String firstName = getFirstName(name);
         String lastName = getLastName(name);
-        
+
         user.setFirstName(firstName);
         user.setLastName(lastName);
 
         //TODO: How do we get the userid?
         String userid = generateUserID(firstName, lastName);
-        
+
         try {
             ctx.bind(UID + "="+ userid + COMMA + userDNSuffix, user);
         } catch (NamingException e) {
@@ -146,7 +149,7 @@ public class LDAPIdentityStore implements IdentityStore
         try {
             Attributes matchAttrs = new BasicAttributes(true); // ignore attribute name case
             matchAttrs.put(new BasicAttribute(CN, name));
-            
+
             NamingEnumeration<SearchResult> answer = ctx.search(userDNSuffix, matchAttrs);
             while (answer.hasMore()) {
                 SearchResult sr = answer.next();
@@ -162,22 +165,65 @@ public class LDAPIdentityStore implements IdentityStore
     @Override
     public Group createGroup(String name, Group parent)
     {
-        // TODO Auto-generated method stub
-        return null;
+        ensureGroupDNExists();
+        LDAPGroup ldapGroup = new LDAPGroup();
+        ldapGroup.setName(name);
+        ldapGroup.setGroupDNSuffix(groupDNSuffix);
+
+        try {
+            ctx.bind(CN + "="+ name + COMMA + groupDNSuffix, ldapGroup);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(parent != null){
+            ldapGroup.setParentGroup(parent);
+
+            LDAPGroup parentGroup = (LDAPGroup) getGroup(parent.getName());
+            ldapGroup.setParentGroup(parentGroup);
+            parentGroup.addChildGroup(ldapGroup);
+            try {
+                ctx.rebind(CN + "="+ parentGroup.getName() + COMMA + groupDNSuffix, parentGroup);
+            } catch (NamingException e) {
+                throw new RuntimeException(e);
+            }   
+        }
+        return ldapGroup;
     }
 
     @Override
     public void removeGroup(Group group)
-    {
-        // TODO Auto-generated method stub
-
+    { 
+        try {
+            ctx.destroySubcontext(CN + "="+ group.getName() + COMMA + groupDNSuffix);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Group getGroup(String name)
     {
-        // TODO Auto-generated method stub
-        return null;
+        LDAPGroup ldapGroup = null;
+        try {
+            Attributes matchAttrs = new BasicAttributes(true); // ignore attribute name case
+            matchAttrs.put(new BasicAttribute(CN, name));
+
+            NamingEnumeration<SearchResult> answer = ctx.search(groupDNSuffix, matchAttrs);
+            while (answer.hasMore()) {
+                SearchResult sr = answer.next();
+                Attributes attributes = sr.getAttributes();
+                ldapGroup = LDAPGroup.create(attributes, groupDNSuffix);
+                //Let us work out any parent groups for this group exist
+                Group parentGroup = parentGroup(ldapGroup);
+                if(parentGroup != null){
+                    ldapGroup.setParentGroup(parentGroup);
+                }
+            }
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+        return ldapGroup;
     }
 
     @Override
@@ -185,7 +231,7 @@ public class LDAPIdentityStore implements IdentityStore
     {
         LDAPRole role = new LDAPRole();
         role.setName(name);
-        
+
         try {
             ctx.bind(CN + "="+ name + COMMA + roleDNSuffix, role);
         } catch (NamingException e) {
@@ -211,7 +257,7 @@ public class LDAPIdentityStore implements IdentityStore
         try {
             Attributes matchAttrs = new BasicAttributes(true); // ignore attribute name case
             matchAttrs.put(new BasicAttribute(CN, role));
-            
+
             NamingEnumeration<SearchResult> answer = ctx.search(roleDNSuffix, matchAttrs);
             while (answer.hasMore()) {
                 SearchResult sr = answer.next();
@@ -368,23 +414,23 @@ public class LDAPIdentityStore implements IdentityStore
         // TODO Auto-generated method stub
         return null;
     }
-    
+
     protected String getFirstName(String name){
         String[] tokens = name.split("\\ ");
         int length = tokens.length;
         String firstName = null;
-        
+
         if(length > 0){
             firstName = tokens[0];
         }
         return firstName;
     }
-    
+
     protected String getLastName(String name){
         String[] tokens = name.split("\\ ");
         int length = tokens.length;
         String lastName = null;
-         
+
         if(length > 2){
             lastName = tokens[2];
         } else {
@@ -405,5 +451,54 @@ public class LDAPIdentityStore implements IdentityStore
         }else {
             return userID;
         }
+    }
+
+    protected void ensureGroupDNExists(){
+        try {
+            Object obj = ctx.lookup(groupDNSuffix);
+            if(obj == null){
+                createGroupDN();
+            }
+            return; //exists
+        } catch (NamingException e) {
+            if(e instanceof NameNotFoundException){
+                createGroupDN();
+                return;
+            } 
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void createGroupDN(){
+        try{
+            Attributes attributes = new BasicAttributes(true);
+
+            Attribute oc = new BasicAttribute(OBJECT_CLASS); 
+            oc.add("top");
+            oc.add("organizationalUnit");
+            attributes.put(oc);
+            ctx.createSubcontext(groupDNSuffix, attributes);
+        } catch(NamingException ne){
+            throw new RuntimeException(ne);
+        }
+    }
+
+    //Get the parent group by searching
+    protected Group parentGroup(LDAPGroup group){ 
+        Attributes matchAttrs = new BasicAttributes(true);
+        matchAttrs.put(new BasicAttribute(MEMBER, CN + EQUAL + group.getName() + COMMA + groupDNSuffix));
+        // Search for objects with these matching attributes
+        try { 
+            NamingEnumeration<SearchResult> answer = ctx.search(groupDNSuffix,matchAttrs,new String[] {CN});
+            while(answer.hasMoreElements()){
+                SearchResult sr  = (SearchResult) answer.nextElement();
+                Attributes attributes = sr.getAttributes();
+                String cn = (String) attributes.get(CN).get();
+                return getGroup(cn);
+            }
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        } 
+        return null;
     }
 }

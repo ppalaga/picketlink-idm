@@ -27,5 +27,9 @@ package org.jboss.picketlink.idm.internal.ldap;
  * @since Sep 4, 2012
  */
 public interface LDAPChangeNotificationHandler {
+    /**
+     * Handle an {@link LDAPObjectChangedNotification}
+     * @param notification
+     */
     void handle(LDAPObjectChangedNotification notification);
 }

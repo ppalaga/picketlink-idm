@@ -30,6 +30,7 @@ import java.util.Map;
 
 import org.jboss.picketlink.idm.internal.LDAPIdentityStore;
 import org.jboss.picketlink.idm.model.Group;
+import org.jboss.picketlink.idm.model.Membership;
 import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
 import org.junit.Before;
@@ -98,13 +99,19 @@ public class LDAPIdentityStoreTestCase extends AbstractLDAPTest {
         assertNotNull(parentOfDevGroup);
         assertEquals("PicketBox Team", parentOfDevGroup.getName());
         
+        //Add a relationship between an user, role and group
+        Membership membership = store.createMembership(ldapRole, anil, ldapGroup);
+        assertNotNull(membership);
+        
         //Deal with removal of users, roles and groups
+        store.removeMembership(ldapRole, anil, ldapGroup);
+        
         store.removeUser(anil);
         store.removeRole(ldapRole);
         store.removeGroup(ldapGroup);
         store.removeGroup(devGroup);
         
-        anil = store.getUser("Pedro Silva");
+        anil = store.getUser("Anil Saldhana");
         assertNull(anil);
         ldapRole = store.getRole("testRole");
         assertNull(ldapRole);

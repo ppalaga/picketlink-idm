@@ -35,8 +35,8 @@ public interface User extends IdentityType
     void setLastName(String lastName);
 
     //TODO: this one could be configurable with some regex
-    String getFullName();
-
+    String getFullName(); 
+    
     String getEmail();
 
     void setEmail(String email);

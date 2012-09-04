@@ -1,5 +1,20 @@
 package org.jboss.picketlink.idm.internal;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchResult;
+import javax.naming.ldap.InitialLdapContext;
+
+import org.jboss.picketlink.idm.internal.ldap.LDAPUser;
 import org.jboss.picketlink.idm.model.Group;
 import org.jboss.picketlink.idm.model.Membership;
 import org.jboss.picketlink.idm.model.Role;
@@ -11,36 +26,128 @@ import org.jboss.picketlink.idm.query.RoleQuery;
 import org.jboss.picketlink.idm.query.UserQuery;
 import org.jboss.picketlink.idm.spi.IdentityStore;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * An IdentityStore implementation backed by an LDAP directory 
  *
  * @author Shane Bryzak
+ * @author Anil Saldhana
  */
 public class LDAPIdentityStore implements IdentityStore
 {
+    public final String COMMA = ",";
+    
+    protected DirContext ctx = null;
+    protected String userDNSuffix;
+
+    /**
+     * WE NEED A PROPER BUILDER TO REPLACE THIS
+     * @param config
+     */
+    public void config(Map<String,String> config){
+        userDNSuffix = config.get("userDNSuffix");
+
+        //Construct the dir ctx
+        Properties env = new Properties();
+
+        String factoryName = config.get("factory");
+        if(factoryName == null){
+            factoryName = "com.sun.jndi.ldap.LdapCtxFactory";
+        }
+        env.setProperty(Context.INITIAL_CONTEXT_FACTORY, factoryName);   
+
+        String authType = config.get("securityAuth");
+        if(authType == null){
+            authType = "simple";
+        }
+
+        String protocol = config.get("protocol");
+        if (protocol != null) {
+            env.setProperty(Context.SECURITY_PROTOCOL, protocol);
+        }
+
+        String bindDN = config.get("bindDN");
+        char[] bindCredential = null;
+
+        if (config.get("password") != null) {
+            bindCredential = config.get("password").toCharArray();
+        }
+
+        if (bindDN != null) {
+            env.setProperty(Context.SECURITY_PRINCIPAL, bindDN);
+            env.put(Context.SECURITY_CREDENTIALS, bindCredential);
+        }
+
+        if (bindDN != null) {
+            // Rebind the ctx to the bind dn/credentials for the roles searches
+            env.setProperty(Context.SECURITY_PRINCIPAL, bindDN);
+            env.put(Context.SECURITY_CREDENTIALS, bindCredential);
+
+        }
+
+        String url =  config.get("url");
+        if(url == null){
+            throw new RuntimeException("url");
+        }
+
+        env.setProperty(Context.PROVIDER_URL,url);
+
+        try {
+            ctx = new InitialLdapContext(env, null);
+        } catch (NamingException e1) {
+            throw new RuntimeException(e1);
+        }
+    }
 
     @Override
     public User createUser(String name)
     {
-        // TODO Auto-generated method stub
-        return null;
+        LDAPUser user = new LDAPUser();
+        user.setFullName(name); 
+        String firstName = getFirstName(name);
+        String lastName = getLastName(name);
+        
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+
+        //TODO: How do we get the userid?
+        String userid = generateUserID(firstName, lastName);
+        
+        try {
+            ctx.bind("uid="+ userid + COMMA + userDNSuffix, user);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
     }
 
     @Override
     public void removeUser(User user)
-    {
-        // TODO Auto-generated method stub
-        
+    { 
+        try {
+            ctx.destroySubcontext("uid="+ user.getId() + COMMA + userDNSuffix);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public User getUser(String name)
-    {
-        // TODO Auto-generated method stub
-        return null;
+    { 
+        LDAPUser user  = null;
+        try {
+            Attributes matchAttrs = new BasicAttributes(true); // ignore attribute name case
+            matchAttrs.put(new BasicAttribute("cn", name));
+            
+            NamingEnumeration<SearchResult> answer = ctx.search(userDNSuffix, matchAttrs);
+            while (answer.hasMore()) {
+                SearchResult sr = answer.next();
+                Attributes attributes = sr.getAttributes();
+                user = LDAPUser.create(attributes);
+            }
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
     }
 
     @Override
@@ -54,7 +161,7 @@ public class LDAPIdentityStore implements IdentityStore
     public void removeGroup(Group group)
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -75,7 +182,7 @@ public class LDAPIdentityStore implements IdentityStore
     public void removeRole(Role role)
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -96,7 +203,7 @@ public class LDAPIdentityStore implements IdentityStore
     public void removeMembership(Role role, User user, Group group)
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -138,14 +245,14 @@ public class LDAPIdentityStore implements IdentityStore
     public void setAttribute(User user, String name, String[] values)
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void removeAttribute(User user, String name)
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -166,14 +273,14 @@ public class LDAPIdentityStore implements IdentityStore
     public void setAttribute(Group group, String name, String[] values)
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void removeAttribute(Group group, String name)
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -194,14 +301,14 @@ public class LDAPIdentityStore implements IdentityStore
     public void setAttribute(Role role, String name, String[] values)
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void removeAttribute(Role role, String name)
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -217,5 +324,42 @@ public class LDAPIdentityStore implements IdentityStore
         // TODO Auto-generated method stub
         return null;
     }
+    
+    protected String getFirstName(String name){
+        String[] tokens = name.split("\\ ");
+        int length = tokens.length;
+        String firstName = null;
+        
+        if(length > 0){
+            firstName = tokens[0];
+        }
+        return firstName;
+    }
+    
+    protected String getLastName(String name){
+        String[] tokens = name.split("\\ ");
+        int length = tokens.length;
+        String lastName = null;
+         
+        if(length > 2){
+            lastName = tokens[2];
+        } else {
+            lastName = tokens[1];
+        }
+        return lastName;
+    }
 
+    protected String generateUserID(String firstName, String lastName){
+        char f = firstName.charAt(0);
+        StringBuilder builder = new StringBuilder();
+        builder.append(f).append(lastName);
+
+        String userID = builder.toString();
+        int length = userID.length();
+        if(length > 7){
+            return userID.substring(0,7);
+        }else {
+            return userID;
+        }
+    }
 }

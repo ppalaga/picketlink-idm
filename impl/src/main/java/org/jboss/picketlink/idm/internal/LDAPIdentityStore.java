@@ -322,10 +322,13 @@ public class LDAPIdentityStore implements IdentityStore
     @Override
     public void setAttribute(User user, String name, String[] values)
     {
-        if(user instanceof LDAPUser == false){
-            throw new RuntimeException("Wrong type:" + user);
+        LDAPUser ldapUser = null;
+        
+        if(user instanceof LDAPUser){
+            ldapUser = (LDAPUser) user;
+        } else {
+            ldapUser = (LDAPUser) getUser(user.getFullName());
         }
-        LDAPUser ldapUser = (LDAPUser) user;
         ldapUser.setAttribute(name, values);
     }
 
@@ -362,57 +365,97 @@ public class LDAPIdentityStore implements IdentityStore
     @Override
     public void setAttribute(Group group, String name, String[] values)
     {
-        // TODO Auto-generated method stub
-
+        LDAPGroup ldapGroup = null;
+        if(group instanceof LDAPGroup){
+            ldapGroup = (LDAPGroup) group;
+        } else {
+            ldapGroup = (LDAPGroup) getGroup(group.getName());
+        }
+        ldapGroup.setAttribute(name, values);
     }
 
     @Override
     public void removeAttribute(Group group, String name)
     {
-        // TODO Auto-generated method stub
-
+        LDAPGroup ldapGroup = null;
+        if(group instanceof LDAPGroup){
+            ldapGroup = (LDAPGroup) group;
+        } else {
+            ldapGroup = (LDAPGroup) getGroup(group.getName());
+        }
+        ldapGroup.removeAttribute(name);
     }
 
     @Override
     public String[] getAttributeValues(Group group, String name)
     {
-        // TODO Auto-generated method stub
-        return null;
+        LDAPGroup ldapGroup = null;
+        if(group instanceof LDAPGroup){
+            ldapGroup = (LDAPGroup) group;
+        } else {
+            ldapGroup = (LDAPGroup) getGroup(group.getName());
+        }
+        return ldapGroup.getAttributeValues(name);
     }
 
     @Override
     public Map<String, String[]> getAttributes(Group group)
     {
-        // TODO Auto-generated method stub
-        return null;
+        LDAPGroup ldapGroup = null;
+        if(group instanceof LDAPGroup){
+            ldapGroup = (LDAPGroup) group;
+        } else {
+            ldapGroup = (LDAPGroup) getGroup(group.getName());
+        }
+        return ldapGroup.getAttributes();
     }
 
     @Override
     public void setAttribute(Role role, String name, String[] values)
     {
-        // TODO Auto-generated method stub
-
+        LDAPRole ldapRole = null;
+        if(role instanceof LDAPGroup){
+            ldapRole = (LDAPRole) role;
+        } else {
+            ldapRole = (LDAPRole) getRole(role.getName());
+        }
+        ldapRole.setAttribute(name, values);
     }
 
     @Override
     public void removeAttribute(Role role, String name)
     {
-        // TODO Auto-generated method stub
-
+        LDAPRole ldapRole = null;
+        if(role instanceof LDAPGroup){
+            ldapRole = (LDAPRole) role;
+        } else {
+            ldapRole = (LDAPRole) getRole(role.getName());
+        }
+        ldapRole.removeAttribute(name);
     }
 
     @Override
     public String[] getAttributeValues(Role role, String name)
     {
-        // TODO Auto-generated method stub
-        return null;
+        LDAPRole ldapRole = null;
+        if(role instanceof LDAPGroup){
+            ldapRole = (LDAPRole) role;
+        } else {
+            ldapRole = (LDAPRole) getRole(role.getName());
+        }
+        return ldapRole.getAttributeValues(name);
     }
 
     @Override
     public Map<String, String[]> getAttributes(Role role)
     {
-        // TODO Auto-generated method stub
-        return null;
+        LDAPRole ldapRole = null;
+        if(ldapRole instanceof LDAPRole){
+            ldapRole = (LDAPRole) role;
+        } else {
+            ldapRole = (LDAPRole) getRole(role.getName());
+        }
+        return ldapRole.getAttributes();
     }
 
     protected String getFirstName(String name){

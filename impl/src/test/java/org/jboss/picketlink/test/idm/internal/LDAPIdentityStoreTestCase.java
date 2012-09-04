@@ -32,10 +32,9 @@ import org.jboss.picketlink.idm.internal.LDAPIdentityStore;
 import org.jboss.picketlink.idm.model.Group;
 import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
-import org.picketbox.test.ldap.AbstractLDAPTest;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.picketbox.test.ldap.AbstractLDAPTest;
 /**
  * Unit test the {@link LDAPIdentityStore}
  * @author anil saldhana

@@ -28,9 +28,8 @@ package org.jboss.picketlink.idm.internal.jpa;
  */
 public interface NamedQueries {
 
-    public static final String USER_LOAD_BY_KEY = "USER.LOAD_BY_KEY";
-    public static final String ROLE_LOAD_BY_KEY = "ROLE.LOAD_BY_KEY";
-    public static final String GROUP_LOAD_BY_KEY = "GROUP.LOAD_BY_KEY";
-    public static final String MEMBERSHIP_LOAD_BY_KEY = "MEMBERSHIP.LOAD_BY_KEY";
-    
+    String USER_LOAD_BY_KEY = "USER.LOAD_BY_KEY";
+    String ROLE_LOAD_BY_KEY = "ROLE.LOAD_BY_KEY";
+    String GROUP_LOAD_BY_KEY = "GROUP.LOAD_BY_KEY";
+    String MEMBERSHIP_LOAD_BY_KEY = "MEMBERSHIP.LOAD_BY_KEY";
 }

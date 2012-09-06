@@ -35,8 +35,8 @@ import org.junit.Test;
  * <p>
  * Tests the creation of groups using the {@link JPAIdentityStore}.
  * </p>
- * 
- * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a> 
+ *
+ * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  */
 public class JPAGroupTestCase extends AbstractJPAIdentityTypeTestCase {
 
@@ -44,63 +44,69 @@ public class JPAGroupTestCase extends AbstractJPAIdentityTypeTestCase {
     private static final String GROUP_PARENT_NAME = "Company";
 
     /**
-     * <p>Tests the creation of an {@link Group} with populating some basic attributes.</p>
-     * 
+     * <p>
+     * Tests the creation of an {@link Group} with populating some basic attributes.
+     * </p>
+     *
      * @throws Exception
      */
     @Test
     public void testGroupStore() throws Exception {
         IdentityStore identityStore = createIdentityStore();
-        
+
         Group parentGroup = identityStore.createGroup(GROUP_PARENT_NAME, null);
         Group group = identityStore.createGroup(GROUP_NAME, parentGroup);
-        
+
         assertNotNull(group);
         assertNotNull(group.getKey());
         assertEquals(GROUP_NAME, group.getName());
-        
+
         testAddAttributes();
-        
+
         testGetGroup();
-        
+
         testRemoveGroup();
     }
-    
+
     /**
-     * <p>Tests the retrieval of an {@link Group} and the removal of attributes.</p>
-     * 
+     * <p>
+     * Tests the retrieval of an {@link Group} and the removal of attributes.
+     * </p>
+     *
      * @throws Exception
      */
     public void testGetGroup() throws Exception {
         IdentityStore identityStore = createIdentityStore();
-        
+
         Group group = identityStore.getGroup(GROUP_NAME);
-        
+
         assertNotNull(group);
         assertNotNull(group.getParentGroup());
         assertNotNull(group.getKey());
         assertEquals(GROUP_NAME, group.getName());
         assertEquals(GROUP_PARENT_NAME, group.getParentGroup().getName());
-        
+
         testRemoveAttributes();
     }
 
     /**
-     * <p>Tests the remove of an {@link Group}.</p>
-     * 
+     * <p>
+     * Tests the remove of an {@link Group}.
+     * </p>
+     *
      * @throws Exception
      */
     public void testRemoveGroup() throws Exception {
         IdentityStore identityStore = createIdentityStore();
-        
+
         Group group = identityStore.getGroup(GROUP_NAME);
-        
+
         assertNotNull(group);
-        
+
         identityStore.removeGroup(group);
-        
+
         group = identityStore.getGroup(GROUP_NAME);
-        
+
         assertNull(group);
     }
 

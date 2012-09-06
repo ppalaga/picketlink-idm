@@ -42,6 +42,7 @@ import org.picketbox.test.ldap.AbstractLDAPTest;
 
 /**
  * Unit test the {@link LDAPUser} construct
+ *
  * @author anil saldhana
  * @since Sep 4, 2012
  */
@@ -51,38 +52,38 @@ public class LDAPUserTestCase extends AbstractLDAPTest {
         super.setup();
         importLDIF("ldap/users.ldif");
     }
-    
+
     @Test
-    public void testLDAPIdentityStore() throws Exception{
+    public void testLDAPIdentityStore() throws Exception {
         LDAPIdentityStore store = new LDAPIdentityStore();
-        Map<String,String> config = new HashMap<String,String>();
+        Map<String, String> config = new HashMap<String, String>();
         config.put("userDNSuffix", "ou=People,dc=jboss,dc=org");
         config.put("roleDNSuffix", "ou=Roles,dc=jboss,dc=org");
         config.put("groupDNSuffix", "ou=Groups,dc=jboss,dc=org");
         config.put("url", "ldap://localhost:10389");
         config.put("bindDN", adminDN);
         config.put("password", adminPW);
-        
+
         store.config(config);
-        
-        //Let us create an user
+
+        // Let us create an user
         User user = store.createUser("Anil Saldhana");
         assertNotNull(user);
-        
+
         User anil = store.getUser("Anil Saldhana");
         assertNotNull(anil);
         assertEquals("Anil Saldhana", anil.getFullName());
         assertEquals("Anil", anil.getFirstName());
         assertEquals("Saldhana", anil.getLastName());
-        
-        //Deal with Anil's attributes
+
+        // Deal with Anil's attributes
         anil.setAttribute("QuestionTotal", "2");
         anil.setAttribute("Question1", "What is favorite toy?");
         anil.setAttribute("Question1Answer", "Gum");
 
         anil.setAttribute("Question2", "What is favorite word?");
         anil.setAttribute("Question2Answer", "Hi");
-        
+
         // Certificate
         InputStream bis = getClass().getClassLoader().getResourceAsStream("cert/servercert.txt");
 
@@ -92,23 +93,23 @@ public class LDAPUserTestCase extends AbstractLDAPTest {
 
         String encodedCert = Base64.encodeBytes(cert.getEncoded());
         anil.setAttribute("x509", encodedCert);
-        
-        //let us retrieve the attributes from ldap store and see if they are the same
-        Map<String,String[]> attributes = store.getAttributes(anil);
+
+        // let us retrieve the attributes from ldap store and see if they are the same
+        Map<String, String[]> attributes = store.getAttributes(anil);
         assertNotNull(attributes);
-        
+
         assertEquals("2", attributes.get("QuestionTotal")[0]);
         assertEquals("What is favorite toy?", attributes.get("Question1")[0]);
         assertEquals("Gum", attributes.get("Question1Answer")[0]);
         assertEquals("What is favorite word?", attributes.get("Question2")[0]);
         assertEquals("Hi", attributes.get("Question2Answer")[0]);
-        
+
         String loadedCert = attributes.get("x509")[0];
         byte[] certBytes = Base64.decode(loadedCert);
 
         cert = (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(certBytes));
         assertNotNull(cert);
-        
+
         store.removeUser(anil);
         anil = store.getUser("Anil Saldhana");
         assertNull(anil);

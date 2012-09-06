@@ -29,7 +29,7 @@ import javax.persistence.ManyToOne;
 
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- * 
+ *
  */
 @Entity
 public class DatabaseUserAttribute extends AbstractDatabaseAttribute<DatabaseUser> implements Serializable {

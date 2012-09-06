@@ -27,14 +27,14 @@ import javax.persistence.ManyToOne;
 
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- * 
+ *
  */
 @Entity
 public class DatabaseGroupAttribute extends AbstractDatabaseAttribute<DatabaseGroup> {
 
     @ManyToOne
     private DatabaseGroup group;
-    
+
     public DatabaseGroupAttribute() {
     }
 

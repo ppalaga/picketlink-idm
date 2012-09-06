@@ -103,5 +103,5 @@ public abstract class AbstractDatabaseAttribute<O extends IdentityType> {
     }
 
     // TODO: implement hashcode and equals methods
-    
+
 }

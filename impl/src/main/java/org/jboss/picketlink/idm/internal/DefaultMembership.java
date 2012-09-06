@@ -28,6 +28,7 @@ import org.jboss.picketlink.idm.model.User;
 
 /**
  * Simple implementation of the {@link Membership} interface
+ *
  * @author anil saldhana
  * @since Sep 4, 2012
  */
@@ -37,11 +38,12 @@ public class DefaultMembership implements Membership {
     private Role role;
     private Group group;
 
-    public DefaultMembership(User user, Role role, Group group){
+    public DefaultMembership(User user, Role role, Group group) {
         this.user = user;
         this.role = role;
         this.group = group;
     }
+
     @Override
     public User getUser() {
         return user;

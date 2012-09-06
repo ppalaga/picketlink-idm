@@ -1,10 +1,29 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ * Copyright 2012, Red Hat, Inc., and individual contributors
+ * as indicated by the @author tags. See the copyright.txt file in the
+ * distribution for a full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.picketlink.idm.internal.util.reflection;
 
 import java.beans.Introspector;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -24,36 +43,31 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Utility class for working with JDK Reflection and also CDI's
- * {@link Annotated} metadata.
+ * Utility class for working with JDK Reflection and also CDI's {@link Annotated} metadata.
  *
  */
-public class Reflections 
-{
+public class Reflections {
     /**
-     * An empty array of type {@link Annotation}, useful converting lists to
-     * arrays.
+     * An empty array of type {@link Annotation}, useful converting lists to arrays.
      */
     public static final Annotation[] EMPTY_ANNOTATION_ARRAY = new Annotation[0];
 
     /**
-     * An empty array of type {@link Object}, useful for converting lists to
-     * arrays.
+     * An empty array of type {@link Object}, useful for converting lists to arrays.
      */
     public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
     public static final Type[] EMPTY_TYPES = {};
 
     public static final Class<?>[] EMPTY_CLASSES = new Class<?>[0];
-    
-    private Reflections() 
-    {
-    }    
+
+    private Reflections() {
+    }
 
     /**
      * <p>
-     * Perform a runtime cast. Similar to {@link Class#cast(Object)}, but useful
-     * when you do not have a {@link Class} object for type you wish to cast to.
+     * Perform a runtime cast. Similar to {@link Class#cast(Object)}, but useful when you do not have a {@link Class} object for
+     * type you wish to cast to.
      * </p>
      * <p/>
      * <p>
@@ -67,25 +81,20 @@ public class Reflections
      * @see Class#cast(Object)
      */
     @SuppressWarnings("unchecked")
-    public static <T> T cast(Object obj) 
-    {
+    public static <T> T cast(Object obj) {
         return (T) obj;
     }
 
     /**
-     * Get all the declared fields on the class hierarchy. This <b>will</b>
-     * return overridden fields.
+     * Get all the declared fields on the class hierarchy. This <b>will</b> return overridden fields.
      *
      * @param clazz The class to search
      * @return the set of all declared fields or an empty set if there are none
      */
-    public static Set<Field> getAllDeclaredFields(Class<?> clazz) 
-    {
+    public static Set<Field> getAllDeclaredFields(Class<?> clazz) {
         HashSet<Field> fields = new HashSet<Field>();
-        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) 
-        {
-            for (Field a : c.getDeclaredFields()) 
-            {
+        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
+            for (Field a : c.getDeclaredFields()) {
                 fields.add(a);
             }
         }
@@ -93,24 +102,18 @@ public class Reflections
     }
 
     /**
-     * Search the class hierarchy for a field with the given name. Will return
-     * the nearest match, starting with the class specified and searching up the
-     * hierarchy.
+     * Search the class hierarchy for a field with the given name. Will return the nearest match, starting with the class
+     * specified and searching up the hierarchy.
      *
      * @param clazz The class to search
-     * @param name  The name of the field to search for
+     * @param name The name of the field to search for
      * @return The field found, or null if no field is found
      */
-    public static Field findDeclaredField(Class<?> clazz, String name) 
-    {
-        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) 
-        {
-            try 
-            {
+    public static Field findDeclaredField(Class<?> clazz, String name) {
+        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
+            try {
                 return c.getDeclaredField(name);
-            } 
-            catch (NoSuchFieldException e) 
-            {
+            } catch (NoSuchFieldException e) {
                 // No-op, we continue looking up the class hierarchy
             }
         }
@@ -120,19 +123,15 @@ public class Reflections
     /**
      * Search for annotations with the specified meta annotation type
      *
-     * @param annotations        The annotation set to search
+     * @param annotations The annotation set to search
      * @param metaAnnotationType The type of the meta annotation to search for
-     * @return The set of annotations with the specified meta annotation, or an
-     *         empty set if none are found
+     * @return The set of annotations with the specified meta annotation, or an empty set if none are found
      */
-    public static Set<Annotation> getAnnotationsWithMetaAnnotation(
-            Set<Annotation> annotations, Class<? extends Annotation> metaAnnotationType) 
-    {
+    public static Set<Annotation> getAnnotationsWithMetaAnnotation(Set<Annotation> annotations,
+            Class<? extends Annotation> metaAnnotationType) {
         Set<Annotation> set = new HashSet<Annotation>();
-        for (Annotation annotation : annotations) 
-        {
-            if (annotation.annotationType().isAnnotationPresent(metaAnnotationType)) 
-            {
+        for (Annotation annotation : annotations) {
+            if (annotation.annotationType().isAnnotationPresent(metaAnnotationType)) {
                 set.add(annotation);
             }
         }
@@ -143,17 +142,13 @@ public class Reflections
      * Determine if a method exists in a specified class hierarchy
      *
      * @param clazz The class to search
-     * @param name  The name of the method
+     * @param name The name of the method
      * @return true if a method is found, otherwise false
      */
-    public static boolean methodExists(Class<?> clazz, String name) 
-    {
-        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) 
-        {
-            for (Method m : c.getDeclaredMethods()) 
-            {
-                if (m.getName().equals(name)) 
-                {
+    public static boolean methodExists(Class<?> clazz, String name) {
+        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
+            for (Method m : c.getDeclaredMethods()) {
+                if (m.getName().equals(name)) {
                     return true;
                 }
             }
@@ -162,19 +157,15 @@ public class Reflections
     }
 
     /**
-     * Get all the declared methods on the class hierarchy. This <b>will</b>
-     * return overridden methods.
+     * Get all the declared methods on the class hierarchy. This <b>will</b> return overridden methods.
      *
      * @param clazz The class to search
      * @return the set of all declared methods or an empty set if there are none
      */
-    public static Set<Method> getAllDeclaredMethods(Class<?> clazz) 
-    {
+    public static Set<Method> getAllDeclaredMethods(Class<?> clazz) {
         HashSet<Method> methods = new HashSet<Method>();
-        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) 
-        {
-            for (Method a : c.getDeclaredMethods()) 
-            {
+        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
+            for (Method a : c.getDeclaredMethods()) {
                 methods.add(a);
             }
         }
@@ -182,25 +173,19 @@ public class Reflections
     }
 
     /**
-     * Search the class hierarchy for a method with the given name and arguments.
-     * Will return the nearest match, starting with the class specified and
-     * searching up the hierarchy.
+     * Search the class hierarchy for a method with the given name and arguments. Will return the nearest match, starting with
+     * the class specified and searching up the hierarchy.
      *
      * @param clazz The class to search
-     * @param name  The name of the method to search for
-     * @param args  The arguments of the method to search for
+     * @param name The name of the method to search for
+     * @param args The arguments of the method to search for
      * @return The method found, or null if no method is found
      */
-    public static Method findDeclaredMethod(Class<?> clazz, String name, Class<?>... args) 
-    {
-        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) 
-        {
-            try 
-            {
+    public static Method findDeclaredMethod(Class<?> clazz, String name, Class<?>... args) {
+        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
+            try {
                 return c.getDeclaredMethod(name, args);
-            } 
-            catch (NoSuchMethodException e) 
-            {
+            } catch (NoSuchMethodException e) {
                 // No-op, continue the search
             }
         }
@@ -208,24 +193,18 @@ public class Reflections
     }
 
     /**
-     * Search the class hierarchy for a constructor with the given arguments.
-     * Will return the nearest match, starting with the class specified and
-     * searching up the hierarchy.
+     * Search the class hierarchy for a constructor with the given arguments. Will return the nearest match, starting with the
+     * class specified and searching up the hierarchy.
      *
      * @param clazz The class to search
-     * @param args  The arguments of the constructor to search for
+     * @param args The arguments of the constructor to search for
      * @return The constructor found, or null if no constructor is found
      */
-    public static Constructor<?> findDeclaredConstructor(Class<?> clazz, Class<?>... args) 
-    {
-        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) 
-        {
-            try 
-            {
+    public static Constructor<?> findDeclaredConstructor(Class<?> clazz, Class<?>... args) {
+        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
+            try {
                 return c.getDeclaredConstructor(args);
-            } 
-            catch (NoSuchMethodException e) 
-            {
+            } catch (NoSuchMethodException e) {
                 // No-op, continue the search
             }
         }
@@ -233,20 +212,15 @@ public class Reflections
     }
 
     /**
-     * Get all the declared constructors on the class hierarchy. This <b>will</b>
-     * return overridden constructors.
+     * Get all the declared constructors on the class hierarchy. This <b>will</b> return overridden constructors.
      *
      * @param clazz The class to search
-     * @return the set of all declared constructors or an empty set if there are
-     *         none
+     * @return the set of all declared constructors or an empty set if there are none
      */
-    public static Set<Constructor<?>> getAllDeclaredConstructors(Class<?> clazz) 
-    {
+    public static Set<Constructor<?>> getAllDeclaredConstructors(Class<?> clazz) {
         HashSet<Constructor<?>> constructors = new HashSet<Constructor<?>>();
-        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) 
-        {
-            for (Constructor<?> constructor : c.getDeclaredConstructors()) 
-            {
+        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
+            for (Constructor<?> constructor : c.getDeclaredConstructors()) {
                 constructors.add(constructor);
             }
         }
@@ -258,25 +232,16 @@ public class Reflections
      *
      * @param member The member
      * @return The type of the member
-     * @throws UnsupportedOperationException if the member is not a field,
-     *                                       method, or constructor
+     * @throws UnsupportedOperationException if the member is not a field, method, or constructor
      */
-    public static Class<?> getMemberType(Member member) 
-    {
-        if (member instanceof Field) 
-        {
+    public static Class<?> getMemberType(Member member) {
+        if (member instanceof Field) {
             return ((Field) member).getType();
-        } 
-        else if (member instanceof Method) 
-        {
+        } else if (member instanceof Method) {
             return ((Method) member).getReturnType();
-        } 
-        else if (member instanceof Constructor<?>) 
-        {
+        } else if (member instanceof Constructor<?>) {
             return ((Constructor<?>) member).getDeclaringClass();
-        } 
-        else 
-        {
+        } else {
             throw new UnsupportedOperationException("Cannot operate on a member of type " + member.getClass());
         }
     }
@@ -287,71 +252,51 @@ public class Reflections
      * </p>
      * <p/>
      * <p>
-     * If the Thread Context Class Loader is available, it will be used,
-     * otherwise the classloader used to load {@link Reflections} will be used
+     * If the Thread Context Class Loader is available, it will be used, otherwise the classloader used to load
+     * {@link Reflections} will be used
      * </p>
      * <p/>
      * <p>
-     * It is also possible to specify additional classloaders to attempt to load
-     * the class with. If the first attempt fails, then these additional loaders
-     * are tried in order.
+     * It is also possible to specify additional classloaders to attempt to load the class with. If the first attempt fails,
+     * then these additional loaders are tried in order.
      * </p>
      *
-     * @param name    the name of the class to load
+     * @param name the name of the class to load
      * @param loaders additional classloaders to use to attempt to load the class
      * @return the class object
      * @throws ClassNotFoundException if the class cannot be found
      */
-    public static Class<?> classForName(String name, ClassLoader... loaders) throws ClassNotFoundException 
-    {
-        try 
-        {
-            if (Thread.currentThread().getContextClassLoader() != null) 
-            {
+    public static Class<?> classForName(String name, ClassLoader... loaders) throws ClassNotFoundException {
+        try {
+            if (Thread.currentThread().getContextClassLoader() != null) {
                 return Class.forName(name, true, Thread.currentThread().getContextClassLoader());
-            } 
-            else 
-            {
+            } else {
                 return Class.forName(name);
             }
-        } 
-        catch (ClassNotFoundException e) 
-        {
-            for (ClassLoader l : loaders) 
-            {
-                try 
-                {
+        } catch (ClassNotFoundException e) {
+            for (ClassLoader l : loaders) {
+                try {
                     return Class.forName(name, true, l);
-                } 
-                catch (ClassNotFoundException ex) 
-                {
+                } catch (ClassNotFoundException ex) {
 
                 }
             }
         }
-        if (Thread.currentThread().getContextClassLoader() != null) 
-        {
-            throw new ClassNotFoundException("Could not load class " + name + 
-                    " with the context class loader " + Thread.currentThread().getContextClassLoader().toString() + 
-                    " or any of the additional ClassLoaders: " + Arrays.toString(loaders));
-        } 
-        else 
-        {
-            throw new ClassNotFoundException("Could not load class " + name + 
-                    " using Class.forName or using any of the additional ClassLoaders: " + 
-                    Arrays.toString(loaders));
+        if (Thread.currentThread().getContextClassLoader() != null) {
+            throw new ClassNotFoundException("Could not load class " + name + " with the context class loader "
+                    + Thread.currentThread().getContextClassLoader().toString() + " or any of the additional ClassLoaders: "
+                    + Arrays.toString(loaders));
+        } else {
+            throw new ClassNotFoundException("Could not load class " + name
+                    + " using Class.forName or using any of the additional ClassLoaders: " + Arrays.toString(loaders));
         }
     }
 
-    private static String buildInvokeMethodErrorMessage(Method method, Object obj, Object... args) 
-    {
-        StringBuilder message = new StringBuilder(
-                String.format("Exception invoking method [%s] on object [%s], using arguments [", 
-                        method.getName(), obj));
-        if (args != null)
-        {
-            for (int i = 0; i < args.length; i++)
-            {
+    private static String buildInvokeMethodErrorMessage(Method method, Object obj, Object... args) {
+        StringBuilder message = new StringBuilder(String.format(
+                "Exception invoking method [%s] on object [%s], using arguments [", method.getName(), obj));
+        if (args != null) {
+            for (int i = 0; i < args.length; i++) {
                 message.append((i > 0 ? "," : "") + args[i]);
             }
         }
@@ -361,158 +306,134 @@ public class Reflections
 
     /**
      * Set the accessibility flag on the {@link AccessibleObject} as described in
-     * {@link AccessibleObject#setAccessible(boolean)} within the context of
-     * a {@link PrivilegedAction}.
+     * {@link AccessibleObject#setAccessible(boolean)} within the context of a {@link PrivilegedAction}.
      *
-     * @param <A>    member the accessible object type
+     * @param <A> member the accessible object type
      * @param member the accessible object
      * @return the accessible object after the accessible flag has been altered
      */
-    public static <A extends AccessibleObject> A setAccessible(A member) 
-    {
+    public static <A extends AccessibleObject> A setAccessible(A member) {
         AccessController.doPrivileged(new SetAccessiblePriviligedAction(member));
         return member;
     }
 
     /**
      * <p>
-     * Invoke the specified method on the provided instance, passing any additional
-     * arguments included in this method as arguments to the specified method.
+     * Invoke the specified method on the provided instance, passing any additional arguments included in this method as
+     * arguments to the specified method.
      * </p>
      * <p/>
-     * <p>This method provides the same functionality and throws the same exceptions as
-     * {@link Reflections#invokeMethod(boolean, Method, Class, Object, Object...)}, with the
-     * expected return type set to {@link Object} and no change to the method's accessibility.</p>
+     * <p>
+     * This method provides the same functionality and throws the same exceptions as
+     * {@link Reflections#invokeMethod(boolean, Method, Class, Object, Object...)}, with the expected return type set to
+     * {@link Object} and no change to the method's accessibility.
+     * </p>
      *
      * @see Reflections#invokeMethod(boolean, Method, Class, Object, Object...)
      * @see Method#invoke(Object, Object...)
      */
-    public static Object invokeMethod(Method method, Object instance, Object... args) 
-    {
+    public static Object invokeMethod(Method method, Object instance, Object... args) {
         return invokeMethod(false, method, Object.class, instance, args);
     }
 
     /**
      * <p>
-     * Invoke the specified method on the provided instance, passing any additional
-     * arguments included in this method as arguments to the specified method.
+     * Invoke the specified method on the provided instance, passing any additional arguments included in this method as
+     * arguments to the specified method.
      * </p>
      * <p/>
      * <p>
-     * This method attempts to set the accessible flag of the method in a
-     * {@link PrivilegedAction} before invoking the method if the first argument
-     * is true.
+     * This method attempts to set the accessible flag of the method in a {@link PrivilegedAction} before invoking the method if
+     * the first argument is true.
      * </p>
      * <p/>
-     * <p>This method provides the same functionality and throws the same exceptions as
-     * {@link Reflections#invokeMethod(boolean, Method, Class, Object, Object...)}, with the
-     * expected return type set to {@link Object}.</p>
+     * <p>
+     * This method provides the same functionality and throws the same exceptions as
+     * {@link Reflections#invokeMethod(boolean, Method, Class, Object, Object...)}, with the expected return type set to
+     * {@link Object}.
+     * </p>
      *
      * @see Reflections#invokeMethod(boolean, Method, Class, Object, Object...)
      * @see Method#invoke(Object, Object...)
      */
-    public static Object invokeMethod(boolean setAccessible, Method method, Object instance, Object... args) 
-    {
+    public static Object invokeMethod(boolean setAccessible, Method method, Object instance, Object... args) {
         return invokeMethod(setAccessible, method, Object.class, instance, args);
     }
 
     /**
      * <p>
-     * Invoke the specified method on the provided instance, passing any additional
-     * arguments included in this method as arguments to the specified method.
+     * Invoke the specified method on the provided instance, passing any additional arguments included in this method as
+     * arguments to the specified method.
      * </p>
      * <p/>
-     * <p>This method provides the same functionality and throws the same exceptions as
-     * {@link Reflections#invokeMethod(boolean, Method, Class, Object, Object...)}, with the
-     * expected return type set to {@link Object} and honoring the accessibility of
-     * the method.</p>
+     * <p>
+     * This method provides the same functionality and throws the same exceptions as
+     * {@link Reflections#invokeMethod(boolean, Method, Class, Object, Object...)}, with the expected return type set to
+     * {@link Object} and honoring the accessibility of the method.
+     * </p>
      *
      * @see Reflections#invokeMethod(boolean, Method, Class, Object, Object...)
      * @see Method#invoke(Object, Object...)
      */
-    public static <T> T invokeMethod(Method method, Class<T> expectedReturnType, Object instance, Object... args) 
-    {
+    public static <T> T invokeMethod(Method method, Class<T> expectedReturnType, Object instance, Object... args) {
         return invokeMethod(false, method, expectedReturnType, instance, args);
     }
 
     /**
      * <p>
-     * Invoke the method on the instance, with any arguments specified, casting
-     * the result of invoking the method to the expected return type.
+     * Invoke the method on the instance, with any arguments specified, casting the result of invoking the method to the
+     * expected return type.
      * </p>
      * <p/>
      * <p>
-     * This method wraps {@link Method#invoke(Object, Object...)}, converting the
-     * checked exceptions that {@link Method#invoke(Object, Object...)} specifies
-     * to runtime exceptions.
+     * This method wraps {@link Method#invoke(Object, Object...)}, converting the checked exceptions that
+     * {@link Method#invoke(Object, Object...)} specifies to runtime exceptions.
      * </p>
      * <p/>
      * <p>
-     * If instructed, this method attempts to set the accessible flag of the method in a
-     * {@link PrivilegedAction} before invoking the method.
+     * If instructed, this method attempts to set the accessible flag of the method in a {@link PrivilegedAction} before
+     * invoking the method.
      * </p>
      *
-     * @param setAccessible flag indicating whether method should first be set as
-     *                      accessible
-     * @param method        the method to invoke
-     * @param instance      the instance to invoke the method
-     * @param args          the arguments to the method
-     * @return the result of invoking the method, or null if the method's return
-     *         type is void
-     * @throws RuntimeException            if this <code>Method</code> object enforces Java
-     *                                     language access control and the underlying method is
-     *                                     inaccessible or if the underlying method throws an exception or
-     *                                     if the initialization provoked by this method fails.
-     * @throws IllegalArgumentException    if the method is an instance method and
-     *                                     the specified <code>instance</code> argument is not an instance
-     *                                     of the class or interface declaring the underlying method (or
-     *                                     of a subclass or implementor thereof); if the number of actual
-     *                                     and formal parameters differ; if an unwrapping conversion for
-     *                                     primitive arguments fails; or if, after possible unwrapping, a
-     *                                     parameter value cannot be converted to the corresponding formal
-     *                                     parameter type by a method invocation conversion.
-     * @throws NullPointerException        if the specified <code>instance</code> is
-     *                                     null and the method is an instance method.
-     * @throws ClassCastException          if the result of invoking the method cannot be
-     *                                     cast to the expectedReturnType
-     * @throws ExceptionInInitializerError if the initialization provoked by this
-     *                                     method fails.
+     * @param setAccessible flag indicating whether method should first be set as accessible
+     * @param method the method to invoke
+     * @param instance the instance to invoke the method
+     * @param args the arguments to the method
+     * @return the result of invoking the method, or null if the method's return type is void
+     * @throws RuntimeException if this <code>Method</code> object enforces Java language access control and the underlying
+     *         method is inaccessible or if the underlying method throws an exception or if the initialization provoked by this
+     *         method fails.
+     * @throws IllegalArgumentException if the method is an instance method and the specified <code>instance</code> argument is
+     *         not an instance of the class or interface declaring the underlying method (or of a subclass or implementor
+     *         thereof); if the number of actual and formal parameters differ; if an unwrapping conversion for primitive
+     *         arguments fails; or if, after possible unwrapping, a parameter value cannot be converted to the corresponding
+     *         formal parameter type by a method invocation conversion.
+     * @throws NullPointerException if the specified <code>instance</code> is null and the method is an instance method.
+     * @throws ClassCastException if the result of invoking the method cannot be cast to the expectedReturnType
+     * @throws ExceptionInInitializerError if the initialization provoked by this method fails.
      * @see Method#invoke(Object, Object...)
      */
-    public static <T> T invokeMethod(boolean setAccessible, Method method, 
-            Class<T> expectedReturnType, Object instance, Object... args) 
-    {
-        if (setAccessible && !method.isAccessible()) 
-        {
+    public static <T> T invokeMethod(boolean setAccessible, Method method, Class<T> expectedReturnType, Object instance,
+            Object... args) {
+        if (setAccessible && !method.isAccessible()) {
             setAccessible(method);
         }
 
-        try 
-        {
+        try {
             return expectedReturnType.cast(method.invoke(instance, args));
-        } 
-        catch (IllegalAccessException ex) 
-        {
+        } catch (IllegalAccessException ex) {
             throw new RuntimeException(buildInvokeMethodErrorMessage(method, instance, args), ex);
-        } 
-        catch (IllegalArgumentException ex) 
-        {
+        } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException(buildInvokeMethodErrorMessage(method, instance, args), ex);
-        } 
-        catch (InvocationTargetException ex) 
-        {
+        } catch (InvocationTargetException ex) {
             throw new RuntimeException(buildInvokeMethodErrorMessage(method, instance, args), ex.getCause());
-        } 
-        catch (NullPointerException ex) 
-        {
+        } catch (NullPointerException ex) {
             NullPointerException ex2 = new NullPointerException(buildInvokeMethodErrorMessage(method, instance, args));
             ex2.initCause(ex.getCause());
             throw ex2;
-        } 
-        catch (ExceptionInInitializerError e) 
-        {
-            ExceptionInInitializerError e2 = new ExceptionInInitializerError(
-                    buildInvokeMethodErrorMessage(method, instance, args));
+        } catch (ExceptionInInitializerError e) {
+            ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildInvokeMethodErrorMessage(method, instance,
+                    args));
             e2.initCause(e.getCause());
             throw e2;
         }
@@ -523,12 +444,12 @@ public class Reflections
      * Set the value of a field on the instance to the specified value.
      * </p>
      * <p/>
-     * <p>This method provides the same functionality and throws the same exceptions as
-     * {@link Reflections#setFieldValue(boolean, Method, Class, Object, Object...)}, honoring
-     * the accessibility of the field.</p>
+     * <p>
+     * This method provides the same functionality and throws the same exceptions as
+     * {@link Reflections#setFieldValue(boolean, Method, Class, Object, Object...)}, honoring the accessibility of the field.
+     * </p>
      */
-    public static void setFieldValue(Field field, Object instance, Object value) 
-    {
+    public static void setFieldValue(Field field, Object instance, Object value) {
         setFieldValue(false, field, instance, value);
     }
 
@@ -538,120 +459,90 @@ public class Reflections
      * </p>
      * <p/>
      * <p>
-     * This method wraps {@link Field#set(Object, Object)}, converting the
-     * checked exceptions that {@link Field#set(Object, Object)} specifies to
-     * runtime exceptions.
+     * This method wraps {@link Field#set(Object, Object)}, converting the checked exceptions that
+     * {@link Field#set(Object, Object)} specifies to runtime exceptions.
      * </p>
      * <p/>
      * <p>
-     * If instructed, this method attempts to set the accessible flag of the method in a
-     * {@link PrivilegedAction} before invoking the method.
+     * If instructed, this method attempts to set the accessible flag of the method in a {@link PrivilegedAction} before
+     * invoking the method.
      * </p>
      *
-     * @param field    the field on which to operate, or null if the field is static
+     * @param field the field on which to operate, or null if the field is static
      * @param instance the instance on which the field value should be set upon
-     * @param value    the value to set the field to
-     * @throws RuntimeException            if the underlying field is inaccessible.
-     * @throws IllegalArgumentException    if the specified <code>instance</code> is not an
-     *                                     instance of the class or interface declaring the underlying
-     *                                     field (or a subclass or implementor thereof), or if an
-     *                                     unwrapping conversion fails.
-     * @throws NullPointerException        if the specified <code>instance</code> is null and the field
-     *                                     is an instance field.
-     * @throws ExceptionInInitializerError if the initialization provoked by this
-     *                                     method fails.
+     * @param value the value to set the field to
+     * @throws RuntimeException if the underlying field is inaccessible.
+     * @throws IllegalArgumentException if the specified <code>instance</code> is not an instance of the class or interface
+     *         declaring the underlying field (or a subclass or implementor thereof), or if an unwrapping conversion fails.
+     * @throws NullPointerException if the specified <code>instance</code> is null and the field is an instance field.
+     * @throws ExceptionInInitializerError if the initialization provoked by this method fails.
      * @see Field#set(Object, Object)
      */
-    public static void setFieldValue(boolean setAccessible, Field field, Object instance, Object value) 
-    {
-        if (setAccessible && !field.isAccessible()) 
-        {
+    public static void setFieldValue(boolean setAccessible, Field field, Object instance, Object value) {
+        if (setAccessible && !field.isAccessible()) {
             setAccessible(field);
         }
 
-        try 
-        {
+        try {
             field.set(instance, value);
-        } 
-        catch (IllegalAccessException e) 
-        {
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(buildSetFieldValueErrorMessage(field, instance, value), e);
-        } 
-        catch (NullPointerException ex) 
-        {
+        } catch (NullPointerException ex) {
             NullPointerException ex2 = new NullPointerException(buildSetFieldValueErrorMessage(field, instance, value));
             ex2.initCause(ex.getCause());
             throw ex2;
-        } 
-        catch (ExceptionInInitializerError e) 
-        {
-            ExceptionInInitializerError e2 = new ExceptionInInitializerError(
-                    buildSetFieldValueErrorMessage(field, instance, value));
+        } catch (ExceptionInInitializerError e) {
+            ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildSetFieldValueErrorMessage(field, instance,
+                    value));
             e2.initCause(e.getCause());
             throw e2;
         }
     }
 
-    private static String buildSetFieldValueErrorMessage(Field field, Object obj, Object value) 
-    {
+    private static String buildSetFieldValueErrorMessage(Field field, Object obj, Object value) {
         return String.format("Exception setting [%s] field on object [%s] to value [%s]", field.getName(), obj, value);
     }
 
-    private static String buildGetFieldValueErrorMessage(Field field, Object obj) 
-    {
+    private static String buildGetFieldValueErrorMessage(Field field, Object obj) {
         return String.format("Exception reading [%s] field from object [%s].", field.getName(), obj);
     }
 
-    public static Object getFieldValue(Field field, Object instance) 
-    {
+    public static Object getFieldValue(Field field, Object instance) {
         return getFieldValue(field, instance, Object.class);
     }
 
     /**
      * <p>
-     * Get the value of the field, on the specified instance, casting the value
-     * of the field to the expected type.
+     * Get the value of the field, on the specified instance, casting the value of the field to the expected type.
      * </p>
      * <p/>
      * <p>
-     * This method wraps {@link Field#get(Object)}, converting the checked
-     * exceptions that {@link Field#get(Object)} specifies to runtime exceptions.
+     * This method wraps {@link Field#get(Object)}, converting the checked exceptions that {@link Field#get(Object)} specifies
+     * to runtime exceptions.
      * </p>
      *
-     * @param <T>          the type of the field's value
-     * @param field        the field to operate on
-     * @param instance     the instance from which to retrieve the value
+     * @param <T> the type of the field's value
+     * @param field the field to operate on
+     * @param instance the instance from which to retrieve the value
      * @param expectedType the expected type of the field's value
      * @return the value of the field
-     * @throws RuntimeException            if the underlying field is inaccessible.
-     * @throws IllegalArgumentException    if the specified <code>instance</code> is not an
-     *                                     instance of the class or interface declaring the underlying
-     *                                     field (or a subclass or implementor thereof).
-     * @throws NullPointerException        if the specified <code>instance</code> is null and the field
-     *                                     is an instance field.
-     * @throws ExceptionInInitializerError if the initialization provoked by this
-     *                                     method fails.
+     * @throws RuntimeException if the underlying field is inaccessible.
+     * @throws IllegalArgumentException if the specified <code>instance</code> is not an instance of the class or interface
+     *         declaring the underlying field (or a subclass or implementor thereof).
+     * @throws NullPointerException if the specified <code>instance</code> is null and the field is an instance field.
+     * @throws ExceptionInInitializerError if the initialization provoked by this method fails.
      */
-    public static <T> T getFieldValue(Field field, Object instance, Class<T> expectedType) 
-    {
-        try 
-        {
+    public static <T> T getFieldValue(Field field, Object instance, Class<T> expectedType) {
+        try {
             return Reflections.cast(field.get(instance));
-        } 
-        catch (IllegalAccessException e) 
-        {
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(buildGetFieldValueErrorMessage(field, instance), e);
-        } 
-        catch (NullPointerException ex) 
-        {
+        } catch (NullPointerException ex) {
             NullPointerException ex2 = new NullPointerException(buildGetFieldValueErrorMessage(field, instance));
             ex2.initCause(ex.getCause());
             throw ex2;
-        } 
-        catch (ExceptionInInitializerError e) 
-        {
-            ExceptionInInitializerError e2 = new ExceptionInInitializerError(
-                    buildGetFieldValueErrorMessage(field, instance));
+        } catch (ExceptionInInitializerError e) {
+            ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildGetFieldValueErrorMessage(field, instance));
             e2.initCause(e.getCause());
             throw e2;
         }
@@ -660,21 +551,16 @@ public class Reflections
     /**
      * Extract the raw type, given a type.
      *
-     * @param <T>  the type
+     * @param <T> the type
      * @param type the type to extract the raw type from
      * @return the raw type, or null if the raw type cannot be determined.
      */
     @SuppressWarnings("unchecked")
-    public static <T> Class<T> getRawType(Type type) 
-    {
-        if (type instanceof Class<?>) 
-        {
+    public static <T> Class<T> getRawType(Type type) {
+        if (type instanceof Class<?>) {
             return (Class<T>) type;
-        } 
-        else if (type instanceof ParameterizedType) 
-        {
-            if (((ParameterizedType) type).getRawType() instanceof Class<?>) 
-            {
+        } else if (type instanceof ParameterizedType) {
+            if (((ParameterizedType) type).getRawType() instanceof Class<?>) {
                 return (Class<T>) ((ParameterizedType) type).getRawType();
             }
         }
@@ -687,56 +573,40 @@ public class Reflections
      * @param clazz The class to check
      * @return true if the class implements serializable or is a primitive
      */
-    public static boolean isSerializable(Class<?> clazz) 
-    {
+    public static boolean isSerializable(Class<?> clazz) {
         return clazz.isPrimitive() || Serializable.class.isAssignableFrom(clazz);
     }
 
-
-    public static Map<Class<?>, Type> buildTypeMap(Set<Type> types) 
-    {
+    public static Map<Class<?>, Type> buildTypeMap(Set<Type> types) {
         Map<Class<?>, Type> map = new HashMap<Class<?>, Type>();
-        for (Type type : types) 
-        {
-            if (type instanceof Class<?>) 
-            {
+        for (Type type : types) {
+            if (type instanceof Class<?>) {
                 map.put((Class<?>) type, type);
-            } 
-            else if (type instanceof ParameterizedType) 
-            {
-                if (((ParameterizedType) type).getRawType() instanceof Class<?>) 
-                {
+            } else if (type instanceof ParameterizedType) {
+                if (((ParameterizedType) type).getRawType() instanceof Class<?>) {
                     map.put((Class<?>) ((ParameterizedType) type).getRawType(), type);
                 }
-            } 
-            else if (type instanceof TypeVariable<?>) 
-            {
+            } else if (type instanceof TypeVariable<?>) {
 
             }
         }
         return map;
     }
 
-    public static boolean isCacheable(Set<Annotation> annotations) 
-    {
-        for (Annotation qualifier : annotations) 
-        {
+    public static boolean isCacheable(Set<Annotation> annotations) {
+        for (Annotation qualifier : annotations) {
             Class<?> clazz = qualifier.getClass();
-            if (clazz.isAnonymousClass() || (clazz.isMemberClass() && isStatic(clazz))) 
-            {
+            if (clazz.isAnonymousClass() || (clazz.isMemberClass() && isStatic(clazz))) {
                 return false;
             }
         }
         return true;
     }
 
-    public static boolean isCacheable(Annotation[] annotations) 
-    {
-        for (Annotation qualifier : annotations) 
-        {
+    public static boolean isCacheable(Annotation[] annotations) {
+        for (Annotation qualifier : annotations) {
             Class<?> clazz = qualifier.getClass();
-            if (clazz.isAnonymousClass() || (clazz.isMemberClass() && isStatic(clazz))) 
-            {
+            if (clazz.isAnonymousClass() || (clazz.isMemberClass() && isStatic(clazz))) {
                 return false;
             }
         }
@@ -749,22 +619,15 @@ public class Reflections
      * We extend JavaBean conventions, allowing the getter method to have parameters
      *
      * @param method The getter method
-     * @return The name of the property. Returns null if method wasn't JavaBean
-     *         getter-styled
+     * @return The name of the property. Returns null if method wasn't JavaBean getter-styled
      */
-    public static String getPropertyName(Method method) 
-    {
+    public static String getPropertyName(Method method) {
         String methodName = method.getName();
-        if (methodName.matches("^(get).*")) 
-        {
+        if (methodName.matches("^(get).*")) {
             return Introspector.decapitalize(methodName.substring(3));
-        } 
-        else if (methodName.matches("^(is).*")) 
-        {
+        } else if (methodName.matches("^(is).*")) {
             return Introspector.decapitalize(methodName.substring(2));
-        } 
-        else 
-        {
+        } else {
             return null;
         }
 
@@ -776,19 +639,14 @@ public class Reflections
      * @param clazz The class to check
      * @return True if final, false otherwise
      */
-    public static boolean isFinal(Class<?> clazz) 
-    {
+    public static boolean isFinal(Class<?> clazz) {
         return Modifier.isFinal(clazz.getModifiers());
     }
 
-    public static int getNesting(Class<?> clazz) 
-    {
-        if (clazz.isMemberClass() && !isStatic(clazz)) 
-        {
+    public static int getNesting(Class<?> clazz) {
+        if (clazz.isMemberClass() && !isStatic(clazz)) {
             return 1 + getNesting(clazz.getDeclaringClass());
-        } 
-        else 
-        {
+        } else {
             return 0;
         }
     }
@@ -799,8 +657,7 @@ public class Reflections
      * @param member The member to check
      * @return True if final, false otherwise
      */
-    public static boolean isFinal(Member member) 
-    {
+    public static boolean isFinal(Member member) {
         return Modifier.isFinal(member.getModifiers());
     }
 
@@ -810,8 +667,7 @@ public class Reflections
      * @param member The member to check
      * @return True if final, false otherwise
      */
-    public static boolean isPrivate(Member member) 
-    {
+    public static boolean isPrivate(Member member) {
         return Modifier.isPrivate(member.getModifiers());
     }
 
@@ -821,29 +677,23 @@ public class Reflections
      * @param type Type or member
      * @return True if final, false otherwise
      */
-    public static boolean isTypeOrAnyMethodFinal(Class<?> type) 
-    {
+    public static boolean isTypeOrAnyMethodFinal(Class<?> type) {
         return getNonPrivateFinalMethodOrType(type) != null;
     }
 
-    public static Object getNonPrivateFinalMethodOrType(Class<?> type) 
-    {
-        if (isFinal(type)) 
-        {
+    public static Object getNonPrivateFinalMethodOrType(Class<?> type) {
+        if (isFinal(type)) {
             return type;
         }
-        for (Method method : type.getDeclaredMethods()) 
-        {
-            if (isFinal(method) && !isPrivate(method)) 
-            {
+        for (Method method : type.getDeclaredMethods()) {
+            if (isFinal(method) && !isPrivate(method)) {
                 return method;
             }
         }
         return null;
     }
 
-    public static boolean isPackagePrivate(int mod) 
-    {
+    public static boolean isPackagePrivate(int mod) {
         return !(Modifier.isPrivate(mod) || Modifier.isProtected(mod) || Modifier.isPublic(mod));
     }
 
@@ -853,8 +703,7 @@ public class Reflections
      * @param type Type to check
      * @return True if static, false otherwise
      */
-    public static boolean isStatic(Class<?> type) 
-    {
+    public static boolean isStatic(Class<?> type) {
         return Modifier.isStatic(type.getModifiers());
     }
 
@@ -864,13 +713,11 @@ public class Reflections
      * @param member Member to check
      * @return True if static, false otherwise
      */
-    public static boolean isStatic(Member member) 
-    {
+    public static boolean isStatic(Member member) {
         return Modifier.isStatic(member.getModifiers());
     }
 
-    public static boolean isTransient(Member member) 
-    {
+    public static boolean isTransient(Member member) {
         return Modifier.isTransient(member.getModifiers());
     }
 
@@ -880,8 +727,7 @@ public class Reflections
      * @param method
      * @return
      */
-    public static boolean isAbstract(Method method)
-    {
+    public static boolean isAbstract(Method method) {
         return Modifier.isAbstract(method.getModifiers());
     }
 
@@ -891,15 +737,11 @@ public class Reflections
      * @param clazz The class to examine
      * @return The type arguments
      */
-    public static Type[] getActualTypeArguments(Class<?> clazz) 
-    {
+    public static Type[] getActualTypeArguments(Class<?> clazz) {
         Type type = new HierarchyDiscovery(clazz).getResolvedType();
-        if (type instanceof ParameterizedType) 
-        {
+        if (type instanceof ParameterizedType) {
             return ((ParameterizedType) type).getActualTypeArguments();
-        } 
-        else 
-        {
+        } else {
             return EMPTY_TYPES;
         }
     }
@@ -910,15 +752,11 @@ public class Reflections
      * @param type The type to examine
      * @return The type arguments
      */
-    public static Type[] getActualTypeArguments(Type type) 
-    {
+    public static Type[] getActualTypeArguments(Type type) {
         Type resolvedType = new HierarchyDiscovery(type).getResolvedType();
-        if (resolvedType instanceof ParameterizedType) 
-        {
+        if (resolvedType instanceof ParameterizedType) {
             return ((ParameterizedType) resolvedType).getActualTypeArguments();
-        } 
-        else 
-        {
+        } else {
             return EMPTY_TYPES;
         }
     }
@@ -929,8 +767,7 @@ public class Reflections
      * @param rawType The raw type to check
      * @return True if array, false otherwise
      */
-    public static boolean isArrayType(Class<?> rawType) 
-    {
+    public static boolean isArrayType(Class<?> rawType) {
         return rawType.isArray();
     }
 
@@ -940,29 +777,21 @@ public class Reflections
      * @param type The type to check
      * @return True if parameterized, false otherwise
      */
-    public static boolean isParameterizedType(Class<?> type) 
-    {
+    public static boolean isParameterizedType(Class<?> type) {
         return type.getTypeParameters().length > 0;
     }
 
-    public static boolean isParamerterizedTypeWithWildcard(Class<?> type) 
-    {
-        if (isParameterizedType(type)) 
-        {
+    public static boolean isParamerterizedTypeWithWildcard(Class<?> type) {
+        if (isParameterizedType(type)) {
             return containsWildcards(type.getTypeParameters());
-        } 
-        else 
-        {
+        } else {
             return false;
         }
     }
 
-    public static boolean containsWildcards(Type[] types) 
-    {
-        for (Type type : types) 
-        {
-            if (type instanceof WildcardType) 
-            {
+    public static boolean containsWildcards(Type[] types) {
+        for (Type type : types) {
+            if (type instanceof WildcardType) {
                 return true;
             }
         }
@@ -970,270 +799,200 @@ public class Reflections
     }
 
     /**
-     * Check the assignability of one type to another, taking into account the
-     * actual type arguements
+     * Check the assignability of one type to another, taking into account the actual type arguements
      *
-     * @param rawType1             the raw type of the class to check
-     * @param actualTypeArguments1 the actual type arguements to check, or an
-     *                             empty array if not a parameterized type
-     * @param rawType2             the raw type of the class to check
-     * @param actualTypeArguments2 the actual type arguements to check, or an
-     *                             empty array if not a parameterized type
+     * @param rawType1 the raw type of the class to check
+     * @param actualTypeArguments1 the actual type arguements to check, or an empty array if not a parameterized type
+     * @param rawType2 the raw type of the class to check
+     * @param actualTypeArguments2 the actual type arguements to check, or an empty array if not a parameterized type
      * @return
      */
-    public static boolean isAssignableFrom(Class<?> rawType1, Type[] actualTypeArguments1, 
-            Class<?> rawType2, Type[] actualTypeArguments2) 
-    {
-        return Types.boxedClass(rawType1).isAssignableFrom(Types.boxedClass(rawType2)) && 
-                isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
+    public static boolean isAssignableFrom(Class<?> rawType1, Type[] actualTypeArguments1, Class<?> rawType2,
+            Type[] actualTypeArguments2) {
+        return Types.boxedClass(rawType1).isAssignableFrom(Types.boxedClass(rawType2))
+                && isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
     }
 
-    public static boolean matches(Class<?> rawType1, Type[] actualTypeArguments1, 
-            Class<?> rawType2, Type[] actualTypeArguments2) 
-    {
-        return Types.boxedClass(rawType1).equals(Types.boxedClass(rawType2)) && 
-                isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
+    public static boolean matches(Class<?> rawType1, Type[] actualTypeArguments1, Class<?> rawType2, Type[] actualTypeArguments2) {
+        return Types.boxedClass(rawType1).equals(Types.boxedClass(rawType2))
+                && isAssignableFrom(actualTypeArguments1, actualTypeArguments2);
     }
 
-    public static boolean isAssignableFrom(Type[] actualTypeArguments1, Type[] actualTypeArguments2) 
-    {
-        for (int i = 0; i < actualTypeArguments1.length; i++) 
-        {
+    public static boolean isAssignableFrom(Type[] actualTypeArguments1, Type[] actualTypeArguments2) {
+        for (int i = 0; i < actualTypeArguments1.length; i++) {
             Type type1 = actualTypeArguments1[i];
             Type type2 = Object.class;
-            if (actualTypeArguments2.length > i) 
-            {
+            if (actualTypeArguments2.length > i) {
                 type2 = actualTypeArguments2[i];
             }
-            if (!isAssignableFrom(type1, type2)) 
-            {
+            if (!isAssignableFrom(type1, type2)) {
                 return false;
             }
         }
         return true;
     }
 
-    public static boolean isAssignableFrom(Type type1, Set<? extends Type> types2) 
-    {
-        for (Type type2 : types2) 
-        {
-            if (isAssignableFrom(type1, type2)) 
-            {
+    public static boolean isAssignableFrom(Type type1, Set<? extends Type> types2) {
+        for (Type type2 : types2) {
+            if (isAssignableFrom(type1, type2)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean matches(Type type1, Set<? extends Type> types2) 
-    {
-        for (Type type2 : types2) 
-        {
-            if (matches(type1, type2)) 
-            {
+    public static boolean matches(Type type1, Set<? extends Type> types2) {
+        for (Type type2 : types2) {
+            if (matches(type1, type2)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isAssignableFrom(Type type1, Type[] types2) 
-    {
-        for (Type type2 : types2) 
-        {
-            if (isAssignableFrom(type1, type2)) 
-            {
+    public static boolean isAssignableFrom(Type type1, Type[] types2) {
+        for (Type type2 : types2) {
+            if (isAssignableFrom(type1, type2)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isAssignableFrom(Type type1, Type type2) 
-    {
-        if (type1 instanceof Class<?>) 
-        {
+    public static boolean isAssignableFrom(Type type1, Type type2) {
+        if (type1 instanceof Class<?>) {
             Class<?> clazz = (Class<?>) type1;
-            if (isAssignableFrom(clazz, EMPTY_TYPES, type2)) 
-            {
+            if (isAssignableFrom(clazz, EMPTY_TYPES, type2)) {
                 return true;
             }
         }
-        if (type1 instanceof ParameterizedType) 
-        {
+        if (type1 instanceof ParameterizedType) {
             ParameterizedType parameterizedType1 = (ParameterizedType) type1;
-            if (parameterizedType1.getRawType() instanceof Class<?>) 
-            {
-                if (isAssignableFrom((Class<?>) parameterizedType1.getRawType(), 
-                        parameterizedType1.getActualTypeArguments(), type2)) 
-                {
+            if (parameterizedType1.getRawType() instanceof Class<?>) {
+                if (isAssignableFrom((Class<?>) parameterizedType1.getRawType(), parameterizedType1.getActualTypeArguments(),
+                        type2)) {
                     return true;
                 }
             }
         }
-        if (type1 instanceof WildcardType) 
-        {
+        if (type1 instanceof WildcardType) {
             WildcardType wildcardType = (WildcardType) type1;
-            if (isTypeBounded(type2, wildcardType.getLowerBounds(), wildcardType.getUpperBounds())) 
-            {
+            if (isTypeBounded(type2, wildcardType.getLowerBounds(), wildcardType.getUpperBounds())) {
                 return true;
             }
         }
-        if (type2 instanceof WildcardType) 
-        {
+        if (type2 instanceof WildcardType) {
             WildcardType wildcardType = (WildcardType) type2;
-            if (isTypeBounded(type1, wildcardType.getUpperBounds(), wildcardType.getLowerBounds())) 
-            {
+            if (isTypeBounded(type1, wildcardType.getUpperBounds(), wildcardType.getLowerBounds())) {
                 return true;
             }
         }
-        if (type1 instanceof TypeVariable<?>) 
-        {
+        if (type1 instanceof TypeVariable<?>) {
             TypeVariable<?> typeVariable = (TypeVariable<?>) type1;
-            if (isTypeBounded(type2, EMPTY_TYPES, typeVariable.getBounds())) 
-            {
+            if (isTypeBounded(type2, EMPTY_TYPES, typeVariable.getBounds())) {
                 return true;
             }
         }
-        if (type2 instanceof TypeVariable<?>) 
-        {
+        if (type2 instanceof TypeVariable<?>) {
             TypeVariable<?> typeVariable = (TypeVariable<?>) type2;
-            if (isTypeBounded(type1, typeVariable.getBounds(), EMPTY_TYPES)) 
-            {
+            if (isTypeBounded(type1, typeVariable.getBounds(), EMPTY_TYPES)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean matches(Type type1, Type type2) 
-    {
-        if (type1 instanceof Class<?>) 
-        {
+    public static boolean matches(Type type1, Type type2) {
+        if (type1 instanceof Class<?>) {
             Class<?> clazz = (Class<?>) type1;
-            if (matches(clazz, EMPTY_TYPES, type2)) 
-            {
+            if (matches(clazz, EMPTY_TYPES, type2)) {
                 return true;
             }
         }
-        if (type1 instanceof ParameterizedType) 
-        {
+        if (type1 instanceof ParameterizedType) {
             ParameterizedType parameterizedType1 = (ParameterizedType) type1;
-            if (parameterizedType1.getRawType() instanceof Class<?>) 
-            {
-                if (matches((Class<?>) parameterizedType1.getRawType(), 
-                        parameterizedType1.getActualTypeArguments(), type2)) 
-                {
+            if (parameterizedType1.getRawType() instanceof Class<?>) {
+                if (matches((Class<?>) parameterizedType1.getRawType(), parameterizedType1.getActualTypeArguments(), type2)) {
                     return true;
                 }
             }
         }
-        if (type1 instanceof WildcardType) 
-        {
+        if (type1 instanceof WildcardType) {
             WildcardType wildcardType = (WildcardType) type1;
-            if (isTypeBounded(type2, wildcardType.getLowerBounds(), wildcardType.getUpperBounds())) 
-            {
+            if (isTypeBounded(type2, wildcardType.getLowerBounds(), wildcardType.getUpperBounds())) {
                 return true;
             }
         }
-        if (type2 instanceof WildcardType) 
-        {
+        if (type2 instanceof WildcardType) {
             WildcardType wildcardType = (WildcardType) type2;
-            if (isTypeBounded(type1, wildcardType.getUpperBounds(), wildcardType.getLowerBounds())) 
-            {
+            if (isTypeBounded(type1, wildcardType.getUpperBounds(), wildcardType.getLowerBounds())) {
                 return true;
             }
         }
-        if (type1 instanceof TypeVariable<?>) 
-        {
+        if (type1 instanceof TypeVariable<?>) {
             TypeVariable<?> typeVariable = (TypeVariable<?>) type1;
-            if (isTypeBounded(type2, EMPTY_TYPES, typeVariable.getBounds())) 
-            {
+            if (isTypeBounded(type2, EMPTY_TYPES, typeVariable.getBounds())) {
                 return true;
             }
         }
-        if (type2 instanceof TypeVariable<?>) 
-        {
+        if (type2 instanceof TypeVariable<?>) {
             TypeVariable<?> typeVariable = (TypeVariable<?>) type2;
-            if (isTypeBounded(type1, typeVariable.getBounds(), EMPTY_TYPES)) 
-            {
+            if (isTypeBounded(type1, typeVariable.getBounds(), EMPTY_TYPES)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isTypeBounded(Type type, Type[] lowerBounds, Type[] upperBounds) 
-    {
-        if (lowerBounds.length > 0) 
-        {
-            if (!isAssignableFrom(type, lowerBounds)) 
-            {
+    public static boolean isTypeBounded(Type type, Type[] lowerBounds, Type[] upperBounds) {
+        if (lowerBounds.length > 0) {
+            if (!isAssignableFrom(type, lowerBounds)) {
                 return false;
             }
         }
-        if (upperBounds.length > 0) 
-        {
-            if (!isAssignableFrom(upperBounds, type)) 
-            {
+        if (upperBounds.length > 0) {
+            if (!isAssignableFrom(upperBounds, type)) {
                 return false;
             }
         }
         return true;
     }
 
-    public static boolean isAssignableFrom(Class<?> rawType1, Type[] actualTypeArguments1, Type type2) 
-    {
-        if (type2 instanceof ParameterizedType) 
-        {
+    public static boolean isAssignableFrom(Class<?> rawType1, Type[] actualTypeArguments1, Type type2) {
+        if (type2 instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type2;
-            if (parameterizedType.getRawType() instanceof Class<?>) 
-            {
-                if (isAssignableFrom(rawType1, actualTypeArguments1, (Class<?>) parameterizedType.getRawType(), 
-                        parameterizedType.getActualTypeArguments())) 
-                {
+            if (parameterizedType.getRawType() instanceof Class<?>) {
+                if (isAssignableFrom(rawType1, actualTypeArguments1, (Class<?>) parameterizedType.getRawType(),
+                        parameterizedType.getActualTypeArguments())) {
                     return true;
                 }
             }
-        } 
-        else if (type2 instanceof Class<?>) 
-        {
+        } else if (type2 instanceof Class<?>) {
             Class<?> clazz = (Class<?>) type2;
-            if (isAssignableFrom(rawType1, actualTypeArguments1, clazz, EMPTY_TYPES)) 
-            {
+            if (isAssignableFrom(rawType1, actualTypeArguments1, clazz, EMPTY_TYPES)) {
                 return true;
             }
-        } 
-        else if (type2 instanceof TypeVariable<?>) 
-        {
+        } else if (type2 instanceof TypeVariable<?>) {
             TypeVariable<?> typeVariable = (TypeVariable<?>) type2;
-            if (isTypeBounded(rawType1, actualTypeArguments1, typeVariable.getBounds())) 
-            {
+            if (isTypeBounded(rawType1, actualTypeArguments1, typeVariable.getBounds())) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean matches(Class<?> rawType1, Type[] actualTypeArguments1, Type type2) 
-    {
-        if (type2 instanceof ParameterizedType) 
-        {
+    public static boolean matches(Class<?> rawType1, Type[] actualTypeArguments1, Type type2) {
+        if (type2 instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type2;
-            if (parameterizedType.getRawType() instanceof Class<?>) 
-            {
-                if (matches(rawType1, actualTypeArguments1, (Class<?>) parameterizedType.getRawType(), 
-                        parameterizedType.getActualTypeArguments())) 
-                {
+            if (parameterizedType.getRawType() instanceof Class<?>) {
+                if (matches(rawType1, actualTypeArguments1, (Class<?>) parameterizedType.getRawType(),
+                        parameterizedType.getActualTypeArguments())) {
                     return true;
                 }
             }
-        } 
-        else if (type2 instanceof Class<?>)
-        {
+        } else if (type2 instanceof Class<?>) {
             Class<?> clazz = (Class<?>) type2;
-            if (matches(rawType1, actualTypeArguments1, clazz, EMPTY_TYPES)) 
-            {
+            if (matches(rawType1, actualTypeArguments1, clazz, EMPTY_TYPES)) {
                 return true;
             }
         }
@@ -1241,19 +1000,16 @@ public class Reflections
     }
 
     /**
-     * Check the assiginability of a set of <b>flattened</b> types. This
-     * algorithm will check whether any of the types1 matches a type in types2
+     * Check the assiginability of a set of <b>flattened</b> types. This algorithm will check whether any of the types1 matches
+     * a type in types2
      *
      * @param types1
      * @param types2
      * @return
      */
-    public static boolean isAssignableFrom(Set<Type> types1, Set<Type> types2) 
-    {
-        for (Type type : types1) 
-        {
-            if (isAssignableFrom(type, types2)) 
-            {
+    public static boolean isAssignableFrom(Set<Type> types1, Set<Type> types2) {
+        for (Type type : types1) {
+            if (isAssignableFrom(type, types2)) {
                 return true;
             }
         }
@@ -1267,12 +1023,9 @@ public class Reflections
      * @param types2
      * @return
      */
-    public static boolean matches(Set<Type> types1, Set<Type> types2) 
-    {
-        for (Type type : types1) 
-        {
-            if (matches(type, types2)) 
-            {
+    public static boolean matches(Set<Type> types1, Set<Type> types2) {
+        for (Type type : types1) {
+            if (matches(type, types2)) {
                 return true;
             }
         }
@@ -1280,42 +1033,34 @@ public class Reflections
     }
 
     /**
-     * Check the assignability of a set of <b>flattened</b> types. This
-     * algorithm will check whether any of the types1 matches a type in types2
+     * Check the assignability of a set of <b>flattened</b> types. This algorithm will check whether any of the types1 matches a
+     * type in types2
      *
      * @param types1
      * @param type2
      * @return
      */
-    public static boolean isAssignableFrom(Set<Type> types1, Type type2) 
-    {
-        for (Type type : types1) 
-        {
-            if (isAssignableFrom(type, type2)) 
-            {
+    public static boolean isAssignableFrom(Set<Type> types1, Type type2) {
+        for (Type type : types1) {
+            if (isAssignableFrom(type, type2)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isAssignableFrom(Type[] types1, Type type2) 
-    {
-        for (Type type : types1) 
-        {
-            if (isAssignableFrom(type, type2)) 
-            {
+    public static boolean isAssignableFrom(Type[] types1, Type type2) {
+        for (Type type : types1) {
+            if (isAssignableFrom(type, type2)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isPrimitive(Type type) 
-    {
+    public static boolean isPrimitive(Type type) {
         Class<?> rawType = getRawType(type);
         return rawType == null ? false : rawType.isPrimitive();
     }
-
 
 }

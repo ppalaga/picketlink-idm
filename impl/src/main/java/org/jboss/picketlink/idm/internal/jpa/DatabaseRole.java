@@ -34,7 +34,7 @@ import org.jboss.picketlink.idm.model.Role;
 
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- * 
+ *
  */
 @Entity
 @NamedQuery(name = NamedQueries.ROLE_LOAD_BY_KEY, query = "from DatabaseRole where key = :key")

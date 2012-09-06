@@ -47,8 +47,8 @@ import javax.naming.directory.SearchResult;
 import org.jboss.picketlink.idm.model.IdentityType;
 
 /**
- * An adaptor class that provides barebones implementation
- * of the {@link DirContext}
+ * An adaptor class that provides barebones implementation of the {@link DirContext}
+ *
  * @author anil saldhana
  * @since Aug 30, 2012
  */
@@ -58,15 +58,15 @@ public class DirContextAdaptor implements DirContext, IdentityType {
     public static final String EQUAL = "=";
     public static final String SPACE_STRING = " ";
     protected Attributes attributes = new BasicAttributes(true);
-    
+
     protected LDAPChangeNotificationHandler handler = null;
 
     @Override
     public Object lookup(Name name) throws NamingException {
         return null;
     }
-    
-    public void setLDAPChangeNotificationHandler(LDAPChangeNotificationHandler lh){
+
+    public void setLDAPChangeNotificationHandler(LDAPChangeNotificationHandler lh) {
         this.handler = lh;
     }
 
@@ -216,17 +216,17 @@ public class DirContextAdaptor implements DirContext, IdentityType {
 
     @Override
     public Attributes getAttributes(String name, String[] ids) throws NamingException {
-        if(! name.equals(""))
+        if (!name.equals(""))
             throw new NameNotFoundException();
-         Attributes answer = new BasicAttributes(true);
-         Attribute target;
-         for (int i = 0; i < ids.length; i++){
+        Attributes answer = new BasicAttributes(true);
+        Attribute target;
+        for (int i = 0; i < ids.length; i++) {
             target = attributes.get(ids[i]);
-            if (target != null){
-               answer.put(target);
+            if (target != null) {
+                answer.put(target);
             }
-         }
-         return answer;
+        }
+        return answer;
     }
 
     @Override
@@ -358,7 +358,7 @@ public class DirContextAdaptor implements DirContext, IdentityType {
     @Override
     public void setAttribute(String name, String value) {
         attributes.put(name, value);
-        if(handler != null){
+        if (handler != null) {
             handler.handle(new LDAPObjectChangedNotification(this));
         }
     }
@@ -366,7 +366,7 @@ public class DirContextAdaptor implements DirContext, IdentityType {
     @Override
     public void setAttribute(String name, String[] values) {
         attributes.put(name, values);
-        if(handler != null){
+        if (handler != null) {
             handler.handle(new LDAPObjectChangedNotification(this));
         }
     }
@@ -374,7 +374,7 @@ public class DirContextAdaptor implements DirContext, IdentityType {
     @Override
     public void removeAttribute(String name) {
         attributes.remove(name);
-        if(handler != null){
+        if (handler != null) {
             handler.handle(new LDAPObjectChangedNotification(this));
         }
     }
@@ -399,23 +399,24 @@ public class DirContextAdaptor implements DirContext, IdentityType {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Map<String, String[]> getAttributes() {
         try {
-            Map<String,String[]> map = new HashMap<String,String[]>();
+            Map<String, String[]> map = new HashMap<String, String[]>();
             NamingEnumeration<? extends Attribute> theAttributes = attributes.getAll();
-            while(theAttributes.hasMore()){
+            while (theAttributes.hasMore()) {
                 Attribute anAttribute = theAttributes.next();
-                NamingEnumeration ne = anAttribute.getAll();
-                
+                NamingEnumeration<String> ne = (NamingEnumeration<String>) anAttribute.getAll();
+
                 List<String> theList = new ArrayList<String>();
-                while(ne.hasMoreElements()){
-                    String val = (String) ne.nextElement();
+                while (ne.hasMoreElements()) {
+                    String val = ne.nextElement();
                     theList.add(val);
                 }
                 String[] valuesArr = new String[theList.size()];
                 theList.toArray(valuesArr);
-                
+
                 map.put(anAttribute.getID(), valuesArr);
             }
             return map;

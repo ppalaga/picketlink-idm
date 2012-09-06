@@ -43,9 +43,9 @@ import org.junit.BeforeClass;
  * which is annotated with {@link BeforeClass}. For each test method an {@link EntityManager} instance is created by the method
  * <code>onSetupTest</code>.
  * </p>
- * 
+ *
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- * 
+ *
  */
 public abstract class AbstractJPAIdentityStoreTestCase {
 
@@ -57,7 +57,7 @@ public abstract class AbstractJPAIdentityStoreTestCase {
      * <p>
      * Creates a shared {@link EntityManagerFactory} and database instances
      * </p>
-     * 
+     *
      * @throws Exception
      */
     @BeforeClass
@@ -69,7 +69,7 @@ public abstract class AbstractJPAIdentityStoreTestCase {
      * <p>
      * Closes the shared {@link EntityManagerFactory} instance.
      * </p>
-     * 
+     *
      * @throws Exception
      */
     @AfterClass
@@ -81,7 +81,7 @@ public abstract class AbstractJPAIdentityStoreTestCase {
      * <p>
      * Creates an {@link EntityManager} instance for each test and begins a transaction
      * </p>
-     * 
+     *
      * @throws Exception
      */
     @Before
@@ -94,7 +94,7 @@ public abstract class AbstractJPAIdentityStoreTestCase {
      * <p>
      * Flush/Closes the {@link EntityManager} and commit the current transaction.
      * </p>
-     * 
+     *
      * @throws Exception
      */
     @After
@@ -103,23 +103,24 @@ public abstract class AbstractJPAIdentityStoreTestCase {
         this.entityManager.getTransaction().commit();
         this.entityManager.close();
     }
-    
+
     /**
-     * <p>Creates a new {@link JPAIdentityStore}</p>
-     * 
+     * <p>
+     * Creates a new {@link JPAIdentityStore}
+     * </p>
+     *
      * @return
      */
     protected IdentityStore createIdentityStore() {
         JPAIdentityStore identityStore = new JPAIdentityStore();
 
         JPATemplate jpaTemplate = new JPATemplate();
-        
+
         jpaTemplate.setEntityManager(this.entityManager);
-        
+
         identityStore.setJpaTemplate(jpaTemplate);
-        
+
         return identityStore;
     }
-
 
 }

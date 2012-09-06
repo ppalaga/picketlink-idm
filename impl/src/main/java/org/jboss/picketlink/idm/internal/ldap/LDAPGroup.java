@@ -34,6 +34,7 @@ import org.jboss.picketlink.idm.model.Group;
 
 /**
  * LDAP Representation of the {@link Group}
+ *
  * @author anil saldhana
  * @since Sep 4, 2012
  */
@@ -42,84 +43,84 @@ public class LDAPGroup extends DirContextAdaptor implements Group {
     public final String COMMA = ",";
     private LDAPGroup parent;
     private String groupName;
-    
+
     private String groupDNSuffix;
-    
-    public LDAPGroup(){
-        Attribute oc = new BasicAttribute(OBJECT_CLASS); 
+
+    public LDAPGroup() {
+        Attribute oc = new BasicAttribute(OBJECT_CLASS);
         oc.add("top");
         oc.add("groupOfNames");
         attributes.put(oc);
     }
-    
-    public String getDN(){
+
+    public String getDN() {
         return CN + EQUAL + groupName + COMMA + groupDNSuffix;
     }
-    
-    public void addRole(LDAPRole role){
+
+    public void addRole(LDAPRole role) {
         Attribute memberAttribute = attributes.get(MEMBER);
-        if(memberAttribute != null ){
-            if(memberAttribute.contains(SPACE_STRING)){
+        if (memberAttribute != null) {
+            if (memberAttribute.contains(SPACE_STRING)) {
                 memberAttribute.remove(SPACE_STRING);
             }
         } else {
-            memberAttribute = new BasicAttribute(OBJECT_CLASS); 
+            memberAttribute = new BasicAttribute(OBJECT_CLASS);
             memberAttribute.add("top");
             memberAttribute.add("groupOfNames");
         }
         memberAttribute.add(role.getDN());
     }
-    
-    public void removeRole(LDAPRole role){
+
+    public void removeRole(LDAPRole role) {
         Attribute memberAttribute = attributes.get(MEMBER);
-        if(memberAttribute != null ){
+        if (memberAttribute != null) {
             memberAttribute.remove(role.getDN());
         }
     }
-    
+
     @Override
     public String getId() {
         return null;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.groupName = name;
         Attribute theAttribute = attributes.get(CN);
-        if(theAttribute == null){
+        if (theAttribute == null) {
             attributes.put(CN, groupName);
         } else {
             theAttribute.set(0, groupName);
         }
-        attributes.put(MEMBER, SPACE_STRING); //Dummy member for now
+        attributes.put(MEMBER, SPACE_STRING); // Dummy member for now
     }
-    
+
     @Override
     public String getName() {
         return groupName;
     }
 
-    public void setParentGroup(Group parent){
-        if(parent instanceof LDAPGroup == false){
+    public void setParentGroup(Group parent) {
+        if (parent instanceof LDAPGroup == false) {
             throw new RuntimeException("Wrong type:" + parent.getClass());
         }
         LDAPGroup parentGroup = (LDAPGroup) parent;
         this.parent = parentGroup;
     }
-    
+
     @Override
     public Group getParentGroup() {
         return parent;
     }
-    
-    public void addChildGroup(LDAPGroup childGroup){
-        //Deal with attributes
+
+    public void addChildGroup(LDAPGroup childGroup) {
+        // Deal with attributes
         Attribute memberAttribute = attributes.get(MEMBER);
-        if(memberAttribute != null){
-            if(memberAttribute.contains(SPACE_STRING)){
+        if (memberAttribute != null) {
+            if (memberAttribute.contains(SPACE_STRING)) {
                 memberAttribute.remove(SPACE_STRING);
             }
-            
-            memberAttribute.add(CN + "=" + childGroup.getName() + COMMA + groupDNSuffix );
+
+            memberAttribute.add(CN + "=" + childGroup.getName() + COMMA + groupDNSuffix);
         }
     }
 
@@ -130,16 +131,16 @@ public class LDAPGroup extends DirContextAdaptor implements Group {
     public void setGroupDNSuffix(String groupDNSuffix) {
         this.groupDNSuffix = groupDNSuffix;
     }
-    
-    public static LDAPGroup create(Attributes attributes, String groupDNSuffix){
+
+    public static LDAPGroup create(Attributes attributes, String groupDNSuffix) {
         LDAPGroup ldapGroup = new LDAPGroup();
         ldapGroup.setGroupDNSuffix(groupDNSuffix);
-        
-        try{
-            //Get the common name
-            Attribute cn =  attributes.get(CN);
+
+        try {
+            // Get the common name
+            Attribute cn = attributes.get(CN);
             ldapGroup.setName((String) cn.get());
-        } catch(NamingException e){
+        } catch (NamingException e) {
             throw new RuntimeException(e);
         }
         return ldapGroup;

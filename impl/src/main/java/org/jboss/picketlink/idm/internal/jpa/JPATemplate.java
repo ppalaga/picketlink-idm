@@ -29,17 +29,19 @@ import javax.persistence.EntityManager;
  * This class provides a template method to execute operations on the {@link EntityManager} instance. It already provides some
  * exception handling, logging and gives more control about how the {@link EntityManager} is used.
  * </p>
- * 
+ *
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- * 
+ *
  */
 public class JPATemplate {
 
     private EntityManager entityManager;
 
     /**
-     * <p>Executes the specified {@link JPACallback}.</p>
-     * 
+     * <p>
+     * Executes the specified {@link JPACallback}.
+     * </p>
+     *
      * @param callback
      * @return
      */

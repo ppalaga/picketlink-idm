@@ -28,9 +28,9 @@ import javax.persistence.EntityManager;
  * <p>
  * Callback class to execute some specific operation using the provided {@link EntityManager} instance.
  * </p>
- * 
+ *
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- * 
+ *
  */
 public interface JPACallback {
 
@@ -39,7 +39,7 @@ public interface JPACallback {
      * Executes some operation using the provided {@link EntityManager}. Basic exception handling and logging are already
      * provided by the {@link JPATemplate}.
      * </p>
-     * 
+     *
      * @param entityManager
      * @return
      */

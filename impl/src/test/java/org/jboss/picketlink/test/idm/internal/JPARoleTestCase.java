@@ -35,16 +35,18 @@ import org.junit.Test;
  * <p>
  * Tests the creation of roles using the {@link JPAIdentityStore}.
  * </p>
- * 
- * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a> 
+ *
+ * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  */
 public class JPARoleTestCase extends AbstractJPAIdentityTypeTestCase {
 
     private static final String ROLE_NAME = "admin";
 
     /**
-     * <p>Tests the creation of an {@link Role} with populating some basic attributes.</p>
-     * 
+     * <p>
+     * Tests the creation of an {@link Role} with populating some basic attributes.
+     * </p>
+     *
      * @throws Exception
      */
     @Test
@@ -52,51 +54,55 @@ public class JPARoleTestCase extends AbstractJPAIdentityTypeTestCase {
         IdentityStore identityStore = createIdentityStore();
 
         Role role = identityStore.createRole(ROLE_NAME);
-        
+
         assertNotNull(role);
         assertNotNull(role.getKey());
         assertEquals(ROLE_NAME, role.getName());
-        
+
         testAddAttributes();
-        
+
         testGetGroup();
-        
+
         testRemoveRole();
     }
-    
+
     /**
-     * <p>Tests the retrieval of an {@link Role} and the removal of attributes.</p>
-     * 
+     * <p>
+     * Tests the retrieval of an {@link Role} and the removal of attributes.
+     * </p>
+     *
      * @throws Exception
      */
     public void testGetGroup() throws Exception {
         IdentityStore identityStore = createIdentityStore();
-        
+
         Role group = identityStore.getRole(ROLE_NAME);
-        
+
         assertNotNull(group);
         assertNotNull(group.getKey());
         assertEquals(ROLE_NAME, group.getName());
-        
+
         testRemoveAttributes();
     }
 
     /**
-     * <p>Tests the remove of an {@link Role}.</p>
-     * 
+     * <p>
+     * Tests the remove of an {@link Role}.
+     * </p>
+     *
      * @throws Exception
      */
     public void testRemoveRole() throws Exception {
         IdentityStore identityStore = createIdentityStore();
-        
+
         Role role = identityStore.getRole(ROLE_NAME);
-        
+
         assertNotNull(role);
-        
+
         identityStore.removeRole(role);
-        
+
         role = identityStore.getRole(ROLE_NAME);
-        
+
         assertNull(role);
     }
 

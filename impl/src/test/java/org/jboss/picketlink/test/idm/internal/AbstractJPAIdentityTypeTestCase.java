@@ -36,46 +36,50 @@ import org.jboss.picketlink.idm.spi.IdentityStore;
 public abstract class AbstractJPAIdentityTypeTestCase extends AbstractJPAIdentityStoreTestCase {
 
     /**
-     * <p>Tests the setup of some attributes for an user.</p>
-     * 
+     * <p>
+     * Tests the setup of some attributes for an user.
+     * </p>
+     *
      * @throws Exception
      */
     public void testAddAttributes() throws Exception {
         IdentityStore identityStore = createIdentityStore();
-        
+
         IdentityType identityType = getIdentityTypeFromDatabase(identityStore);
 
         identityType.setAttribute("QuestionTotal", "2");
         identityType.setAttribute("Question1", "What is favorite toy?");
         identityType.setAttribute("Question1Answer", "Gum");
-        identityType.setAttribute("MultiValuedAttribute", new String[] {"value1", "value2", "value3"});
-        
+        identityType.setAttribute("MultiValuedAttribute", new String[] { "value1", "value2", "value3" });
+
         assertEquals("2", identityType.getAttribute("QuestionTotal"));
         assertEquals("What is favorite toy?", identityType.getAttribute("Question1"));
         assertEquals("Gum", identityType.getAttribute("Question1Answer"));
-        
+
         assertEquals("value1", identityType.getAttributeValues("MultiValuedAttribute")[0]);
         assertEquals("value2", identityType.getAttributeValues("MultiValuedAttribute")[1]);
         assertEquals("value3", identityType.getAttributeValues("MultiValuedAttribute")[2]);
     }
 
     protected abstract IdentityType getIdentityTypeFromDatabase(IdentityStore identityStore);
-    
+
     /**
-     * <p>Tests the removal of some attributes for an user.</p>
-     * 
+     * <p>
+     * Tests the removal of some attributes for an user.
+     * </p>
+     *
      * @throws Exception
      */
     public void testRemoveAttributes() throws Exception {
         IdentityStore identityStore = createIdentityStore();
-        
+
         IdentityType identityType = getIdentityTypeFromDatabase(identityStore);
 
         assertNotNull(identityType.getAttributeValues("MultiValuedAttribute"));
-        
+
         identityType.removeAttribute("MultiValuedAttribute");
-        
+
         assertNull(identityType.getAttributeValues("MultiValuedAttribute"));
     }
-    
+
 }

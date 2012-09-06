@@ -35,20 +35,19 @@ import org.jboss.picketlink.idm.model.Group;
 
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- * 
+ *
  */
 @Entity
 @NamedQuery(name = NamedQueries.GROUP_LOAD_BY_KEY, query = "from DatabaseGroup where key = :key")
 public class DatabaseGroup extends AbstractDatabaseIdentityType<DatabaseGroupAttribute> implements Group {
 
     private String name;
-    
+
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<DatabaseGroupAttribute> groupAttributes = new ArrayList<DatabaseGroupAttribute>();
 
     @ManyToOne
     private DatabaseGroup parentGroup;
-
 
     public DatabaseGroup() {
     }
@@ -71,11 +70,11 @@ public class DatabaseGroup extends AbstractDatabaseIdentityType<DatabaseGroupAtt
     public Group getParentGroup() {
         return this.parentGroup;
     }
-    
+
     public void setParentGroup(DatabaseGroup parentGroup) {
         this.parentGroup = parentGroup;
     }
-    
+
     @Override
     public List<DatabaseGroupAttribute> getOwnerAttributes() {
         return this.groupAttributes;

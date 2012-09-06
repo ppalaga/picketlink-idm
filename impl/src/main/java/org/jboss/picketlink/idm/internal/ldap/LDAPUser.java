@@ -37,14 +37,15 @@ import org.jboss.picketlink.idm.model.User;
 
 /**
  * LDAP Representation of an {@link User}
+ *
  * @author anil saldhana
  * @since Aug 30, 2012
  */
 public class LDAPUser extends DirContextAdaptor implements User {
 
-    protected String userid, firstName, lastName, fullName,email, userDNSuffix;
+    protected String userid, firstName, lastName, fullName, email, userDNSuffix;
 
-    public LDAPUser(){ 
+    public LDAPUser() {
         Attribute oc = new BasicAttribute(OBJECT_CLASS);
         oc.add("inetOrgPerson");
         oc.add("organizationalPerson");
@@ -52,33 +53,33 @@ public class LDAPUser extends DirContextAdaptor implements User {
         oc.add("top");
 
         attributes.put(oc);
-    } 
-    
-    public void setUserDNSuffix(String udn){
+    }
+
+    public void setUserDNSuffix(String udn) {
         this.userDNSuffix = udn;
     }
-    
-    public String getDN(){
+
+    public String getDN() {
         return UID + EQUAL + userid + COMMA + userDNSuffix;
     }
 
-    public void setId(String id){
+    public void setId(String id) {
         this.userid = id;
         Attribute theAttribute = attributes.get(UID);
-        if(theAttribute == null){
+        if (theAttribute == null) {
             attributes.put(UID, id);
         } else {
             theAttribute.set(0, id);
         }
     }
-    
+
     @Override
     public String getId() {
         Attribute theAttribute = attributes.get(UID);
-        if(theAttribute != null){
+        if (theAttribute != null) {
             try {
                 return (String) theAttribute.get();
-            } catch (NamingException e) { 
+            } catch (NamingException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -88,10 +89,10 @@ public class LDAPUser extends DirContextAdaptor implements User {
     @Override
     public String getFirstName() {
         try {
-            if(firstName == null){
+            if (firstName == null) {
                 Attribute theAttribute = attributes.get(GIVENNAME);
-                if(theAttribute != null){
-                    firstName = (String) theAttribute.get();   
+                if (theAttribute != null) {
+                    firstName = (String) theAttribute.get();
                 }
             }
         } catch (NamingException e) {
@@ -104,7 +105,7 @@ public class LDAPUser extends DirContextAdaptor implements User {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
         Attribute theAttribute = attributes.get(GIVENNAME);
-        if(theAttribute == null){
+        if (theAttribute == null) {
             attributes.put(GIVENNAME, firstName);
         } else {
             theAttribute.set(0, firstName);
@@ -114,10 +115,10 @@ public class LDAPUser extends DirContextAdaptor implements User {
     @Override
     public String getLastName() {
         try {
-            if(lastName == null){
+            if (lastName == null) {
                 Attribute theAttribute = attributes.get(SN);
-                if(theAttribute != null){
-                    lastName = (String) theAttribute.get();   
+                if (theAttribute != null) {
+                    lastName = (String) theAttribute.get();
                 }
             }
         } catch (NamingException e) {
@@ -130,7 +131,7 @@ public class LDAPUser extends DirContextAdaptor implements User {
     public void setLastName(String lastName) {
         this.lastName = lastName;
         Attribute theAttribute = attributes.get(SN);
-        if(theAttribute == null){
+        if (theAttribute == null) {
             attributes.put(SN, lastName);
         } else {
             theAttribute.set(0, lastName);
@@ -140,10 +141,10 @@ public class LDAPUser extends DirContextAdaptor implements User {
     @Override
     public String getFullName() {
         try {
-            if(fullName == null){
+            if (fullName == null) {
                 Attribute theAttribute = attributes.get(CN);
-                if(theAttribute != null){
-                    fullName = (String) theAttribute.get();   
+                if (theAttribute != null) {
+                    fullName = (String) theAttribute.get();
                 }
             }
         } catch (NamingException e) {
@@ -155,20 +156,20 @@ public class LDAPUser extends DirContextAdaptor implements User {
     public void setFullName(String fullName) {
         this.fullName = fullName;
         Attribute theAttribute = attributes.get(CN);
-        if(theAttribute == null){
+        if (theAttribute == null) {
             attributes.put(CN, fullName);
         } else {
             theAttribute.set(0, fullName);
         }
-    } 
+    }
 
     @Override
     public String getEmail() {
         try {
-            if(email == null){
+            if (email == null) {
                 Attribute theAttribute = attributes.get(EMAIL);
-                if(theAttribute != null){
-                    email = (String) theAttribute.get();   
+                if (theAttribute != null) {
+                    email = (String) theAttribute.get();
                 }
             }
         } catch (NamingException e) {
@@ -181,33 +182,33 @@ public class LDAPUser extends DirContextAdaptor implements User {
     public void setEmail(String email) {
         this.email = email;
         Attribute theAttribute = attributes.get(EMAIL);
-        if(theAttribute == null){
+        if (theAttribute == null) {
             attributes.put(EMAIL, email);
         } else {
             theAttribute.set(0, email);
         }
     }
 
-    public static LDAPUser create(Attributes attributes, String userDNSuffix){
+    public static LDAPUser create(Attributes attributes, String userDNSuffix) {
         LDAPUser user = new LDAPUser();
         user.setUserDNSuffix(userDNSuffix);
-        
-        try{
-            //Get the UID
-            Attribute uid =  attributes.get(UID);
+
+        try {
+            // Get the UID
+            Attribute uid = attributes.get(UID);
             user.setId((String) uid.get());
-            
-            //Get the common name
-            Attribute cn =  attributes.get(CN);
+
+            // Get the common name
+            Attribute cn = attributes.get(CN);
             user.setFullName((String) cn.get());
-            
-            //Get the first name
+
+            // Get the first name
             Attribute fn = attributes.get(GIVENNAME);
             user.setFirstName((String) fn.get());
-            
+
             Attribute sn = attributes.get(SN);
             user.setLastName((String) sn.get());
-        } catch(NamingException e){
+        } catch (NamingException e) {
             throw new RuntimeException(e);
         }
         return user;

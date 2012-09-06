@@ -36,51 +36,55 @@ import org.junit.Test;
  * <p>
  * Tests the creation of memberships using the {@link JPAIdentityStore}.
  * </p>
- * 
- * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a> 
+ *
+ * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  */
 public class JPAMembershipTestCase extends AbstractJPAIdentityStoreTestCase {
 
     /**
-     * <p>Tests the creation of an {@link Membership} with populating some basic attributes.</p>
-     * 
+     * <p>
+     * Tests the creation of an {@link Membership} with populating some basic attributes.
+     * </p>
+     *
      * @throws Exception
      */
     @Test
     public void testMembershipStore() throws Exception {
         IdentityStore identityStore = createIdentityStore();
-        
+
         Role role = identityStore.createRole("admin");
         User user = identityStore.createUser("asaldhan");
         Group group = identityStore.createGroup("Administrators", null);
-        
+
         Membership membership = identityStore.createMembership(role, user, group);
 
         assertNotNull(membership);
-        
+
         testRemoveGroup();
     }
 
     /**
-     * <p>Tests the remove of an {@link Membership}.</p>
-     * 
+     * <p>
+     * Tests the remove of an {@link Membership}.
+     * </p>
+     *
      * @throws Exception
      */
     public void testRemoveGroup() throws Exception {
         IdentityStore identityStore = createIdentityStore();
-        
+
         Role role = identityStore.getRole("admin");
         User user = identityStore.getUser("asaldhan");
         Group group = identityStore.getGroup("Administrators");
 
         Membership membership = identityStore.getMembership(role, user, group);
-        
+
         assertNotNull(membership);
-        
+
         identityStore.removeMembership(role, user, group);
-        
+
         membership = identityStore.getMembership(role, user, group);
-        
+
         assertNull(membership);
     }
 

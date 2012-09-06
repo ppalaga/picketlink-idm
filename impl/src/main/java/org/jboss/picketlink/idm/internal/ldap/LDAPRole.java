@@ -34,47 +34,49 @@ import org.jboss.picketlink.idm.model.Role;
 
 /**
  * Implementation of {@link Role} for storage in ldap
+ *
  * @author anil saldhana
  * @since Aug 31, 2012
  */
 public class LDAPRole extends DirContextAdaptor implements Role {
 
     private String roleName, roleDNSuffix;
-    
-    public LDAPRole(){
-        Attribute oc = new BasicAttribute(OBJECT_CLASS); 
+
+    public LDAPRole() {
+        Attribute oc = new BasicAttribute(OBJECT_CLASS);
         oc.add("top");
         oc.add("groupOfNames");
         attributes.put(oc);
-    } 
-    
-    public void setRoleDNSuffix(String rdns){
+    }
+
+    public void setRoleDNSuffix(String rdns) {
         this.roleDNSuffix = rdns;
     }
-    
-    public String getDN(){
+
+    public String getDN() {
         return CN + EQUAL + roleName + COMMA + roleDNSuffix;
     }
-    
-    public void setName(String roleName){
+
+    public void setName(String roleName) {
         this.roleName = roleName;
         Attribute theAttribute = attributes.get(CN);
-        if(theAttribute == null){
+        if (theAttribute == null) {
             attributes.put(CN, roleName);
         } else {
             theAttribute.set(0, roleName);
         }
-        attributes.put(MEMBER, SPACE_STRING); //Dummy member for now
+        attributes.put(MEMBER, SPACE_STRING); // Dummy member for now
     }
+
     @Override
     public String getName() {
         return roleName;
     }
-    
-    public void addUser(LDAPUser user){
+
+    public void addUser(LDAPUser user) {
         Attribute memberAttribute = attributes.get(MEMBER);
-        if(memberAttribute != null ){
-            if(memberAttribute.contains(SPACE_STRING)){
+        if (memberAttribute != null) {
+            if (memberAttribute.contains(SPACE_STRING)) {
                 memberAttribute.remove(SPACE_STRING);
             }
         } else {
@@ -86,23 +88,23 @@ public class LDAPRole extends DirContextAdaptor implements Role {
         }
         memberAttribute.add(user.getDN());
     }
-    
-    public void removeUser(LDAPUser user){
+
+    public void removeUser(LDAPUser user) {
         Attribute memberAttribute = attributes.get(MEMBER);
-        if(memberAttribute != null ){
+        if (memberAttribute != null) {
             memberAttribute.remove(user.getDN());
         }
     }
-    
-    public static LDAPRole create(Attributes attributes, String roleDNSuffix){
+
+    public static LDAPRole create(Attributes attributes, String roleDNSuffix) {
         LDAPRole role = new LDAPRole();
         role.setRoleDNSuffix(roleDNSuffix);
-        
-        try{
-            //Get the common name
-            Attribute cn =  attributes.get(CN);
+
+        try {
+            // Get the common name
+            Attribute cn = attributes.get(CN);
             role.setName((String) cn.get());
-        } catch(NamingException e){
+        } catch (NamingException e) {
             throw new RuntimeException(e);
         }
         return role;

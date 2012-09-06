@@ -35,7 +35,7 @@ import org.jboss.picketlink.idm.model.User;
 
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- * 
+ *
  */
 @Entity
 @NamedQuery(name = NamedQueries.USER_LOAD_BY_KEY, query = "from DatabaseUser where key = :key")
@@ -47,8 +47,8 @@ public class DatabaseUser extends AbstractDatabaseIdentityType<DatabaseUserAttri
     private String email;
 
     private String fullName;
-    
-    @OneToMany (mappedBy="user", cascade=CascadeType.ALL)
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<DatabaseUserAttribute> userAttributes = new ArrayList<DatabaseUserAttribute>();
 
     public DatabaseUser() {
@@ -131,6 +131,6 @@ public class DatabaseUser extends AbstractDatabaseIdentityType<DatabaseUserAttri
     protected DatabaseUserAttribute createAttribute(String name, String value) {
         return new DatabaseUserAttribute(name, value);
     }
-    
+
     // TODO: implement hashcode and equals methods
 }

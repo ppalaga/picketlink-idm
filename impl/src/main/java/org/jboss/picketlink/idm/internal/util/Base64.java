@@ -827,7 +827,8 @@ public class Base64 {
 
             // Check for size of file
             if (file.length() > Integer.MAX_VALUE) {
-                throw new IllegalStateException( "Error decoding from file " + filename + ": file is too big (%s bytes)" + file.length());
+                throw new IllegalStateException("Error decoding from file " + filename + ": file is too big (%s bytes)"
+                        + file.length());
             } // end if: file too big for int index
             buffer = new byte[(int) file.length()];
 

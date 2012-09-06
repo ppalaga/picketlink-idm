@@ -35,8 +35,8 @@ import org.junit.Test;
  * <p>
  * Tests the creation of users using the {@link JPAIdentityStore}.
  * </p>
- * 
- * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a> 
+ *
+ * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  */
 public class JPAUserTestCase extends AbstractJPAIdentityTypeTestCase {
 
@@ -47,8 +47,10 @@ public class JPAUserTestCase extends AbstractJPAIdentityTypeTestCase {
     private static final String USER_USERNAME = "asaldhana";
 
     /**
-     * <p>Tests the creation of an {@link User} with populating some basic attributes.</p>
-     * 
+     * <p>
+     * Tests the creation of an {@link User} with populating some basic attributes.
+     * </p>
+     *
      * @throws Exception
      */
     @Test
@@ -62,17 +64,19 @@ public class JPAUserTestCase extends AbstractJPAIdentityTypeTestCase {
         user.setLastName(USER_LAST_NAME);
 
         assertUserBasicInformation(user);
-        
+
         testAddAttributes();
-        
+
         testGetUser();
-        
+
         testRemoveUser();
     }
 
     /**
-     * <p>Tests if the user was properly created by retrieving him from the database.</p>
-     * 
+     * <p>
+     * Tests if the user was properly created by retrieving him from the database.
+     * </p>
+     *
      * @throws Exception
      */
     public void testGetUser() throws Exception {
@@ -81,32 +85,36 @@ public class JPAUserTestCase extends AbstractJPAIdentityTypeTestCase {
         User user = identityStore.getUser(USER_USERNAME);
 
         assertUserBasicInformation(user);
-        
+
         testRemoveAttributes();
     }
-    
+
     /**
-     * <p>Tests the removal of users.</p>
-     * 
+     * <p>
+     * Tests the removal of users.
+     * </p>
+     *
      * @throws Exception
      */
     public void testRemoveUser() throws Exception {
         IdentityStore identityStore = createIdentityStore();
 
         User user = identityStore.getUser(USER_USERNAME);
-        
+
         assertNotNull(user);
-        
+
         identityStore.removeUser(user);
-        
+
         user = identityStore.getUser(USER_USERNAME);
-        
+
         assertNull(user);
-    }    
-    
+    }
+
     /**
-     * <p>Asserts if the {@link User} is populated with the expected values.</p>
-     * 
+     * <p>
+     * Asserts if the {@link User} is populated with the expected values.
+     * </p>
+     *
      * @param user
      */
     private void assertUserBasicInformation(User user) {

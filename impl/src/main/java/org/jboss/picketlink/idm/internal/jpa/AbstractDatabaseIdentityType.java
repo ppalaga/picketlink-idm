@@ -40,6 +40,7 @@ import org.jboss.picketlink.idm.model.IdentityType;
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  *
  */
+@SuppressWarnings("rawtypes")
 @MappedSuperclass
 public abstract class AbstractDatabaseIdentityType<A extends AbstractDatabaseAttribute> implements IdentityType {
 
@@ -51,7 +52,7 @@ public abstract class AbstractDatabaseIdentityType<A extends AbstractDatabaseAtt
     private boolean enabled;
     private Date expirationDate;
     private Date creationDate;
-    
+
     @Transient
     private Map<String, String[]> userAttributesMap;
 
@@ -135,15 +136,16 @@ public abstract class AbstractDatabaseIdentityType<A extends AbstractDatabaseAtt
      */
     public abstract List<A> getOwnerAttributes();
 
+    @SuppressWarnings("unchecked")
     @Override
     @Transient
     public void setAttribute(String name, String value) {
-        getUserAttributesMap().put(name, new String[] {value});
-        
+        getUserAttributesMap().put(name, new String[] { value });
+
         A attribute = createAttribute(name, value);
-        
+
         attribute.setIdentityType(this);
-        
+
         getOwnerAttributes().add(attribute);
     }
 
@@ -155,17 +157,17 @@ public abstract class AbstractDatabaseIdentityType<A extends AbstractDatabaseAtt
 
             for (AbstractDatabaseAttribute attribute : getOwnerAttributes()) {
                 String[] values = this.userAttributesMap.get(attribute.getName());
-                
+
                 if (values == null) {
-                    values = new String[] {attribute.getValue()};
+                    values = new String[] { attribute.getValue() };
                 } else {
                     int len = values.length;
-                    
+
                     values = Arrays.copyOf(values, len + 1);
-                    
+
                     values[len] = attribute.getValue();
                 }
-                
+
                 this.userAttributesMap.put(attribute.getName(), values);
             }
         }
@@ -173,19 +175,21 @@ public abstract class AbstractDatabaseIdentityType<A extends AbstractDatabaseAtt
         return this.userAttributesMap;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     @Transient
     public void setAttribute(String name, String[] values) {
         getUserAttributesMap().put(name, values);
         for (String value : values) {
             A attribute = createAttribute(name, value);
-            
+
             attribute.setIdentityType(this);
 
             getOwnerAttributes().add(attribute);
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     @Transient
     public void removeAttribute(String name) {
@@ -202,11 +206,11 @@ public abstract class AbstractDatabaseIdentityType<A extends AbstractDatabaseAtt
     @Transient
     public String getAttribute(String name) {
         String[] values = getUserAttributesMap().get(name);
-        
+
         if (values != null) {
             return values[0];
         }
-        
+
         return null;
     }
 
@@ -221,7 +225,7 @@ public abstract class AbstractDatabaseIdentityType<A extends AbstractDatabaseAtt
     public Map<String, String[]> getAttributes() {
         return null;
     }
-    
+
     // TODO: implement hashcode and equals methods
-    
+
 }

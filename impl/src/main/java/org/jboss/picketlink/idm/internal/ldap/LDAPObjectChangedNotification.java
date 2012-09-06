@@ -25,17 +25,18 @@ import javax.naming.directory.DirContext;
 
 /**
  * Indicates that an LDAP Object has changed
+ *
  * @author anil saldhana
  * @since Sep 4, 2012
  */
 public class LDAPObjectChangedNotification {
     private DirContext object;
 
-    public LDAPObjectChangedNotification(DirContext ldapObject){
+    public LDAPObjectChangedNotification(DirContext ldapObject) {
         this.object = ldapObject;
     }
-    
-    public DirContext getLDAPObject(){
+
+    public DirContext getLDAPObject() {
         return object;
     }
 }

@@ -36,8 +36,10 @@ import org.jboss.picketlink.idm.model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.picketbox.test.ldap.AbstractLDAPTest;
+
 /**
  * Unit test the {@link LDAPIdentityStore}
+ *
  * @author anil saldhana
  * @since Aug 30, 2012
  */
@@ -47,70 +49,69 @@ public class LDAPIdentityStoreTestCase extends AbstractLDAPTest {
         super.setup();
         importLDIF("ldap/users.ldif");
     }
-    
+
     @Test
-    public void testLDAPIdentityStore() throws Exception{
+    public void testLDAPIdentityStore() throws Exception {
         LDAPIdentityStore store = new LDAPIdentityStore();
-        Map<String,String> config = new HashMap<String,String>();
+        Map<String, String> config = new HashMap<String, String>();
         config.put("userDNSuffix", "ou=People,dc=jboss,dc=org");
         config.put("roleDNSuffix", "ou=Roles,dc=jboss,dc=org");
         config.put("groupDNSuffix", "ou=Groups,dc=jboss,dc=org");
         config.put("url", "ldap://localhost:10389");
         config.put("bindDN", adminDN);
         config.put("password", adminPW);
-        
+
         store.config(config);
-        
-        //Users
+
+        // Users
         User user = store.createUser("Anil Saldhana");
         assertNotNull(user);
-        
+
         User anil = store.getUser("Anil Saldhana");
         assertNotNull(anil);
         assertEquals("Anil Saldhana", anil.getFullName());
         assertEquals("Anil", anil.getFirstName());
         assertEquals("Saldhana", anil.getLastName());
-        
-        //Roles
+
+        // Roles
         Role role = store.createRole("testRole");
         assertNotNull(role);
         assertEquals("testRole", role.getName());
-        
+
         Role ldapRole = store.getRole("testRole");
         assertNotNull(ldapRole);
         assertEquals("testRole", ldapRole.getName());
-        
-        
-        //Groups
+
+        // Groups
         Group ldapGroup = store.createGroup("PicketBox Team", null);
         assertNotNull(ldapGroup);
-        
+
         Group retrievedLDAPGroup = store.getGroup("PicketBox Team");
         assertNotNull(retrievedLDAPGroup);
         assertNull(retrievedLDAPGroup.getParentGroup());
-        
-        //Parent Groups Now
+
+        // Parent Groups Now
         Group devGroup = store.createGroup("Dev", ldapGroup);
         assertNotNull(devGroup);
-        
+
         Group retrievedDevGroup = store.getGroup("Dev");
         assertNotNull(retrievedDevGroup);
         Group parentOfDevGroup = retrievedDevGroup.getParentGroup();
         assertNotNull(parentOfDevGroup);
         assertEquals("PicketBox Team", parentOfDevGroup.getName());
-        
-        //Add a relationship between an user, role and group
+
+        // Add a relationship between an user, role and group
         Membership membership = store.createMembership(ldapRole, anil, ldapGroup);
         assertNotNull(membership);
-        
-        //Deal with removal of users, roles and groups
+
+        // Deal with removal of users, roles and groups
         store.removeMembership(ldapRole, anil, ldapGroup);
-        
+
         store.removeUser(anil);
         store.removeRole(ldapRole);
         store.removeGroup(ldapGroup);
         store.removeGroup(devGroup);
-        
+
         anil = store.getUser("Anil Saldhana");
         assertNull(anil);
         ldapRole = store.getRole("testRole");

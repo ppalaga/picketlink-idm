@@ -29,10 +29,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.picketlink.idm.internal.LDAPIdentityStore;
+import org.jboss.picketlink.idm.internal.config.LDAPConfiguration;
+import org.jboss.picketlink.idm.internal.config.LDAPConfigurationBuilder;
 import org.jboss.picketlink.idm.model.Group;
 import org.jboss.picketlink.idm.model.Membership;
 import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
+import org.jboss.picketlink.idm.spi.IdentityStoreConfigurationBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.picketbox.test.ldap.AbstractLDAPTest;
@@ -50,6 +53,16 @@ public class LDAPIdentityStoreTestCase extends AbstractLDAPTest {
         importLDIF("ldap/users.ldif");
     }
 
+    private LDAPConfiguration getConfiguration() {
+        String fqn = LDAPConfigurationBuilder.class.getName();
+        LDAPConfiguration config = (LDAPConfiguration) IdentityStoreConfigurationBuilder.config(fqn);
+
+        config.setBindDN(adminDN).setBindCredential(adminPW).setLdapURL("ldap://localhost:10389");
+        config.setUserDNSuffix("ou=People,dc=jboss,dc=org").setRoleDNSuffix("ou=Roles,dc=jboss,dc=org");
+        config.setGroupDNSuffix("ou=Groups,dc=jboss,dc=org");
+        return config;
+    }
+
     @Test
     public void testLDAPIdentityStore() throws Exception {
         LDAPIdentityStore store = new LDAPIdentityStore();
@@ -61,7 +74,8 @@ public class LDAPIdentityStoreTestCase extends AbstractLDAPTest {
         config.put("bindDN", adminDN);
         config.put("password", adminPW);
 
-        store.config(config);
+        store.setConfiguration(getConfiguration());
+        // store.config(config);
 
         // Users
         User user = store.createUser("Anil Saldhana");

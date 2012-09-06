@@ -42,6 +42,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
+import org.jboss.picketlink.idm.internal.config.LDAPConfiguration;
 import org.jboss.picketlink.idm.internal.ldap.LDAPChangeNotificationHandler;
 import org.jboss.picketlink.idm.internal.ldap.LDAPGroup;
 import org.jboss.picketlink.idm.internal.ldap.LDAPObjectChangedNotification;
@@ -71,40 +72,28 @@ public class LDAPIdentityStore implements IdentityStore, LDAPChangeNotificationH
     protected DirContext ctx = null;
     protected String userDNSuffix, roleDNSuffix, groupDNSuffix;
 
-    /**
-     * WE NEED A PROPER BUILDER TO REPLACE THIS
-     *
-     * @param config
-     */
-    public void config(Map<String, String> config) {
-        userDNSuffix = config.get("userDNSuffix");
-        roleDNSuffix = config.get("roleDNSuffix");
-        groupDNSuffix = config.get("groupDNSuffix");
+    public LDAPIdentityStore() {
+    }
+
+    public void setConfiguration(LDAPConfiguration configuration) {
+        userDNSuffix = configuration.getUserDNSuffix();
+        roleDNSuffix = configuration.getRoleDNSuffix();
+        groupDNSuffix = configuration.getGroupDNSuffix();
 
         // Construct the dir ctx
         Properties env = new Properties();
+        env.setProperty(Context.INITIAL_CONTEXT_FACTORY, configuration.getFactoryName());
+        env.setProperty(Context.SECURITY_AUTHENTICATION, configuration.getAuthType());
 
-        String factoryName = config.get("factory");
-        if (factoryName == null) {
-            factoryName = "com.sun.jndi.ldap.LdapCtxFactory";
-        }
-        env.setProperty(Context.INITIAL_CONTEXT_FACTORY, factoryName);
-
-        String authType = config.get("securityAuth");
-        if (authType == null) {
-            authType = "simple";
-        }
-
-        String protocol = config.get("protocol");
+        String protocol = configuration.getProtocol();
         if (protocol != null) {
             env.setProperty(Context.SECURITY_PROTOCOL, protocol);
         }
-
-        String bindDN = config.get("bindDN");
+        String bindDN = configuration.getBindDN();
         char[] bindCredential = null;
 
-        if (config.get("password") != null) {
-            bindCredential = config.get("password").toCharArray();
+        if (configuration.getBindCredential() != null) {
+            bindCredential = configuration.getBindCredential().toCharArray();
         }
 
         if (bindDN != null) {
@@ -112,14 +101,7 @@ public class LDAPIdentityStore implements IdentityStore, LDAPChangeNotificationH
             env.put(Context.SECURITY_CREDENTIALS, bindCredential);
         }
 
-        if (bindDN != null) {
-            // Rebind the ctx to the bind dn/credentials for the roles searches
-            env.setProperty(Context.SECURITY_PRINCIPAL, bindDN);
-            env.put(Context.SECURITY_CREDENTIALS, bindCredential);
-
-        }
-
-        String url = config.get("url");
+        String url = configuration.getLdapURL();
         if (url == null) {
             throw new RuntimeException("url");
         }
@@ -131,6 +113,7 @@ public class LDAPIdentityStore implements IdentityStore, LDAPChangeNotificationH
         } catch (NamingException e1) {
             throw new RuntimeException(e1);
         }
+
     }
 
     @Override

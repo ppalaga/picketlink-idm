@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.picketlink.idm.internal.LDAPIdentityStore;
+import org.jboss.picketlink.idm.internal.config.LDAPConfiguration;
+import org.jboss.picketlink.idm.internal.config.LDAPConfigurationBuilder;
 import org.jboss.picketlink.idm.internal.ldap.LDAPUser;
 import org.jboss.picketlink.idm.internal.util.Base64;
 import org.jboss.picketlink.idm.model.User;
@@ -53,6 +55,16 @@ public class LDAPUserTestCase extends AbstractLDAPTest {
         importLDIF("ldap/users.ldif");
     }
 
+    private LDAPConfiguration getConfiguration() {
+        LDAPConfigurationBuilder builder = new LDAPConfigurationBuilder();
+        LDAPConfiguration config = (LDAPConfiguration) builder.build();
+
+        config.setBindDN(adminDN).setBindCredential(adminPW).setLdapURL("ldap://localhost:10389");
+        config.setUserDNSuffix("ou=People,dc=jboss,dc=org").setRoleDNSuffix("ou=Roles,dc=jboss,dc=org");
+        config.setGroupDNSuffix("ou=Groups,dc=jboss,dc=org");
+        return config;
+    }
+
     @Test
     public void testLDAPIdentityStore() throws Exception {
         LDAPIdentityStore store = new LDAPIdentityStore();
@@ -64,7 +76,8 @@ public class LDAPUserTestCase extends AbstractLDAPTest {
         config.put("bindDN", adminDN);
         config.put("password", adminPW);
 
-        store.config(config);
+        store.setConfiguration(getConfiguration());
+        // store.config(config);
 
         // Let us create an user
         User user = store.createUser("Anil Saldhana");

@@ -69,7 +69,8 @@ public abstract class AbstractInfinispanCacheProvider
       {
          try
          {
-            infinispanCache = getCacheFromRegistry(configurationRegistry, registryName);
+            this.cache = getCacheFromRegistry(configurationRegistry, registryName);
+            return;
          }
          catch (Exception e)
          {
@@ -205,7 +206,7 @@ public abstract class AbstractInfinispanCacheProvider
    /**
     * Different registry type is used for API cache and for Store cache
     */
-   protected abstract Cache<Object, Object> getCacheFromRegistry(Object registry, String registryName)  throws IdentityException;
+   protected abstract TreeCache<Object, Object> getCacheFromRegistry(Object registry, String registryName)  throws IdentityException;
 
    protected Fqn getNamespacedFqn(String ns)
    {

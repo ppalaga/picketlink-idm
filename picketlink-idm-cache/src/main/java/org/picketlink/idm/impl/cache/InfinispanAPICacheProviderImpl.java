@@ -127,10 +127,10 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    }
 
    @Override
-   protected Cache<Object, Object> getCacheFromRegistry(Object registry, String registryName) throws IdentityException
+   protected TreeCache<Object, Object> getCacheFromRegistry(Object registry, String registryName) throws IdentityException
    {
       IdentityConfigurationRegistry reg = (IdentityConfigurationRegistry)registry;
-      return (Cache)reg.getObject(registryName);
+      return (TreeCache)reg.getObject(registryName);
    }
 
    public void putUser(String ns, User user)

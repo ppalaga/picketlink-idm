@@ -27,14 +27,14 @@
       xmlns="urn:infinispan:config:5.1">
 
    <global>
-      <globalJmxStatistics enabled="true" cacheManagerName="plidm"
+      <globalJmxStatistics enabled="true" cacheManagerName="plidm" allowDuplicateDomains="true"
                            mBeanServerLookup="org.infinispan.jmx.PlatformMBeanServerLookup" />
    </global>
 
    <namedCache name="xml-configured-cache">
-      <!--<transaction transactionManagerLookupClass="org.infinispan.transaction.lookup.JBossStandaloneJTAManagerLookup"
-                   transactionMode="TRANSACTIONAL" lockingMode="OPTIMISTIC" autoCommit="true" />-->
-      <transaction transactionMode="TRANSACTIONAL" />
+      <transaction transactionManagerLookupClass="org.infinispan.transaction.lookup.JBossStandaloneJTAManagerLookup"
+                   transactionMode="TRANSACTIONAL" lockingMode="OPTIMISTIC" autoCommit="true" />
+
       <invocationBatching enabled="true" />
 
       <expiration lifespan="120000" wakeUpInterval="5000" />

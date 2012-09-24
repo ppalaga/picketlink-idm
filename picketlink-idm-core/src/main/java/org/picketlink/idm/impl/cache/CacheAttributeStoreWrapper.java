@@ -37,13 +37,16 @@ import java.util.Set;
 import java.util.Map;
 
 /**
+ * Implementation, which wrapps another "real" Attribute store and adds some caching functionality with
+ * usage of {@link IdentityStoreCacheProvider}
+ *
  * @author <a href="mailto:boleslaw.dawidowicz at redhat.com">Boleslaw Dawidowicz</a>
  * @version : 0.1 $
  */
-public class JBossCacheAttributeStoreWrapper implements AttributeStore
+public class CacheAttributeStoreWrapper implements AttributeStore
 {
 
-   private static Logger log = Logger.getLogger(JBossCacheAttributeStoreWrapper.class.getName());
+   private static Logger log = Logger.getLogger(CacheAttributeStoreWrapper.class.getName());
 
    private final AttributeStore attributeStore;
 
@@ -51,7 +54,7 @@ public class JBossCacheAttributeStoreWrapper implements AttributeStore
 
    protected final String cacheScope;
 
-   public JBossCacheAttributeStoreWrapper(AttributeStore attributeStore, IdentityStoreCacheProvider cacheSupport, String cacheScope)
+   public CacheAttributeStoreWrapper(AttributeStore attributeStore, IdentityStoreCacheProvider cacheSupport, String cacheScope)
    {
       this.cacheSupport = cacheSupport;
       this.attributeStore = attributeStore;
@@ -191,7 +194,7 @@ public class JBossCacheAttributeStoreWrapper implements AttributeStore
    @Override
    public String toString()
    {
-      return "JBossCacheAttributeStoreWrapper (AttributeStore=" + attributeStore.getId() + ")";
+      return "CacheAttributeStoreWrapper (AttributeStore=" + attributeStore.getId() + ")";
    }
 
 }

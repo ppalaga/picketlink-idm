@@ -44,29 +44,30 @@ import java.util.HashSet;
 import java.util.logging.Logger;
 
 /**
- * IdentityStore implementation that wraps another IdentityStore and uses JBossCache to cache results.
+ * IdentityStore implementation that wraps another IdentityStore and uses cache provided by {@link IdentityStoreCacheProvider}
+ * to cache results.
  *
  * @author <a href="mailto:boleslaw.dawidowicz at redhat.com">Boleslaw Dawidowicz</a>
  * @version : 0.1 $
  */
-public class JBossCacheIdentityStoreWrapper extends JBossCacheAttributeStoreWrapper implements IdentityStore
+public class CacheIdentityStoreWrapper extends CacheAttributeStoreWrapper implements IdentityStore
 {
 
-   private static Logger log = Logger.getLogger(JBossCacheIdentityStoreWrapper.class.getName());
+   private static Logger log = Logger.getLogger(CacheIdentityStoreWrapper.class.getName());
 
 
    //TODO: cache and IdentitySession transaction
 
    private final IdentityStore identityStore;
 
-   public JBossCacheIdentityStoreWrapper(IdentityStore identityStore, IdentityStoreCacheProvider cacheSupport, String cacheScope) throws IdentityException
+   public CacheIdentityStoreWrapper(IdentityStore identityStore, IdentityStoreCacheProvider cacheSupport, String cacheScope) throws IdentityException
    {
       super(identityStore, cacheSupport, cacheScope);
 
       this.identityStore = identityStore;
 
       log.fine("------------------------------------------------------");
-      log.fine("JBossCacheIdentityStoreWrapper created ....." +
+      log.fine("CacheIdentityStoreWrapper created ....." +
          "(IdentityStore: " + identityStore.getId() + "; cache scope: " + cacheScope + ")");
       log.fine("------------------------------------------------------");
 
@@ -636,7 +637,7 @@ public class JBossCacheIdentityStoreWrapper extends JBossCacheAttributeStoreWrap
    @Override
    public String toString()
    {
-      return "JBossCacheIdentityStoreWrapper (IdentityStore=" + identityStore.getId() + ")";
+      return "CacheIdentityStoreWrapper (IdentityStore=" + identityStore.getId() + ")";
    }
 
 }

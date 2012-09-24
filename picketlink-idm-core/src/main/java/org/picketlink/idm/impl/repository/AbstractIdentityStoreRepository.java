@@ -22,6 +22,7 @@
 
 package org.picketlink.idm.impl.repository;
 
+import org.picketlink.idm.impl.cache.CacheIdentityStoreWrapper;
 import org.picketlink.idm.spi.repository.IdentityStoreRepository;
 import org.picketlink.idm.spi.store.IdentityStore;
 import org.picketlink.idm.spi.store.AttributeStore;
@@ -33,8 +34,6 @@ import org.picketlink.idm.spi.configuration.metadata.IdentityStoreMappingMetaDat
 import org.picketlink.idm.spi.configuration.IdentityRepositoryConfigurationContext;
 import org.picketlink.idm.spi.cache.IdentityStoreCacheProvider;
 import org.picketlink.idm.common.exception.IdentityException;
-import org.picketlink.idm.impl.helper.SecurityActions;
-import org.picketlink.idm.impl.cache.JBossCacheIdentityStoreWrapper;
 
 import java.util.LinkedList;
 import java.util.Set;
@@ -42,7 +41,6 @@ import java.util.Map;
 import java.util.HashSet;
 import java.util.List;
 import java.util.HashMap;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.logging.Level;
@@ -190,7 +188,7 @@ public abstract class AbstractIdentityStoreRepository implements IdentityStoreRe
             }
 
 
-            defaultIdentityStore = new JBossCacheIdentityStoreWrapper(defaultIdentityStore, cacheSupport, cacheScope);
+            defaultIdentityStore = new CacheIdentityStoreWrapper(defaultIdentityStore, cacheSupport, cacheScope);
 
 
          }
@@ -278,7 +276,7 @@ public abstract class AbstractIdentityStoreRepository implements IdentityStoreRe
             }
 
 
-            store = new JBossCacheIdentityStoreWrapper(store, cacheSupport, cacheScope);
+            store = new CacheIdentityStoreWrapper(store, cacheSupport, cacheScope);
 
          }
 

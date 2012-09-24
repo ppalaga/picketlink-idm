@@ -35,17 +35,19 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.jboss.cache</groupId>
-      <artifactId>jbosscache-core</artifactId>
-      <version>3.2.7.GA</version>
-      <!--<exclusions>
-        <exclusion>
-          <groupId>org.jboss.logging</groupId>
-          <artifactId>jboss-logging-spi</artifactId>
-        </exclusion>
-      </exclusions>-->
-    </dependency>
+     <dependency>
+        <groupId>org.infinispan</groupId>
+        <artifactId>infinispan-tree</artifactId>
+        <version>5.1.7.Final</version>
+     </dependency>
+
+     <!-- Test JTA with jboss transactions -->
+     <dependency>
+        <groupId>org.jboss.jbossts</groupId>
+        <artifactId>jbossjts</artifactId>
+        <version>4.16.4.Final</version>
+        <scope>test</scope>
+     </dependency>
 
   </dependencies>
 

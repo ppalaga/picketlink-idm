@@ -27,9 +27,10 @@ import junit.framework.TestCase;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.picketlink.idm.impl.cache.JBossCacheAPICacheProviderImpl;
 import org.picketlink.idm.impl.api.model.SimpleUser;
 import org.picketlink.idm.api.User;
+import org.picketlink.idm.impl.cache.AbstractInfinispanCacheProvider;
+import org.picketlink.idm.impl.cache.InfinispanAPICacheProviderImpl;
 
 
 public class APICacheProviderTestCase extends TestCase
@@ -38,14 +39,14 @@ public class APICacheProviderTestCase extends TestCase
    public void testSimple() throws Exception
    {
       Map<String, String> props = new HashMap<String, String>();
-      props.put(JBossCacheAPICacheProviderImpl.CONFIG_FILE_OPTION, "jboss-cache.xml");
-      APICacheProvider cache = new JBossCacheAPICacheProviderImpl();
+      props.put(AbstractInfinispanCacheProvider.CONFIG_FILE_OPTION, "infinispan.xml");
+      props.put(AbstractInfinispanCacheProvider.CONFIG_NAME_OPTION, "xml-configured-cache");
+      APICacheProvider cache = new InfinispanAPICacheProviderImpl();
       cache.initialize(props, null);
 
       String ns = "toto";
 
       User u1 = new SimpleUser("u1");
-      User u2 = new SimpleUser("u2");
       User u3 = new SimpleUser("u3");
 
       assertNull(cache.getUser(ns, "u1"));

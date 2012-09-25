@@ -110,6 +110,34 @@ public class APICacheProviderTestCase extends TestCase
       assertNull(cache.getGroup(ns, "g1", "t1"));
    }
 
+   public void testEviction()
+   {
+      APICacheProvider cache = initCacheFromRegistry();
+
+      String ns = "toto";
+
+      Group g1 = new SimpleGroup("g1", "t1");
+      Group g2 = new SimpleGroup("g2", "t2");
+
+      long startTime = System.currentTimeMillis();
+      System.out.println("start time: " + startTime);
+      cache.putGroup(ns, g1);
+      cache.putGroup(ns, g2);
+
+      assertNotNull(cache.getGroup(ns, "t1", "g1"));
+      assertNotNull(cache.getGroup(ns, "t2", "g2"));
+
+      try { Thread.currentThread().sleep(200); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+
+      assertNotNull(cache.getGroup(ns, "t1", "g1"));
+      assertNotNull(cache.getGroup(ns, "t2", "g2"));
+
+      try { Thread.currentThread().sleep(500); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+
+      assertNull(cache.getGroup(ns, "t1", "g1"));
+      assertNull(cache.getGroup(ns, "t2", "g2"));
+   }
+
    private APICacheProvider initCacheFromRegistry()
    {
       try

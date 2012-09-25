@@ -910,14 +910,18 @@
                   <name>searchTimeLimit</name>
                   <value>10000</value>
                </option>
-              <option>
-                <name>cache.providerClass</name>
-                <value>org.picketlink.idm.impl.cache.JBossCacheIdentityStoreCacheProviderImpl</value>
-              </option>
-              <option>
-                <name>cache.configFile</name>
-                <value>jboss-cache.xml</value>
-              </option>
+               <option>
+                 <name>cache.providerClass</name>
+                 <value>org.picketlink.idm.impl.cache.InfinispanIdentityStoreCacheProviderImpl</value>
+               </option>
+               <option>
+                 <name>cache.configFile</name>
+                 <value>infinispan.xml</value>
+               </option>
+               <option>
+                 <name>cache.configName</name>
+                 <value>xml-configured-cache</value>
+               </option>
             </options>
          </identity-store>
       </identity-stores>

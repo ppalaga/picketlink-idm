@@ -28,25 +28,15 @@
       <artifactId>picketlink-idm-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-
      <dependency>
-        <groupId>org.infinispan</groupId>
-        <artifactId>infinispan-tree</artifactId>
-        <version>5.1.7.Final</version>
+       <groupId>org.infinispan</groupId>
+       <artifactId>infinispan-tree</artifactId>
      </dependency>
 
-     <!-- Test JTA with jboss transactions -->
      <dependency>
-        <groupId>org.jboss.jbossts</groupId>
-        <artifactId>jbossjts</artifactId>
-        <version>4.16.4.Final</version>
-        <scope>test</scope>
+       <groupId>junit</groupId>
+       <artifactId>junit</artifactId>
+       <scope>test</scope>
      </dependency>
 
   </dependencies>

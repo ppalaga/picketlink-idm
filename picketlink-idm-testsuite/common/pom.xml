@@ -16,17 +16,6 @@
   <description>PicketLink IDM Testsuite</description>
 
   <dependencies>
-    <dependency>
-      <groupId>org.picketlink.idm</groupId>
-      <artifactId>picketlink-idm-cache</artifactId>
-      <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.jboss.logging</groupId>
-          <artifactId>jboss-logging-spi</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
 
     <dependency>
       <groupId>org.picketlink.idm</groupId>
@@ -36,9 +25,14 @@
     </dependency>
 
     <dependency>
+      <groupId>org.picketlink.idm</groupId>
+      <artifactId>picketlink-idm-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>

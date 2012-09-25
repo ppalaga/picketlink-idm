@@ -47,13 +47,6 @@ import java.util.Map;
  */
 public class StoreCacheProviderTestCase extends TestCase
 {
-   @Override
-   public void setUp()
-   {
-      // Some necessary configuration for JBoss standalone Transaction manager
-      System.setProperty("JTAEnvironmentBean.transactionManagerClassName", "com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionManagerImple");
-      System.setProperty("JTAEnvironmentBean.userTransactionClassName", "com.arjuna.ats.internal.jta.transaction.arjunacore.UserTransactionImple");
-   }
 
    public void testIdentityObjectCount()
    {

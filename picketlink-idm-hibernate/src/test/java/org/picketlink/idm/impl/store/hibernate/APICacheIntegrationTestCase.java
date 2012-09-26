@@ -1,3 +1,25 @@
+/*
+ * JBoss, a division of Red Hat
+ * Copyright 2012, Red Hat Middleware, LLC, and individual contributors as indicated
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
 package org.picketlink.idm.impl.store.hibernate;
 
 import org.infinispan.Cache;
@@ -74,12 +96,29 @@ public class APICacheIntegrationTestCase extends HibernateTestPOJO
       this.identitySession =  identitySessionFactory.createIdentitySession(REALM_NAME);
    }
 
+
    public void tearDown() throws Exception
    {
       super.stop();
    }
 
-   public void testUsers() throws IdentityException, UnsupportedCriterium, FeatureNotSupportedException
+   /**
+    * Test everything from single method because we want to control order of tests and make the test faster (Hibernate needs to be initialized only once)
+    *
+    * @throws IdentityException
+    * @throws UnsupportedCriterium
+    * @throws FeatureNotSupportedException
+    */
+   public void testApiCacheIntegration() throws IdentityException, UnsupportedCriterium, FeatureNotSupportedException
+   {
+      _testPersistenceManager();
+      _testAttributesManager();
+      _testRelationshipManager();
+      _testRoleManager();
+   }
+
+
+   private void _testPersistenceManager() throws IdentityException, UnsupportedCriterium
    {
       PersistenceManager pm = identitySession.getPersistenceManager();
 
@@ -116,7 +155,7 @@ public class APICacheIntegrationTestCase extends HibernateTestPOJO
       assertNotNull(apiCacheProvider.getGroupSearch(REALM_NAME, searchNonExisting));
       assertNotNull(apiCacheProvider.getGroup(REALM_NAME, "mygrouptype", "mygroup"));
       assertEquals(0, apiCacheProvider.getGroupCount(REALM_NAME, "nonExistingGroupType"));
-      // Not in cache
+      // There is 1 group of 'mygrouptype' but not in cache
       assertEquals(-1, apiCacheProvider.getGroupCount(REALM_NAME, "mygrouptype"));
       // User 'demo' is not in cache as he was invalidated because of group creation
       assertNull(apiCacheProvider.getUser(REALM_NAME, "demo"));
@@ -126,9 +165,11 @@ public class APICacheIntegrationTestCase extends HibernateTestPOJO
       assertNull(apiCacheProvider.getGroupSearch(REALM_NAME, searchNonExisting));
       assertNull(apiCacheProvider.getGroup(REALM_NAME, "mygrouptype", "mygroup"));
       assertEquals(-1, apiCacheProvider.getGroupCount(REALM_NAME, "nonExistingGroupType"));
+   }
 
 
-      // Some testing with attributeManager
+   private void _testAttributesManager() throws IdentityException
+   {
       AttributesManager am = identitySession.getAttributesManager();
       am.getAttributes("demo");
       am.getAttributes("john");
@@ -139,23 +180,29 @@ public class APICacheIntegrationTestCase extends HibernateTestPOJO
       am.addAttribute("john", "surname", "Anthony");
       assertEquals(1, apiCacheProvider.getAttributes(REALM_NAME, "john").size());
 
-      Attribute antoninSurname = new SimpleAttribute("surname", "Antonin");
-      am.updateAttributes("john", new Attribute[] { antoninSurname });
+      Attribute johnSurname = new SimpleAttribute("surname", "Antonin");
+      am.updateAttributes("john", new Attribute[] { johnSurname });
       Map<String, Attribute> johnAttrsFromCache = apiCacheProvider.getAttributes(REALM_NAME, "john");
       assertEquals(1,johnAttrsFromCache.size());
       Attribute surnameFromCache = johnAttrsFromCache.get("surname");
       assertNotNull(surnameFromCache);
-      assertEquals(antoninSurname.getValue(), surnameFromCache.getValue());
+      assertEquals(johnSurname.getValue(), surnameFromCache.getValue());
 
       am.removeAttributes("john", new String[] { "surname" });
       assertEquals(0, apiCacheProvider.getAttributes(REALM_NAME, "john").size());
+   }
 
 
-      // Some testing with relationshipManager
+   private void _testRelationshipManager() throws IdentityException
+   {
+      PersistenceManager pm = identitySession.getPersistenceManager();
+      RelationshipManager relm = identitySession.getRelationshipManager();
+      User john = new SimpleUser("john");
+      IdentitySearchCriteria emptyCriteria = new IdentitySearchCriteriaImpl();
+
       Group group1 = pm.createGroup("mygroup1", "mygrouptype");
       Group group2 = pm.createGroup("mygroup2", "mygrouptype");
       Group group3 = pm.createGroup("mygroup3", "mygrouptype");
-      RelationshipManager relm = identitySession.getRelationshipManager();
       relm.associateGroups(group1, group2);
       assertTrue(relm.isAssociated(group1, group2));
       assertFalse(relm.isAssociated(group2, group3));
@@ -174,7 +221,6 @@ public class APICacheIntegrationTestCase extends HibernateTestPOJO
       assertFalse(apiCacheProvider.getRelationshipSearch(REALM_NAME, search23));
       assertNull(apiCacheProvider.getRelationshipSearch(REALM_NAME, search13));
 
-      IdentitySearchCriteria emptyCriteria = new IdentitySearchCriteriaImpl();
       assertEquals(1, relm.findAssociatedGroups(group1, "mygrouptype", true, true, emptyCriteria).size());
 
       GroupSearchImpl groupSearch = new GroupSearchImpl();
@@ -186,7 +232,6 @@ public class APICacheIntegrationTestCase extends HibernateTestPOJO
       assertTrue(apiCacheProvider.getGroupSearch(REALM_NAME, groupSearch).contains(group2));
 
       // All searches should be invalidated after associating user
-      User john = new SimpleUser("john");
       relm.associateUser(group1, john);
       assertNull(apiCacheProvider.getRelationshipSearch(REALM_NAME, search12));
       assertNull(apiCacheProvider.getRelationshipSearch(REALM_NAME, search23));
@@ -201,23 +246,33 @@ public class APICacheIntegrationTestCase extends HibernateTestPOJO
       assertTrue(apiCacheProvider.getRelationshipSearch(REALM_NAME, search1j));
       relm.disassociateGroups(group1, Arrays.asList(new Group[] { group2 }));
       assertNull(apiCacheProvider.getRelationshipSearch(REALM_NAME, search1j));
+   }
 
 
-      // Some testing with role manager
+   private void _testRoleManager() throws FeatureNotSupportedException, IdentityException
+   {
       RoleManager rolman = identitySession.getRoleManager();
+
+      User john = new SimpleUser("john");
+      Group group1 = new SimpleGroup("mygroup1", "mygrouptype");
+      Group group2 = new SimpleGroup("mygroup2", "mygrouptype");
+      IdentitySearchCriteria emptyCriteria = new IdentitySearchCriteriaImpl();
+
+      // Some roleType operations
       RoleType rolType1 = rolman.createRoleType("roleType1");
       RoleType rolType2 = rolman.createRoleType("roleType2");
       assertNotNull(apiCacheProvider.getRoleType(REALM_NAME, rolType2));
       assertNull(apiCacheProvider.getRoleType(REALM_NAME, new SimpleRoleType("roleTypeNonExisting")));
 
+      // Create some roles and call some find operations on RoleManager
       rolman.createRole(rolType1, john, group1);
       rolman.createRole(rolType2, john, group2);
-
       rolman.findGroupRoleTypes(group1, emptyCriteria);
       rolman.findUserRoleTypes(john, emptyCriteria);
       rolman.findGroupsWithRelatedRole("john", "mygrouptype", emptyCriteria);
       rolman.findRoles(group1, rolType1);
 
+      // Now verify that data are in cache
       RoleTypeSearchImpl rts1 = new RoleTypeSearchImpl();
       rts1.setGroup(group1);
       rts1.setSearchCriteria(emptyCriteria);
@@ -236,13 +291,12 @@ public class APICacheIntegrationTestCase extends HibernateTestPOJO
       assertTrue(groupsFromRS.contains(group1));
       assertTrue(groupsFromRS.contains(group2));
 
-
       RoleSearchImpl roleSearch = new RoleSearchImpl();
       roleSearch.setIdentityTypeId(group1.getKey());
       roleSearch.setRoleType(rolType1);
       assertEquals(1, apiCacheProvider.getRoleSearch(REALM_NAME, roleSearch).size());
 
-      // Assert everything invalidated after creating role type
+      // Assert everything invalidated from cache after creating new role type
       rolman.createRoleType("roleType3");
       assertNull(apiCacheProvider.getRoleTypeSearch(REALM_NAME, rts1));
       assertNull(apiCacheProvider.getRoleTypeSearch(REALM_NAME, rtsUser));

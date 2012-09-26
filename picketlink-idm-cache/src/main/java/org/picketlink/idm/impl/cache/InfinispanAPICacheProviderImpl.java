@@ -809,7 +809,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
       Node ioNode = getCache().getRoot().addChild(nodeFqn);
 
-      if (ioNode == null)
+      if (ioNode != null)
       {
          ioNode.put(NODE_OBJECT_KEY, result);
 

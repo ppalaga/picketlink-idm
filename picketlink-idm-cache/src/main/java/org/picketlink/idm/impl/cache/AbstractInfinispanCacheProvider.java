@@ -45,7 +45,7 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractInfinispanCacheProvider
 {
-   private static Logger log = Logger.getLogger(AbstractInfinispanCacheProvider.class.getName());
+   private Logger log = Logger.getLogger(getClass().getName());
 
    private TreeCache<Object, Object> cache;
 

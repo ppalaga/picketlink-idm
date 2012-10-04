@@ -2,13 +2,13 @@
   <parent>
     <groupId>org.picketlink.idm</groupId>
     <artifactId>picketlink-idm-parent</artifactId>
-    <version>1.4.0.M02-SNAPSHOT</version>
+    <version>1.4.0.M02</version>
     <relativePath>parent</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.picketlink.idm</groupId>
   <artifactId>jboss-identity-idm-pom</artifactId>
-  <version>1.4.0.M02-SNAPSHOT</version>
+  <version>1.4.0.M02</version>
   <packaging>pom</packaging>
   <name>PicketLink IDM - Aggregator</name>
   <url>http://labs.jboss.org/portal/jbosssecurity/</url>

@@ -254,12 +254,12 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <useFile>true</useFile>
-          <includes>
-            <include>**/**TestCase.java</include>
-          </includes>
-          <!--<excludes>-->
-            <!--<exclude>**/*Concurent*.java</exclude>-->
-          <!--</excludes>-->
+          <!--<includes>-->
+            <!--<include>**/**TestCase.java</include>-->
+          <!--</includes>-->
+          <excludes>
+            <exclude>**/*.java</exclude>
+          </excludes>
           <systemProperties>
             <property>
               <name>dataSourceName</name>

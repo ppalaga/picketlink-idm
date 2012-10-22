@@ -39,7 +39,7 @@
 
       <invocationBatching enabled="true" />
 
-      <expiration lifespan="60000" wakeUpInterval="5000" />
+      <expiration lifespan="500" wakeUpInterval="500" />
       <eviction strategy="LRU" maxEntries="100000" />
 
    </namedCache>

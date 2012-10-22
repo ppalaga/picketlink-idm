@@ -81,9 +81,10 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public static final String MAIN_ROOT_STORE = "NODE_MAIN_ROOT_STORE";
 
-   protected Fqn getRootNode()
+   @Override
+   protected String getRootNode()
    {
-      return Fqn.fromString("/" + MAIN_ROOT_STORE);
+      return new StringBuilder('/').append(MAIN_ROOT_STORE).toString();
    }
 
    public void initialize(Map<String, String> properties, IdentityConfigurationContext configurationContext)

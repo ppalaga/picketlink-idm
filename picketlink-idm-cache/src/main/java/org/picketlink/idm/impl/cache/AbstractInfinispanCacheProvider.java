@@ -201,28 +201,29 @@ public abstract class AbstractInfinispanCacheProvider
    /**
     * Different root node name will be used for API cache and for Store cache
     */
-   protected abstract Fqn getRootNode();
+   protected abstract String getRootNode();
 
    /**
     * Different registry type is used for API cache and for Store cache
     */
    protected abstract TreeCache<Object, Object> getCacheFromRegistry(Object registry, String registryName)  throws IdentityException;
 
-   protected Fqn getNamespacedFqn(String ns)
+   protected String getNamespacedFqn(String ns)
    {
       String namespace = ns != null ? ns : NULL_NS_NODE;
-      namespace = namespace.replaceAll("/", "_");
-      return Fqn.fromString(getRootNode() + "/" + namespace);
+      return new StringBuilder(getRootNode()).append('/').append(namespace).toString();
    }
 
    protected Fqn getFqn(String ns, String node, Object o)
    {
-      return Fqn.fromString(getNamespacedFqn(ns) + "/" + node + "/" + o);
+      String fqnStr = new StringBuilder(getNamespacedFqn(ns)).append('/').append(node).append('/').append(o).toString();
+      return Fqn.fromString(fqnStr);
    }
 
    protected Fqn getFqn(String ns, String node)
    {
-      return Fqn.fromString(getNamespacedFqn(ns) + "/" + node);
+      String fqnStr = new StringBuilder(getNamespacedFqn(ns)).append('/').append(node).toString();
+      return Fqn.fromString(fqnStr);
    }
 
    protected TreeCache getCache()

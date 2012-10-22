@@ -32,11 +32,14 @@
    </global>
 
    <namedCache name="xml-configured-cache">
-      <transaction transactionMode="TRANSACTIONAL" lockingMode="OPTIMISTIC" autoCommit="true" />
+      <!--<transaction transactionManagerLookupClass="org.infinispan.transaction.lookup.JBossStandaloneJTAManagerLookup"
+                   transactionMode="TRANSACTIONAL" lockingMode="OPTIMISTIC" autoCommit="true" />-->
+     <transaction
+                  transactionMode="TRANSACTIONAL" lockingMode="OPTIMISTIC" autoCommit="true" />
 
       <invocationBatching enabled="true" />
 
-      <expiration lifespan="500" wakeUpInterval="500" />
+      <expiration lifespan="60000" wakeUpInterval="5000" />
       <eviction strategy="LRU" maxEntries="100000" />
 
    </namedCache>

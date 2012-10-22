@@ -150,4 +150,11 @@ public interface IdentityStoreCacheProvider
 
    void invalidateObjects(String ns);
 
+   /**
+    * Print content of whole cache
+    *
+    * @return cache content
+    */
+   String printContent();
+
 }

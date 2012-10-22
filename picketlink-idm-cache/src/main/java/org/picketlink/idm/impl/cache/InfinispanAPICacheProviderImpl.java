@@ -137,7 +137,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS, user.getKey());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -154,7 +154,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS, id);
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -175,7 +175,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS, id);
 
-      getCache().removeNode(nodeFqn);
+      removeNode(nodeFqn);
 
       if (log.isLoggable(Level.FINER))
       {
@@ -187,7 +187,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS_CRITERIA, criteria != null ? criteria.hashCode() : null);
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -205,7 +205,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS_CRITERIA, criteria != null ? criteria.hashCode() : null);
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -225,11 +225,11 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateUsers(String ns)
    {
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS));
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS_COUNT));
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS_CRITERIA));
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS_QUERIES));
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS_SEARCHES));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS_COUNT));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS_CRITERIA));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS_QUERIES));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS_SEARCHES));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating Users cache. Namespace:" + ns + ";namespace=" + ns);
@@ -240,7 +240,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS_COUNT);
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -257,7 +257,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS_COUNT);
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -281,7 +281,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateUserCount(String ns)
    {
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS_COUNT));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_USERS_COUNT));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating User count. Namespace:" + ns + ";namespace=" + ns);
@@ -292,7 +292,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS, group.getKey());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -309,7 +309,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS, GroupKey.parseKey(groupName, groupType));
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -330,7 +330,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS, GroupKey.parseKey(groupName, groupType));
 
-      getCache().removeNode(nodeFqn);
+      removeNode(nodeFqn);
 
       if (log.isLoggable(Level.FINER))
       {
@@ -343,7 +343,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS_CRITERIA, criteria != null ? criteria.hashCode() : null);
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -361,7 +361,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS_CRITERIA, criteria != null ? criteria.hashCode() : null);
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -381,11 +381,11 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateGroups(String ns)
    {
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_GROUPS));
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_GROUPS_COUNT));
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_GROUPS_CRITERIA));
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_GROUPS_QUERIES));
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_GROUPS_SEARCHES));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_GROUPS));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_GROUPS_COUNT));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_GROUPS_CRITERIA));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_GROUPS_QUERIES));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_GROUPS_SEARCHES));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating Groups cache. Namespace:" + ns + ";namespace=" + ns);
@@ -396,7 +396,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS_COUNT, groupType);
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -414,7 +414,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS_COUNT, groupType);
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -439,7 +439,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateGroupCount(String ns, String groupType)
    {
-      getCache().removeNode(getFqn(ns, NODE_GROUPS_COUNT, groupType));
+      removeNode(getFqn(ns, NODE_GROUPS_COUNT, groupType));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating Group count. Namespace:" + ns);
@@ -450,7 +450,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLES, role.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -467,7 +467,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLES, role.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -486,14 +486,14 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void removeRole(String ns, Role role)
    {
-      getCache().removeNode(getFqn(ns, NODE_ROLES, role.hashCode()));
+      removeNode(getFqn(ns, NODE_ROLES, role.hashCode()));
    }
 
    public void putRoleType(String ns, RoleType role)
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_TYPES, role.getName());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
 
       if (ioNode != null)
@@ -511,7 +511,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_TYPES, role.getName());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -530,14 +530,14 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void removeRoleType(String ns, RoleType roleType)
    {
-      getCache().removeNode(getFqn(ns, NODE_ROLE_TYPES, roleType.getName()));
+      removeNode(getFqn(ns, NODE_ROLE_TYPES, roleType.getName()));
    }
 
    public void putAttributes(String ns, String id, Map<String, Attribute> attributes)
    {
       Fqn nodeFqn = getFqn(ns, NODE_ATTRIBUTES, id);
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -555,7 +555,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ATTRIBUTES, id);
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -575,7 +575,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateAttributes(String ns, String id)
    {
-      getCache().removeNode(getFqn(ns, NODE_ATTRIBUTES, id));
+      removeNode(getFqn(ns, NODE_ATTRIBUTES, id));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating Attributes. id=" + id +";namespace:" + ns);
@@ -584,7 +584,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateAttributes(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_ATTRIBUTES));
+      removeNode(getFqn(ns, NODE_ATTRIBUTES));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating Attributes. Namespace:" + ns);
@@ -595,7 +595,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_PROPERTIES, role.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -613,7 +613,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_PROPERTIES, role.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -633,7 +633,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateRoleProperties(String ns, Role role)
    {
-      getCache().removeNode(getFqn(ns, NODE_ROLE_PROPERTIES, role.hashCode()));
+      removeNode(getFqn(ns, NODE_ROLE_PROPERTIES, role.hashCode()));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating Role properties. role=" + role + "; Namespace:" + ns);
@@ -642,7 +642,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateRoleProperties(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_ROLE_PROPERTIES));
+      removeNode(getFqn(ns, NODE_ROLE_PROPERTIES));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating Role properties. Namespace:" + ns);
@@ -653,7 +653,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_TYPE_PROPERTIES, roleType.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -671,7 +671,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_TYPE_PROPERTIES, roleType.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -691,7 +691,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateRoleTypeProperties(String ns, RoleType roleType)
    {
-      getCache().removeNode(getFqn(ns, NODE_ROLE_TYPE_PROPERTIES, roleType.hashCode()));
+      removeNode(getFqn(ns, NODE_ROLE_TYPE_PROPERTIES, roleType.hashCode()));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating RoleType properties. roleType=" + roleType + "; Namespace:" + ns);
@@ -700,7 +700,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateRoleTypeProperties(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_ROLE_TYPE_PROPERTIES));
+      removeNode(getFqn(ns, NODE_ROLE_TYPE_PROPERTIES));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating RoleType properties. Namespace:" + ns);
@@ -709,15 +709,15 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateAllSearches(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_USERS_SEARCHES));
-      getCache().removeNode(getFqn(ns, NODE_GROUPS_SEARCHES));
-      getCache().removeNode(getFqn(ns, NODE_RELATIONSHIP_SEARCHES));
-      getCache().removeNode(getFqn(ns, NODE_ROLE_SEARCHES));
-      getCache().removeNode(getFqn(ns, NODE_ROLE_TYPE_SEARCHES));
+      removeNode(getFqn(ns, NODE_USERS_SEARCHES));
+      removeNode(getFqn(ns, NODE_GROUPS_SEARCHES));
+      removeNode(getFqn(ns, NODE_RELATIONSHIP_SEARCHES));
+      removeNode(getFqn(ns, NODE_ROLE_SEARCHES));
+      removeNode(getFqn(ns, NODE_ROLE_TYPE_SEARCHES));
 
       // Probably should have separate invalidate methods, but for now need to be part of search invalidation
-      getCache().removeNode(getFqn(ns, NODE_ROLES));
-      getCache().removeNode(getFqn(ns, NODE_ROLE_TYPES));
+      removeNode(getFqn(ns, NODE_ROLES));
+      removeNode(getFqn(ns, NODE_ROLE_TYPES));
 
       if (log.isLoggable(Level.FINER))
       {
@@ -729,7 +729,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS_SEARCHES, search.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -747,7 +747,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS_SEARCHES, search.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -769,7 +769,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS_SEARCHES, search.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -786,7 +786,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS_SEARCHES, search.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -807,7 +807,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_RELATIONSHIP_SEARCHES, search.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -824,7 +824,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_RELATIONSHIP_SEARCHES, search.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -845,7 +845,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_SEARCHES, search.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -862,7 +862,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_SEARCHES, search.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -883,7 +883,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_TYPE_SEARCHES, search.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -900,7 +900,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_TYPE_SEARCHES, search.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -919,9 +919,9 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateAllQueries(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_USERS_QUERIES));
-      getCache().removeNode(getFqn(ns, NODE_GROUPS_QUERIES));
-      getCache().removeNode(getFqn(ns, NODE_ROLE_QUERIES));
+      removeNode(getFqn(ns, NODE_USERS_QUERIES));
+      removeNode(getFqn(ns, NODE_GROUPS_QUERIES));
+      removeNode(getFqn(ns, NODE_ROLE_QUERIES));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating all queries. Namespace:" + ns);
@@ -933,7 +933,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS_QUERIES, q.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -951,7 +951,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS_QUERIES, q.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -969,7 +969,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS_QUERIES, q.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -991,7 +991,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_USERS_QUERIES, q.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -1010,7 +1010,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateUserQueries(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_USERS_QUERIES));
+      removeNode(getFqn(ns, NODE_USERS_QUERIES));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating User queries. Namespace:" + ns);
@@ -1021,7 +1021,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS_QUERIES, q.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -1039,7 +1039,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS_QUERIES, q.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -1057,7 +1057,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS_QUERIES, q.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -1079,7 +1079,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_GROUPS_QUERIES, q.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -1098,7 +1098,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateGroupQueries(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_GROUPS_QUERIES));
+      removeNode(getFqn(ns, NODE_GROUPS_QUERIES));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating Group queries. Namespace:" + ns);
@@ -1109,7 +1109,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_QUERIES, q.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -1127,7 +1127,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_QUERIES, q.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -1145,7 +1145,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_QUERIES, q.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -1167,7 +1167,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    {
       Fqn nodeFqn = getFqn(ns, NODE_ROLE_QUERIES, q.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -1186,7 +1186,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public void invalidateRoleQueries(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_ROLE_QUERIES));
+      removeNode(getFqn(ns, NODE_ROLE_QUERIES));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating Role queries. Namespace:" + ns);

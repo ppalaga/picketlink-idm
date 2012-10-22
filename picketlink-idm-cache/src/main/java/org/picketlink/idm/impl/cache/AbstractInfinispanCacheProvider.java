@@ -27,8 +27,10 @@ import org.infinispan.lifecycle.ComponentStatus;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
 import org.infinispan.tree.Fqn;
+import org.infinispan.tree.Node;
 import org.infinispan.tree.TreeCache;
 import org.infinispan.tree.TreeCacheFactory;
+import org.infinispan.tree.TreeStructureSupport;
 import org.picketlink.idm.common.exception.IdentityException;
 
 import java.io.IOException;
@@ -169,6 +171,10 @@ public abstract class AbstractInfinispanCacheProvider
       }
    }
 
+   public String printContent()
+   {
+      return TreeStructureSupport.printTree(cache, true);
+   }
 
    /**
     * @param commonId parameter is usually realmId in case of APICacheProvider or storeId in case of IdentityStoreCacheProvider
@@ -229,5 +235,34 @@ public abstract class AbstractInfinispanCacheProvider
    protected TreeCache getCache()
    {
       return cache;
+   }
+
+   /**
+    * Add new node to cache
+    * @param nodeFqn
+    * @return new node
+    */
+   protected Node addNode(Fqn nodeFqn)
+   {
+      return getCache().getRoot().addChild(nodeFqn);
+   }
+
+   /**
+    * Get node from cache
+    * @param nodeFqn
+    * @return node from cache if exists, null if doesn't exist
+    */
+   protected Node getNode(Fqn nodeFqn)
+   {
+      return getCache().getRoot().getChild(nodeFqn);
+   }
+
+   /**
+    * Remove node from cache
+    * @param nodeFqn
+    */
+   protected void removeNode(Fqn nodeFqn)
+   {
+      getCache().removeNode(nodeFqn);
    }
 }

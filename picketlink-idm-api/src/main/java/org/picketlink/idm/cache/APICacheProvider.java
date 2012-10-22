@@ -625,4 +625,11 @@ public interface APICacheProvider
     */
    void invalidateRoleQueries(String ns);
 
+   /**
+    * Print content of whole cache
+    *
+    * @return cache content
+    */
+   String printContent();
+
 }

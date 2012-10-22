@@ -118,7 +118,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_IO_COUNT, type);
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -136,7 +136,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_IO_COUNT, type);
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -161,7 +161,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateIdentityObjectCount(String ns, String type)
    {
-      getCache().removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_IO_COUNT + "/" + type));
+      removeNode(Fqn.fromString(getNamespacedFqn(ns) + "/" + NODE_IO_COUNT + "/" + type));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating IdentityObject count. Namespace:" + ns + "; type=" + type
@@ -173,7 +173,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_IO_SEARCH, search.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -191,7 +191,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_IO_SEARCH, search.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -211,7 +211,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateIdentityObjectSearches(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_IO_SEARCH));
+      removeNode(getFqn(ns, NODE_IO_SEARCH));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating IdentityObject searches. Namespace:" + ns);
@@ -222,7 +222,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_IO_REL_SEARCH, search.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -240,7 +240,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_IO_REL_SEARCH, search.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -260,7 +260,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateIdentityObjectRelationshipSearches(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_IO_REL_SEARCH));
+      removeNode(getFqn(ns, NODE_IO_REL_SEARCH));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating IdentityObjectRelationship searches. Namespace:" + ns);
@@ -271,7 +271,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_IO_REL_NAME_SEARCH, search.hashCode());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -289,7 +289,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_IO_REL_NAME_SEARCH, search.hashCode());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -309,7 +309,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateIdentityObjectRelationshipNameSearches(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_IO_REL_NAME_SEARCH));
+      removeNode(getFqn(ns, NODE_IO_REL_NAME_SEARCH));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating IdentityObjectRelationshipName searches. Namespace:" + ns);
@@ -320,7 +320,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_REL_PROPS, decode(relationship));
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -347,7 +347,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_REL_PROPS, decode(relationship));
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -367,7 +367,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateRelationshipProperties(String ns, IdentityObjectRelationship relationship)
    {
-      getCache().removeNode(getFqn(ns, NODE_REL_PROPS, decode(relationship)));
+      removeNode(getFqn(ns, NODE_REL_PROPS, decode(relationship)));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating IdentityObjectRelationship properties. Namespace:" + ns
@@ -377,7 +377,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateRelationshipProperties(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_REL_PROPS));
+      removeNode(getFqn(ns, NODE_REL_PROPS));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating IdentityObjectRelationship properties. Namespace:" + ns);
@@ -388,7 +388,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_REL_NAME_PROPS, name);
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -406,7 +406,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_REL_NAME_PROPS, name);
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -426,7 +426,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateRelationshipNameProperties(String ns, String relationship)
    {
-      getCache().removeNode(getFqn(ns, NODE_REL_NAME_PROPS, relationship));
+      removeNode(getFqn(ns, NODE_REL_NAME_PROPS, relationship));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating IdentityObjectRelationshipName properties." +
@@ -436,7 +436,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateRelationshipNameProperties(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_REL_NAME_PROPS));
+      removeNode(getFqn(ns, NODE_REL_NAME_PROPS));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating IdentityObjectRelationshipName properties. " +
@@ -449,7 +449,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_IO_ATTRIBUTES, io.getIdentityType().getName() + io.getName());
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -467,7 +467,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_IO_ATTRIBUTES, io.getIdentityType().getName() + io.getName());
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -487,7 +487,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateIdentityObjectAttriubtes(String ns, IdentityObject io)
    {
-      getCache().removeNode(getFqn(ns, NODE_IO_ATTRIBUTES, io.getIdentityType().getName() + io.getName()));
+      removeNode(getFqn(ns, NODE_IO_ATTRIBUTES, io.getIdentityType().getName() + io.getName()));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating IdentityObject attributes. Namespace:" + ns + "; io=" + io);
@@ -496,7 +496,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateIdentityObjectAttriubtes(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_IO_ATTRIBUTES));
+      removeNode(getFqn(ns, NODE_IO_ATTRIBUTES));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating IdentityObject attributes. Namespace:" + ns);
@@ -507,7 +507,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_OBJECTS, hash);
 
-      Node ioNode = getCache().getRoot().addChild(nodeFqn);
+      Node ioNode = addNode(nodeFqn);
 
       if (ioNode != null)
       {
@@ -525,7 +525,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    {
       Fqn nodeFqn = getFqn(ns, NODE_OBJECTS, hash);
 
-      Node node = getCache().getRoot().getChild(nodeFqn);
+      Node node = getNode(nodeFqn);
 
       if (node != null)
       {
@@ -545,7 +545,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateObject(String ns, int hash)
    {
-      getCache().removeNode(getFqn(ns, NODE_OBJECTS, hash));
+      removeNode(getFqn(ns, NODE_OBJECTS, hash));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating object. Namespace:" + ns + "; hash=" + hash);
@@ -554,7 +554,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
    public void invalidateObjects(String ns)
    {
-      getCache().removeNode(getFqn(ns, NODE_OBJECTS));
+      removeNode(getFqn(ns, NODE_OBJECTS));
       if (log.isLoggable(Level.FINER))
       {
          log.finer(this.toString() + "Invalidating objects. Namespace:" + ns);

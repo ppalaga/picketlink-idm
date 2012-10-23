@@ -27,11 +27,10 @@ import org.infinispan.lifecycle.ComponentStatus;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
 import org.infinispan.tree.Fqn;
-import org.infinispan.tree.Node;
-import org.infinispan.tree.TreeCache;
-import org.infinispan.tree.TreeCacheFactory;
-import org.infinispan.tree.TreeStructureSupport;
 import org.picketlink.idm.common.exception.IdentityException;
+import org.picketlink.idm.impl.tree.IDMTreeCacheImpl;
+import org.picketlink.idm.impl.tree.Node;
+import org.picketlink.idm.impl.tree.TreeCache;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,7 +48,7 @@ public abstract class AbstractInfinispanCacheProvider
 {
    private Logger log = Logger.getLogger(getClass().getName());
 
-   private TreeCache<Object, Object> cache;
+   private TreeCache cache;
 
    public static final String CONFIG_FILE_OPTION = "cache.configFile";
 
@@ -109,9 +108,9 @@ public abstract class AbstractInfinispanCacheProvider
       }
 
       // Now create tree cache
-      this.cache = new TreeCacheFactory().createTreeCache(infinispanCache);
+      this.cache = new IDMTreeCacheImpl(infinispanCache);
 
-      log.info("Infinispan cache for Picketlink IDM created successfuly. cache name: " + cache.getCache().getName());
+      log.info("Infinispan cache for Picketlink IDM created successfuly. cache name: " + infinispanCache.getName());
    }
 
    public void initialize(InputStream cacheConfigStream, String configName)
@@ -127,7 +126,7 @@ public abstract class AbstractInfinispanCacheProvider
          Cache<Object, Object> infinispanCache = manager.getCache(configName);
 
          // Now create tree cache
-         this.cache = new TreeCacheFactory().createTreeCache(infinispanCache);
+         this.cache = new IDMTreeCacheImpl(infinispanCache);
       }
       catch (IOException ioe)
       {
@@ -139,12 +138,12 @@ public abstract class AbstractInfinispanCacheProvider
 
    public void initialize(Cache infinispanCache)
    {
-      this.cache = new TreeCacheFactory().createTreeCache(infinispanCache);
+      this.cache = new IDMTreeCacheImpl(infinispanCache);
       ComponentStatus status = infinispanCache.getStatus();
 
       if (status.startAllowed())
       {
-         this.cache.start();
+         this.cache.getCache().start();
       }
 
       log.info("Infinispan cache for Picketlink IDM created successfuly. cache name: " + cache.getCache().getName());
@@ -173,7 +172,7 @@ public abstract class AbstractInfinispanCacheProvider
 
    public String printContent()
    {
-      return TreeStructureSupport.printTree(cache, true);
+      return getCache().printTree();
    }
 
    /**
@@ -212,7 +211,7 @@ public abstract class AbstractInfinispanCacheProvider
    /**
     * Different registry type is used for API cache and for Store cache
     */
-   protected abstract TreeCache<Object, Object> getCacheFromRegistry(Object registry, String registryName)  throws IdentityException;
+   protected abstract TreeCache getCacheFromRegistry(Object registry, String registryName)  throws IdentityException;
 
    protected String getNamespacedFqn(String ns)
    {
@@ -244,7 +243,7 @@ public abstract class AbstractInfinispanCacheProvider
     */
    protected Node addNode(Fqn nodeFqn)
    {
-      return getCache().getRoot().addChild(nodeFqn);
+      return getCache().addLeafNode(nodeFqn);
    }
 
    /**
@@ -254,7 +253,7 @@ public abstract class AbstractInfinispanCacheProvider
     */
    protected Node getNode(Fqn nodeFqn)
    {
-      return getCache().getRoot().getChild(nodeFqn);
+      return getCache().getNode(nodeFqn);
    }
 
    /**

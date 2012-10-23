@@ -31,8 +31,6 @@ import java.util.HashMap;
 import org.infinispan.Cache;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
-import org.infinispan.tree.TreeCache;
-import org.infinispan.tree.TreeCacheFactory;
 import org.picketlink.idm.api.Group;
 import org.picketlink.idm.api.cfg.IdentityConfigurationRegistry;
 import org.picketlink.idm.common.exception.IdentityException;
@@ -42,6 +40,8 @@ import org.picketlink.idm.api.User;
 import org.picketlink.idm.impl.cache.AbstractInfinispanCacheProvider;
 import org.picketlink.idm.impl.cache.InfinispanAPICacheProviderImpl;
 import org.picketlink.idm.impl.configuration.IdentityConfigurationImpl;
+import org.picketlink.idm.impl.tree.IDMTreeCacheImpl;
+import org.picketlink.idm.impl.tree.TreeCache;
 
 
 public class APICacheProviderTestCase extends TestCase
@@ -138,7 +138,7 @@ public class APICacheProviderTestCase extends TestCase
          // Init tree cache first
          EmbeddedCacheManager manager = new DefaultCacheManager("infinispan.xml", true);
          Cache<Object, Object> infinispanCache = manager.getCache("xml-configured-cache");
-         TreeCache<Object, Object> treeCache = new TreeCacheFactory().createTreeCache(infinispanCache);
+         TreeCache treeCache = new IDMTreeCacheImpl(infinispanCache);
 
          // Register under key 'apiCacheProvider'
          IdentityConfigurationRegistry registry = new IdentityConfigurationImpl();

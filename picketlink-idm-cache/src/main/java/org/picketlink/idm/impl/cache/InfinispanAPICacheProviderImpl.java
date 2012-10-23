@@ -22,14 +22,7 @@
 
 package org.picketlink.idm.impl.cache;
 
-import org.infinispan.Cache;
-import org.infinispan.lifecycle.ComponentStatus;
-import org.infinispan.manager.DefaultCacheManager;
-import org.infinispan.manager.EmbeddedCacheManager;
 import org.infinispan.tree.Fqn;
-import org.infinispan.tree.Node;
-import org.infinispan.tree.TreeCache;
-import org.infinispan.tree.TreeCacheFactory;
 import org.picketlink.idm.api.Attribute;
 import org.picketlink.idm.api.Group;
 import org.picketlink.idm.api.IdentitySearchCriteria;
@@ -48,9 +41,9 @@ import org.picketlink.idm.cache.RoleTypeSearch;
 import org.picketlink.idm.cache.UserSearch;
 import org.picketlink.idm.common.exception.IdentityException;
 import org.picketlink.idm.impl.api.model.GroupKey;
+import org.picketlink.idm.impl.tree.Node;
+import org.picketlink.idm.impl.tree.TreeCache;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -127,7 +120,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    }
 
    @Override
-   protected TreeCache<Object, Object> getCacheFromRegistry(Object registry, String registryName) throws IdentityException
+   protected TreeCache getCacheFromRegistry(Object registry, String registryName) throws IdentityException
    {
       IdentityConfigurationRegistry reg = (IdentityConfigurationRegistry)registry;
       return (TreeCache)reg.getObject(registryName);

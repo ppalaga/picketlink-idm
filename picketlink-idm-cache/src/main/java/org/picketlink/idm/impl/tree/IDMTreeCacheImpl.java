@@ -13,7 +13,7 @@ import org.infinispan.util.logging.LogFactory;
 /**
  * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>
  */
-public class IDMTreeCacheImpl extends AutoBatchSupport
+public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
 {
    private final AdvancedCache<Fqn, Object> cache;
 
@@ -152,10 +152,9 @@ public class IDMTreeCacheImpl extends AutoBatchSupport
    /**
     * Visual representation of a tree
     *
-    * @param cache cache to dump
     * @return String rep
     */
-   public String printTree(boolean details)
+   public String printTree()
    {
       StringBuilder sb = new StringBuilder();
       sb.append("\n\n");
@@ -171,11 +170,11 @@ public class IDMTreeCacheImpl extends AutoBatchSupport
          sb.append("  ").append(cache.get(Fqn.ROOT));
       }
       sb.append("\n");
-      printChildren(getNode(Fqn.ROOT), 1, sb, details);
+      printChildren(getNode(Fqn.ROOT), 1, sb);
       return sb.toString();
    }
 
-   private void printChildren(Node node, int depth, StringBuilder sb, boolean details)
+   private void printChildren(Node node, int depth, StringBuilder sb)
    {
       AtomicMap<Object, Fqn> structure = getStructure(node.getFqn());
 
@@ -189,7 +188,7 @@ public class IDMTreeCacheImpl extends AutoBatchSupport
          {
             sb.append("  NO_DATA");
             Node n = new IDMNodeImpl(childFqn, cache, this);
-            printChildren(n, depth + 1, sb, details);
+            printChildren(n, depth + 1, sb);
          }
          else
          {

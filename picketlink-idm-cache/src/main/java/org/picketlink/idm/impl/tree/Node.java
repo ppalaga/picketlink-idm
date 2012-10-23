@@ -9,9 +9,9 @@ import java.io.Serializable;
  */
 public interface Node
 {
-   public void put(String key, Serializable value);
+   public void put(String key, Object value);
 
-   public Serializable get(String key);
+   public Object get(String key);
 
    boolean removeChild(Object childName);
 

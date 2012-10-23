@@ -9,7 +9,6 @@ import org.infinispan.util.logging.Log;
 import org.infinispan.util.logging.LogFactory;
 import org.picketlink.idm.impl.cache.InfinispanAPICacheProviderImpl;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -31,12 +30,12 @@ public class IDMNodeImpl implements Node
       this.treeCache = treeCache;
    }
 
-   public void put(String key, Serializable value)
+   public void put(String key, Object value)
    {
       // Workaround to cover unique query case
       if (InfinispanAPICacheProviderImpl.NODE_QUERY_UNIQUE_KEY.equals(key))
       {
-         ArrayList<Serializable> list = new ArrayList<Serializable>();
+         ArrayList<Object> list = new ArrayList<Object>();
          list.add(value);
          value = list;
       }
@@ -44,14 +43,14 @@ public class IDMNodeImpl implements Node
       cache.put(nodeFqn, value);
    }
 
-   public Serializable get(String key)
+   public Object get(String key)
    {
-      Serializable result = (Serializable)cache.get(nodeFqn);
+      Object result = cache.get(nodeFqn);
 
       // Workaround to cover unique query case
       if (InfinispanAPICacheProviderImpl.NODE_QUERY_UNIQUE_KEY.equals(key))
       {
-         Collection<Serializable> collection = (Collection<Serializable>)result;
+         Collection<Object> collection = (Collection<Object>)result;
          return collection.iterator().next();
       }
       else

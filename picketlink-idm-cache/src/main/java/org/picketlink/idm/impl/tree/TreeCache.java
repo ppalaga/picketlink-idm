@@ -1,5 +1,6 @@
 package org.picketlink.idm.impl.tree;
 
+import org.infinispan.Cache;
 import org.infinispan.tree.Fqn;
 
 /**
@@ -15,5 +16,9 @@ public interface TreeCache
 
    public boolean removeNode(Fqn nodeFqn);
 
+   public boolean removeNode(String fqnString);
+
    public String printTree();
+
+   public Cache getCache();
 }

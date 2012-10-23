@@ -98,6 +98,16 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
       }
    }
 
+   public boolean removeNode(String fqnString)
+   {
+      return removeNode(Fqn.fromString(fqnString));
+   }
+
+   public Cache getCache()
+   {
+      return cache;
+   }
+
    private void createRoot()
    {
       if (!exists(Fqn.ROOT))

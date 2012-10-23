@@ -171,13 +171,21 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
 
       // walk tree
       sb.append("+ ").append(Fqn.SEPARATOR);
-      if (cache.get(Fqn.ROOT) instanceof AtomicMap)
+      Object rootNodeContent = cache.get(Fqn.ROOT);
+
+      if (rootNodeContent == null)
+      {
+         sb.append("NULL_CONTENT\n\n");
+         return sb.toString();
+      }
+
+      if (rootNodeContent instanceof AtomicMap)
       {
          sb.append("  NO_DATA");
       }
       else
       {
-         sb.append("  ").append(cache.get(Fqn.ROOT));
+         sb.append("  ").append(rootNodeContent);
       }
       sb.append("\n");
       printChildren(getNode(Fqn.ROOT), 1, sb);
@@ -196,7 +204,7 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
 
          if (cache.get(childFqn) instanceof AtomicMap)
          {
-            sb.append("  NO_DATA");
+            sb.append("  NO_DATA\n");
             Node n = new IDMNodeImpl(childFqn, cache, this);
             printChildren(n, depth + 1, sb);
          }

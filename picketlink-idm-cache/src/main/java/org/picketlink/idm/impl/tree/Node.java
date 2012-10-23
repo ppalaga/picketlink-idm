@@ -1,5 +1,7 @@
 package org.picketlink.idm.impl.tree;
 
+import org.infinispan.tree.Fqn;
+
 import java.io.Serializable;
 
 /**
@@ -12,4 +14,8 @@ public interface Node
    public Serializable get(String key);
 
    boolean removeChild(Object childName);
+
+   void removeChildren();
+
+   Fqn getFqn();
 }

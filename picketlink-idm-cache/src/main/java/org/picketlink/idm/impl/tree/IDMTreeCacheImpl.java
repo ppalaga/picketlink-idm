@@ -57,7 +57,7 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
       try
       {
          createNodeInCache(nodeFqn, true);
-         return new IDMNodeImpl(nodeFqn, cache, this);
+         return new IDMNodeImpl(nodeFqn, cache, this, null);
       }
       finally
       {
@@ -67,9 +67,10 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
 
    public Node getNode(Fqn nodeFqn)
    {
-      if (exists(nodeFqn))
+      Object value = cache.get(nodeFqn);
+      if (value != null)
       {
-         return new IDMNodeImpl(nodeFqn, cache, this);
+         return new IDMNodeImpl(nodeFqn, cache, this, value);
       }
       else
       {
@@ -228,10 +229,11 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
          sb.append("+ ");
          sb.append(childFqn.getLastElementAsString()).append(Fqn.SEPARATOR);
 
-         if (cache.get(childFqn) instanceof AtomicMap)
+         Object cacheValue = cache.get(childFqn);
+         if (cacheValue instanceof AtomicMap)
          {
             sb.append("  NO_DATA\n");
-            Node n = new IDMNodeImpl(childFqn, cache, this);
+            Node n = new IDMNodeImpl(childFqn, cache, this, cacheValue);
             printChildren(n, depth + 1, sb);
          }
          else

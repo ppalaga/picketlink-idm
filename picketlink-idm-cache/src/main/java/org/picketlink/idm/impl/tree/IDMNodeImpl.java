@@ -23,11 +23,14 @@ public class IDMNodeImpl implements Node
    private final AdvancedCache<Fqn, Object> cache;
    private final IDMTreeCacheImpl treeCache;
 
-   public IDMNodeImpl(Fqn nodeFqn, AdvancedCache<Fqn, Object> cache, IDMTreeCacheImpl treeCache)
+   private final Object value;
+
+   public IDMNodeImpl(Fqn nodeFqn, AdvancedCache<Fqn, Object> cache, IDMTreeCacheImpl treeCache, Object value)
    {
       this.nodeFqn = nodeFqn;
       this.cache = cache;
       this.treeCache = treeCache;
+      this.value = value;
    }
 
    public void put(String key, Object value)
@@ -45,7 +48,15 @@ public class IDMNodeImpl implements Node
 
    public Object get(String key)
    {
-      Object result = cache.get(nodeFqn);
+      Object result;
+      if (value == null)
+      {
+         result = cache.get(nodeFqn);
+      }
+      else
+      {
+         result = value;
+      }
 
       // Workaround to cover unique query case
       if (InfinispanAPICacheProviderImpl.NODE_QUERY_UNIQUE_KEY.equals(key))
@@ -77,7 +88,7 @@ public class IDMNodeImpl implements Node
          // We are trying to remove non-leaf node. So we need to recursively remove children
          if (child instanceof AtomicMap)
          {
-            Node childNode = new IDMNodeImpl(childFqn, cache, treeCache);
+            Node childNode = new IDMNodeImpl(childFqn, cache, treeCache, child);
             childNode.removeChildren();
 
          }

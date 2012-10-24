@@ -40,7 +40,7 @@ public class IDMNodeImpl implements Node
          value = list;
       }
 
-      cache.put(nodeFqn, value);
+      treeCache.putValueToCacheLeafNode(nodeFqn, value);
    }
 
    public Object get(String key)

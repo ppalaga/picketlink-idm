@@ -10,6 +10,8 @@ import org.infinispan.tree.Fqn;
 import org.infinispan.util.logging.Log;
 import org.infinispan.util.logging.LogFactory;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>
  */
@@ -21,12 +23,15 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
 
    private static final Integer PLACEHOLDER = 123456;
 
-   public IDMTreeCacheImpl(Cache<?, ?> cache)
+   private final boolean attachLifespanToLeafNodes;
+   private final long leafNodeLifespan;
+
+   public IDMTreeCacheImpl(Cache<?, ?> cache, boolean attachLifespanToLeafNodes, long leafNodeLifespan)
    {
-      this(cache.getAdvancedCache());
+      this(cache.getAdvancedCache(), attachLifespanToLeafNodes, leafNodeLifespan);
    }
 
-   public IDMTreeCacheImpl(AdvancedCache<?, ?> cache)
+   private IDMTreeCacheImpl(AdvancedCache<?, ?> cache, boolean attachLifespanToLeafNodes, long leafNodeLifespan)
    {
       this.cache = (AdvancedCache<Fqn, Object>)cache;
       this.batchContainer = cache.getBatchContainer();
@@ -34,6 +39,10 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
       {
          throw new ConfigurationException("TreeCache cannot be used with a Cache instance configured to use indexing!");
       }
+
+      this.attachLifespanToLeafNodes = attachLifespanToLeafNodes;
+      this.leafNodeLifespan = leafNodeLifespan;
+
       createRoot();
    }
 
@@ -136,8 +145,7 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
 
       if (isLeafNode)
       {
-         // TODO: is this needed? Maybe we can put null
-         cache.put(fqn, PLACEHOLDER);
+         putValueToCacheLeafNode(fqn, PLACEHOLDER);
       }
       else
       {
@@ -157,7 +165,25 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
       return AtomicMapLookup.getAtomicMap(cache, fqn);
    }
 
-
+   void putValueToCacheLeafNode(Fqn key, Object value)
+   {
+      if (attachLifespanToLeafNodes)
+      {
+         cache.put(key, value, leafNodeLifespan, TimeUnit.MILLISECONDS);
+         if (log.isTraceEnabled())
+         {
+            log.tracef("Added record %s with leafNodeLifespan " + leafNodeLifespan + "ms", key);
+         }
+      }
+      else
+      {
+         cache.put(key, value);
+         if (log.isTraceEnabled())
+         {
+            log.tracef("Added record %s with infinite leafNodeLifespan", key);
+         }
+      }
+   }
 
    /**
     * Visual representation of a tree

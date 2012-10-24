@@ -75,7 +75,7 @@ public class StoreCacheProviderTestCase extends TestCase
          // Init tree cache first
          EmbeddedCacheManager manager = new DefaultCacheManager("infinispan.xml", true);
          Cache<Object, Object> infinispanCache = manager.getCache("xml-configured-cache");
-         TreeCache treeCache = new IDMTreeCacheImpl(infinispanCache);
+         TreeCache treeCache = new IDMTreeCacheImpl(infinispanCache, false, -1);
 
          // Register under key 'storeCacheProvider'
          IdentityConfigurationContextRegistry registry = new IdentityConfigurationImpl();

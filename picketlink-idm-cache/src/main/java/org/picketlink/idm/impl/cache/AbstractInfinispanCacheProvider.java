@@ -108,7 +108,7 @@ public abstract class AbstractInfinispanCacheProvider
       }
 
       // Now create tree cache
-      this.cache = new IDMTreeCacheImpl(infinispanCache, false, -1);
+      this.cache = new IDMTreeCacheImpl(infinispanCache, false, -1, -1);
 
       log.info("Infinispan cache for Picketlink IDM created successfuly. cache name: " + infinispanCache.getName());
    }
@@ -126,7 +126,7 @@ public abstract class AbstractInfinispanCacheProvider
          Cache<Object, Object> infinispanCache = manager.getCache(configName);
 
          // Now create tree cache
-         this.cache = new IDMTreeCacheImpl(infinispanCache, false, -1);
+         this.cache = new IDMTreeCacheImpl(infinispanCache, false, -1, -1);
       }
       catch (IOException ioe)
       {
@@ -136,9 +136,9 @@ public abstract class AbstractInfinispanCacheProvider
       log.info("Infinispan cache for Picketlink IDM created successfuly. cache name: " + cache.getCache().getName());
    }
 
-   public void initialize(Cache infinispanCache, boolean attachLifespanToLeafNodes, long leafNodeLifespan)
+   public void initialize(Cache infinispanCache, boolean attachLifespanToLeafNodes, long leafNodeLifespan, long staleNodesLinksCleanerDelay)
    {
-      this.cache = new IDMTreeCacheImpl(infinispanCache, attachLifespanToLeafNodes, leafNodeLifespan);
+      this.cache = new IDMTreeCacheImpl(infinispanCache, attachLifespanToLeafNodes, leafNodeLifespan, staleNodesLinksCleanerDelay);
       ComponentStatus status = infinispanCache.getStatus();
 
       if (status.startAllowed())

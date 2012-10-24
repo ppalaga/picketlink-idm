@@ -87,7 +87,7 @@ public class APICacheIntegrationTestCase extends HibernateTestPOJO
 
       // Init and register apiCacheProvider
       InfinispanAPICacheProviderImpl cacheProvider = new InfinispanAPICacheProviderImpl();
-      cacheProvider.initialize(infinispanCache, false, -1);
+      cacheProvider.initialize(infinispanCache, false, -1, 1000);
       this.apiCacheProvider = cacheProvider;
       identityConfiguration.getIdentityConfigurationRegistry().register(apiCacheProvider, "apiCacheProvider");
 

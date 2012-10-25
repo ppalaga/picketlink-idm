@@ -150,6 +150,7 @@ public class IDMTreeCacheTestCase extends TestCase
       assertTrue(cache.exists(Fqn.fromString("/a/b/e/f")));
       assertTrue(cache.exists(Fqn.fromString("/a/b/e/g")));
 
+      // This will wait until eviction is finished, but not cleaner thread
       try { Thread.currentThread().sleep(500); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
 
       // Assert that leaf nodes are not here but "path" node is still here
@@ -166,7 +167,8 @@ public class IDMTreeCacheTestCase extends TestCase
       assertTrue(map.containsKey("f"));
       assertTrue(map.containsKey("g"));
 
-      try { Thread.currentThread().sleep(900); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+      // This will wait until cleaner thread is finished
+      try { Thread.currentThread().sleep(400); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
       e = cache.getNode(Fqn.fromString("/a/b/e"));
       value = e.get("");
       assertTrue(value instanceof AtomicMap);

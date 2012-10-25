@@ -13,16 +13,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
+ * Implementation of Node, which can be either Path node or Leaf node with single value
+ *
  * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>
  */
 public class IDMNodeImpl implements Node
 {
    private static final Log log = LogFactory.getLog(IDMNodeImpl.class);
 
+   /** FQN of this node */
    private final Fqn nodeFqn;
+
+   /** Underlying infinispan cache */
    private final AdvancedCache<Fqn, Object> cache;
+
+   /** Underlying tree cache */
    private final IDMTreeCacheImpl treeCache;
 
+   /** Value from cache, which is saved in cache under FQN of this node (could be null for newly added cache nodes) */
    private final Object value;
 
    public IDMNodeImpl(Fqn nodeFqn, AdvancedCache<Fqn, Object> cache, IDMTreeCacheImpl treeCache, Object value)
@@ -33,6 +41,10 @@ public class IDMNodeImpl implements Node
       this.value = value;
    }
 
+   /**
+    * @param key parameter is defacto unused (only exception is for "query_unique" key as we need to wrap it to collection before save)
+    * @param value Value to be added to cache under FQN of this node
+    */
    public void put(String key, Object value)
    {
       // Workaround to cover unique query case
@@ -46,8 +58,13 @@ public class IDMNodeImpl implements Node
       treeCache.putValueToCacheLeafNode(nodeFqn, value);
    }
 
+   /**
+    * @param key parameter is defacto unused (only exception is for "query_unique" key as we need to wrap it to collection before save)
+    * @return value from cache
+    */
    public Object get(String key)
    {
+      // Use cached value from "value" if available. Otherwise lookup to infinispan
       Object result;
       if (value == null)
       {
@@ -70,42 +87,52 @@ public class IDMNodeImpl implements Node
       }
    }
 
+   /**
+    * Remove child node of this node. It also removes subnodes of child node if some are available
+    * Method is useful only for path nodes
+    *
+    * @param childName name of child to remove
+    * @return true of child was successfully removed
+    */
    public boolean removeChild(Object childName)
    {
+      // First remove record from our structure
       AtomicMap<Object, Fqn> structure = treeCache.getStructure(nodeFqn);
       Fqn childFqn = structure.remove(childName);
 
-      if (childFqn != null)
+      if (childFqn == null)
       {
-         Object child = cache.get(childFqn);
-
-         // null checks... TODO: is it needed?
-         if (child == null)
-         {
-            return false;
-         }
-
-         // We are trying to remove non-leaf node. So we need to recursively remove children
-         if (child instanceof AtomicMap)
-         {
-            Node childNode = new IDMNodeImpl(childFqn, cache, treeCache, child);
-            childNode.removeChildren();
-
-         }
-
-         // Now real removal
-         Object o = cache.remove(childFqn);
-         if (log.isTraceEnabled())
-         {
-            log.tracef("Removed node %s", childFqn);
-         }
-         return o!=null;
+         childFqn = Fqn.fromString(nodeFqn + "/" + childName);
       }
 
-      return false;
+      // Attempt to get object from cache
+      Object child = cache.get(childFqn);
 
+      // Null checks
+      if (child == null)
+      {
+         return false;
+      }
+
+      // We are trying to remove non-leaf node. So we need to recursively remove children
+      if (child instanceof AtomicMap)
+      {
+         Node childNode = new IDMNodeImpl(childFqn, cache, treeCache, child);
+         childNode.removeChildren();
+      }
+
+      // Now real removal of node from cache
+      Object o = cache.remove(childFqn);
+      if (log.isTraceEnabled())
+      {
+         log.tracef("Removed node %s", childFqn);
+      }
+      return o!=null;
    }
 
+   /**
+    * Remove all children of this node. Method is useful only for path nodes
+    */
    public void removeChildren()
    {
       AtomicMap atomicMap = treeCache.getStructure(nodeFqn);
@@ -115,6 +142,9 @@ public class IDMNodeImpl implements Node
       }
    }
 
+   /**
+    * @return FQN of this node
+    */
    public Fqn getFqn()
    {
       return nodeFqn;

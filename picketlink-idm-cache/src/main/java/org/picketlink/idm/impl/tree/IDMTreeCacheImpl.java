@@ -12,24 +12,47 @@ import org.infinispan.util.Immutables;
 import org.infinispan.util.logging.Log;
 import org.infinispan.util.logging.LogFactory;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Simplified implementation of Infinispan tree cache where each node can be either path node or leaf node.
+ *
+ * Path nodes can't have any values attached to it, but they can have subnodes. They are saved in underlying infinispan
+ * cache in form of {@link AtomicMap}, which contains references to subnodes.
+ *
+ * Leaf nodes can't have subnodes and they have only single value attached to them
+ *
+ *
  * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>
  */
 public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
 {
+   /** Underlying infinispan cache */
    private final AdvancedCache<Fqn, Object> cache;
 
    private static final Log log = LogFactory.getLog(IDMTreeCacheImpl.class);
 
    private static final Integer PLACEHOLDER = 123456;
 
+   /** If true, then during put we will use specific lifespan value from parameter leafNodeLifespan */
    private final boolean attachLifespanToLeafNodes;
+
+   /** will be attached for leaf nodes if attachLifespanToLeafNodes is true */
    private final long leafNodeLifespan;
 
+   /**
+    * @param cache underlying infinispan cache
+    * @param attachLifespanToLeafNodes will be used for attachLifespanToLeafNodes
+    * @param leafNodeLifespan will be used for leafNodeLifespan
+    * @param staleNodesLinksCleanerDelay if non-negative value is used, then thread for cleaning stale records in structure of path nodes will be executed.
+    *                                    Thread will be periodic task executed after each staleNodesLinksCleanerDelay milliseconds
+    */
    public IDMTreeCacheImpl(Cache<?, ?> cache, boolean attachLifespanToLeafNodes, long leafNodeLifespan, long staleNodesLinksCleanerDelay)
    {
       this(cache.getAdvancedCache(), attachLifespanToLeafNodes, leafNodeLifespan, staleNodesLinksCleanerDelay);
@@ -49,17 +72,30 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
 
       createRoot();
 
+      // Skip start of cleaner if delay is negative
       if (staleNodesLinksCleanerDelay > 0)
       {
          startStaleNodesLinkCleaner(staleNodesLinksCleanerDelay);
       }
    }
 
+   /**
+    * Verify if item exists in cache
+    *
+    * @param f FQN, which acts as a key
+    * @return true if item exists in cache
+    */
    public boolean exists(Fqn f)
    {
       return cache.containsKey(f);
    }
 
+   /**
+    * Add leaf node and all it's supernodes needed for the path
+    *
+    * @param nodeFqn FQN of node to add
+    * @return newly created node
+    */
    public Node addLeafNode(Fqn nodeFqn)
    {
       startAtomic();
@@ -74,6 +110,11 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
       }
    }
 
+   /**
+    *
+    * @param nodeFqn FQN, which acts as a key
+    * @return Node object related to cache value under given FQN
+    */
    public Node getNode(Fqn nodeFqn)
    {
       Object value = cache.get(nodeFqn);
@@ -87,6 +128,12 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
       }
    }
 
+   /**
+    * Remove node from cache and all it's subnodes (In case that node is path node, it's not removed but only all it's children are removed)
+    *
+    * @param nodeFqn
+    * @return true if node was successfully removed
+    */
    public boolean removeNode(Fqn nodeFqn)
    {
       if (nodeFqn.isRoot())
@@ -100,7 +147,7 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
          Object cacheObject = cache.get(nodeFqn);
          if (cacheObject != null && cacheObject instanceof AtomicMap)
          {
-            // Don't remove node itself, but remove only it's child nodes
+            // Don't remove node itself for now, but remove only it's child nodes
             Node myNode = getNode(nodeFqn);
             myNode.removeChildren();
             return true;
@@ -253,6 +300,7 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
       }
    }
 
+   // Start scheduled cleaner task with given schedule delay
    private void startStaleNodesLinkCleaner(long staleNodesLinksCleanerDelay)
    {
       Properties props = new Properties();
@@ -286,26 +334,47 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
          if (node.get("") instanceof AtomicMap)
          {
             Fqn nodeFqn = node.getFqn();
-            // Do we really need to refresh the state like this?
+
+            // Do we really need to refresh the state like this? But better yes
             AtomicMap<Object, Fqn> structure = getStructure(node.getFqn());
-            for (Object key : Immutables.immutableSetCopy(structure.keySet()))
+            List<Node> childPathNodes = new LinkedList<Node>();
+            Set<Object> structureCopy = Immutables.immutableSetCopy(structure.keySet());
+
+            // Wrap processing of current node into single transaction
+            startAtomic();
+            try
             {
-               Fqn childFqn = structure.get(key);
-               Object cacheValue = cache.get(childFqn);
-               if (cacheValue == null)
+               for (Object key : structureCopy)
                {
-                  // If child node doesn't exist, we need to remove it from our own structure
-                  if (log.isTraceEnabled())
+                  Fqn childFqn = structure.get(key);
+                  Object cacheValue = cache.get(childFqn);
+
+                  if (cacheValue == null)
                   {
-                     log.tracef("Removing node link %s from parent structure", childFqn);
+                     // If child node doesn't exist, we need to remove it from our own structure
+                     if (log.isTraceEnabled())
+                     {
+                        log.tracef("Removing node link %s from parent structure", childFqn);
+                     }
+                     structure.remove(key);
                   }
-                  structure.remove(key);
+                  else if (cacheValue instanceof AtomicMap)
+                  {
+                     // Create node object and add it to childPathNodes list. We need to recursively process all child nodes after finish processing of current node
+                     Node child = new IDMNodeImpl(childFqn, cache, IDMTreeCacheImpl.this, cacheValue);
+                     childPathNodes.add(child);
+                  }
                }
-               else if (cacheValue instanceof AtomicMap)
-               {
-                  Node child = new IDMNodeImpl(childFqn, cache, IDMTreeCacheImpl.this, cacheValue);
-                  processNode(child);
-               }
+            }
+            finally
+            {
+               endAtomic();
+            }
+
+            // Now recursively process child path nodes
+            for (Node child : childPathNodes)
+            {
+               processNode(child);
             }
          }
       }

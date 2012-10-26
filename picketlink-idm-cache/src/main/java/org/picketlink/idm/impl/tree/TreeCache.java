@@ -19,7 +19,7 @@ public interface TreeCache
    public boolean exists(Fqn f);
 
    /**
-    * Return transient node, which is not saved in underlying infinispan cache. It will be persisted to cache when method
+    * Return transient node, which is not synced (persisted) in underlying infinispan cache. It will be persisted to cache when method
     * {@link IDMTreeCacheImpl#addLeafNode(org.infinispan.tree.Fqn, Object)} will be called.
     *
     * @param nodeFqn FQN of particular leaf transient node

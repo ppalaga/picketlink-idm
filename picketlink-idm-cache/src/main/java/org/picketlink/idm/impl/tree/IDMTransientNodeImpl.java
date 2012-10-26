@@ -6,7 +6,7 @@ import org.picketlink.idm.impl.cache.InfinispanAPICacheProviderImpl;
 import java.util.ArrayList;
 
 /**
- * Implementation of leaf node, which is not saved in cache at the moment of creation of this object
+ * Implementation of leaf node, which is not persisted in cache at the moment when this object is instantiated
  * Calling of method {@link #put(String, Object)} will enforce persisting of this node into underlying infinispan cache
  *
  * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>

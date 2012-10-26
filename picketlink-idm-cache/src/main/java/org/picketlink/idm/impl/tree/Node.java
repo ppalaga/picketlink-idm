@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * Representation of Node in cache. Node can be either path node (node which contains other subnodes) or leaf node (node without subnodes).
- * Leaf node can contain either single value or multiple values
+ * Leaf node can contain either single value or multiple values (currently our impl supports only single value)
  *
  * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>
  */

@@ -111,7 +111,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
    @Override
    protected String getRootNode()
    {
-      return new StringBuilder('/').append(MAIN_ROOT_API).toString();
+      return MAIN_ROOT_API;
    }
 
    public void initialize(Map<String, String> properties, IdentityConfigurationRegistry configurationRegistry)

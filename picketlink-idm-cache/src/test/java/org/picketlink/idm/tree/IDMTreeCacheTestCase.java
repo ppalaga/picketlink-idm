@@ -167,7 +167,7 @@ public class IDMTreeCacheTestCase extends TestCase
       assertTrue(map.containsKey("f"));
       assertTrue(map.containsKey("g"));
 
-      // This will wait until cleaner thread is finished
+      // This will wait until cleaner thread is finished. References to deleted child nodes are now removed from AtomicMap
       try { Thread.currentThread().sleep(400); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
       e = cache.getNode(Fqn.fromString("/a/b/e"));
       value = e.get("");

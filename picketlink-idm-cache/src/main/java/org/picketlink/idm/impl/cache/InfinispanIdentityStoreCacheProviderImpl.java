@@ -83,7 +83,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
    @Override
    protected String getRootNode()
    {
-      return new StringBuilder('/').append(MAIN_ROOT_STORE).toString();
+      return MAIN_ROOT_STORE;
    }
 
    public void initialize(Map<String, String> properties, IdentityConfigurationContext configurationContext)

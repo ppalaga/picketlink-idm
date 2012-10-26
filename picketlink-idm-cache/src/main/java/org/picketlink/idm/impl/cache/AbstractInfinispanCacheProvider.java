@@ -152,7 +152,7 @@ public abstract class AbstractInfinispanCacheProvider
    public void invalidate(String ns)
    {
 
-      boolean success = getCache().removeNode(getNamespacedFqn(ns));
+      boolean success = getCache().removeNode(getNamespacedFqn(ns).toString());
 
       if (log.isLoggable(Level.FINER))
       {
@@ -162,7 +162,7 @@ public abstract class AbstractInfinispanCacheProvider
 
    public void invalidateAll()
    {
-      boolean success = getCache().removeNode(getRootNode());
+      boolean success = getCache().removeNode("/" + getRootNode());
 
       if (log.isLoggable(Level.FINER))
       {
@@ -213,22 +213,45 @@ public abstract class AbstractInfinispanCacheProvider
     */
    protected abstract TreeCache getCacheFromRegistry(Object registry, String registryName)  throws IdentityException;
 
-   protected String getNamespacedFqn(String ns)
+   // Fqn.fromString is non-effective way of FQN parsing, but it's actually used only from invalidate operations
+   protected StringBuilder getNamespacedFqn(String ns)
    {
-      String namespace = ns != null ? ns : NULL_NS_NODE;
-      return new StringBuilder(getRootNode()).append('/').append(namespace).toString();
+      String namespace = getNamespaceForFqn(ns);
+      return new StringBuilder('/').append(getRootNode()).append('/').append(namespace);
+   }
+
+   private String getNamespaceForFqn(String ns)
+   {
+      if (ns == null)
+      {
+         return NULL_NS_NODE;
+      }
+      else
+      {
+         // Better to check with indexOf first because of performance reasons, as replaceAll is expensive and '/' is used only in unit tests
+         if (ns.indexOf('/') != -1)
+         {
+            ns = ns.replaceAll("/", "_");
+         }
+      }
+      return ns;
    }
 
    protected Fqn getFqn(String ns, String node, Object o)
    {
-      String fqnStr = new StringBuilder(getNamespacedFqn(ns)).append('/').append(node).append('/').append(o).toString();
-      return Fqn.fromString(fqnStr);
+      if (o == null)
+      {
+         o = "null";
+      }
+
+      Object[] fqnElements = new Object[] { getRootNode(), getNamespaceForFqn(ns), node, o};
+      return Fqn.fromElements(fqnElements);
    }
 
    protected Fqn getFqn(String ns, String node)
    {
-      String fqnStr = new StringBuilder(getNamespacedFqn(ns)).append('/').append(node).toString();
-      return Fqn.fromString(fqnStr);
+      Object[] fqnElements = new Object[] { getRootNode(), getNamespaceForFqn(ns), node};
+      return Fqn.fromElements(fqnElements);
    }
 
    protected TreeCache getCache()

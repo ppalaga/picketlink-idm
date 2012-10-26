@@ -38,8 +38,6 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
 
    private static final Log log = LogFactory.getLog(IDMTreeCacheImpl.class);
 
-   private static final Integer PLACEHOLDER = 123456;
-
    /** If true, then during put we will use specific lifespan value from parameter leafNodeLifespan */
    private final boolean attachLifespanToLeafNodes;
 
@@ -91,18 +89,21 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
    }
 
    /**
-    * Add leaf node and all it's supernodes needed for the path
+    * Add leaf node and all it's supernodes needed for the path into underlying cache.
+    * Also save the value under FQN of newly created node
     *
-    * @param nodeFqn FQN of node to add
+    * @param nodeFqn FQN of node to add to cache
+    * @param value Value, which will be saved to cache under given FQN
     * @return newly created node
     */
-   public Node addLeafNode(Fqn nodeFqn)
+   Node addLeafNode(Fqn nodeFqn, Object value)
    {
       startAtomic();
       try
       {
          createNodeInCache(nodeFqn, true);
-         return new IDMNodeImpl(nodeFqn, cache, this, null);
+         putValueToCacheLeafNode(nodeFqn, value);
+         return new IDMNodeImpl(nodeFqn, cache, this, value);
       }
       finally
       {
@@ -111,9 +112,17 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
    }
 
    /**
+    * {@inheritDoc}
+    */
+   public Node getTransientLeafNode(Fqn nodeFqn)
+   {
+      return new IDMTransientNodeImpl(nodeFqn, this);
+   }
+
+   /**
     *
     * @param nodeFqn FQN, which acts as a key
-    * @return Node object related to cache value under given FQN
+    * @return Node object related to cache value under given FQN, null if there is no value in cache under given FQN
     */
    public Node getNode(Fqn nodeFqn)
    {
@@ -200,11 +209,7 @@ public class IDMTreeCacheImpl extends AutoBatchSupport implements TreeCache
          parentStructure.put(fqn.getLastElement(), fqn);
       }
 
-      if (isLeafNode)
-      {
-         putValueToCacheLeafNode(fqn, PLACEHOLDER);
-      }
-      else
+      if (!isLeafNode)
       {
          getStructure(fqn);
       }

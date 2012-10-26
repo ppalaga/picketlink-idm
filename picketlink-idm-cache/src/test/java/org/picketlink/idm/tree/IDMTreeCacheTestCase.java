@@ -30,18 +30,20 @@ public class IDMTreeCacheTestCase extends TestCase
       TreeCache cache = new IDMTreeCacheImpl(infinispanCache, true, 120000, 120000);
 
       // Add some nodes
-      Node c = cache.addLeafNode(Fqn.fromString("/a/b/c"));
-      Node d = cache.addLeafNode(Fqn.fromString("/a/b/d"));
-      Node f = cache.addLeafNode(Fqn.fromString("/a/b/e/f"));
-      Node g = cache.addLeafNode(Fqn.fromString("/a/b/e/g"));
-      Node i1 = cache.addLeafNode(Fqn.fromString("/a/b/e/ch/i1"));
-      Node i2 = cache.addLeafNode(Fqn.fromString("/a/b/e/ch/i2"));
+      Node c = cache.getTransientLeafNode(Fqn.fromString("/a/b/c"));
+      Node d = cache.getTransientLeafNode(Fqn.fromString("/a/b/d"));
+      Node f = cache.getTransientLeafNode(Fqn.fromString("/a/b/e/f"));
+      Node g = cache.getTransientLeafNode(Fqn.fromString("/a/b/e/g"));
+      Node i1 = cache.getTransientLeafNode(Fqn.fromString("/a/b/e/ch/i1"));
+      Node i2 = cache.getTransientLeafNode(Fqn.fromString("/a/b/e/ch/i2"));
 
       // Put values to nodes
       c.put("", "C_CONTENT");
       d.put("", "D_CONTENT");
       f.put("", "F_CONTENT");
       g.put("", "G_CONTENT");
+      i1.put("", "I1_VALUE");
+      i2.put("", "I2_VALUE");
 
       // Some "exists" operations
       assertTrue(cache.exists(Fqn.fromString("/a")));
@@ -102,7 +104,7 @@ public class IDMTreeCacheTestCase extends TestCase
       TreeCache cache = new IDMTreeCacheImpl(infinispanCache, true, 120000, 120000);
 
       // Try to add something under "query_unique" key
-      Node c = cache.addLeafNode(Fqn.fromString("/a/b/c"));
+      Node c = cache.getTransientLeafNode(Fqn.fromString("/a/b/c"));
       c.put(InfinispanAPICacheProviderImpl.NODE_QUERY_UNIQUE_KEY, "VALUE1");
 
       // Verify that value is in the cache and we can obtain it from node.get("query_unique")
@@ -118,6 +120,7 @@ public class IDMTreeCacheTestCase extends TestCase
       assertEquals("VALUE1", coll.iterator().next());
 
       // Now put it under key
+      c = cache.getTransientLeafNode(Fqn.fromString("/a/b/c"));
       c.put(InfinispanAPICacheProviderImpl.NODE_QUERY_KEY, Arrays.asList("VALUE2"));
 
       // Verify again that it's wrapped in collection when obtained through node.get("query")
@@ -139,10 +142,16 @@ public class IDMTreeCacheTestCase extends TestCase
       Cache<Object, Object> infinispanCache = manager.getCache("xml-configured-cache");
       TreeCache cache = new IDMTreeCacheImpl(infinispanCache, true, 250, 700);
 
-      Node c = cache.addLeafNode(Fqn.fromString("/a/b/c"));
-      Node d = cache.addLeafNode(Fqn.fromString("/a/b/d"));
-      Node f = cache.addLeafNode(Fqn.fromString("/a/b/e/f"));
-      Node g = cache.addLeafNode(Fqn.fromString("/a/b/e/g"));
+      Node c = cache.getTransientLeafNode(Fqn.fromString("/a/b/c"));
+      Node d = cache.getTransientLeafNode(Fqn.fromString("/a/b/d"));
+      Node f = cache.getTransientLeafNode(Fqn.fromString("/a/b/e/f"));
+      Node g = cache.getTransientLeafNode(Fqn.fromString("/a/b/e/g"));
+
+      // Put values to nodes
+      c.put("", "C_CONTENT");
+      d.put("", "D_CONTENT");
+      f.put("", "F_CONTENT");
+      g.put("", "G_CONTENT");
 
       // Some "exists" operations
       assertTrue(cache.exists(Fqn.fromString("/a/b/c")));

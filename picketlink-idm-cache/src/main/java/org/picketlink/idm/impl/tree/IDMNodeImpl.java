@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Implementation of Node, which can be either Path node or Leaf node with single value
+ * Implementation of Node, which can be either Path node or Leaf node with single value. This node already exists in underlying
+ * infinispan cache at the moment of creation of this object.
  *
  * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>
  */
@@ -47,15 +48,7 @@ public class IDMNodeImpl implements Node
     */
    public void put(String key, Object value)
    {
-      // Workaround to cover unique query case
-      if (InfinispanAPICacheProviderImpl.NODE_QUERY_UNIQUE_KEY.equals(key))
-      {
-         ArrayList<Object> list = new ArrayList<Object>();
-         list.add(value);
-         value = list;
-      }
-
-      treeCache.putValueToCacheLeafNode(nodeFqn, value);
+      throw new IllegalStateException("Not supported to rewrite value of persistent node");
    }
 
    /**

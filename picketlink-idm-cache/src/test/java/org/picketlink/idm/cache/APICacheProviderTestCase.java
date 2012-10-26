@@ -112,8 +112,6 @@ public class APICacheProviderTestCase extends TestCase
       Group g1 = new SimpleGroup("g1", "t1");
       Group g2 = new SimpleGroup("g2", "t2");
 
-      long startTime = System.currentTimeMillis();
-      System.out.println("start time: " + startTime);
       cache.putGroup(ns, g1);
       cache.putGroup(ns, g2);
 

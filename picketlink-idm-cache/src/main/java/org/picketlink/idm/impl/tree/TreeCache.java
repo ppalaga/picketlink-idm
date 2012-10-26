@@ -19,12 +19,13 @@ public interface TreeCache
    public boolean exists(Fqn f);
 
    /**
-    * Add leaf node (and alternatively all it's supernodes needed for the path)
+    * Return transient node, which is not saved in underlying infinispan cache. It will be persisted to cache when method
+    * {@link IDMTreeCacheImpl#addLeafNode(org.infinispan.tree.Fqn, Object)} will be called.
     *
-    * @param nodeFqn FQN of node to add
-    * @return newly created node
+    * @param nodeFqn FQN of particular leaf transient node
+    * @return Node, which is not transient and may not be presented in infinispan cache at the moment of method return
     */
-   public Node addLeafNode(Fqn nodeFqn);
+   public Node getTransientLeafNode(Fqn nodeFqn);
 
    /**
     * @param nodeFqn FQN, which acts as a key

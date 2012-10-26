@@ -266,7 +266,7 @@ public abstract class AbstractInfinispanCacheProvider
     */
    protected Node addNode(Fqn nodeFqn)
    {
-      return getCache().addLeafNode(nodeFqn);
+      return getCache().getTransientLeafNode(nodeFqn);
    }
 
    /**

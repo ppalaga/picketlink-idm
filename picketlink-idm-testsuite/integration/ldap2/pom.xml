@@ -8,7 +8,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.picketlink.idm.testsuite</groupId>
   <artifactId>ldap2</artifactId>
-  <version>1.4.0.M03-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>PicketLink IDM Integration Testsuite - 2 LDAPs</name>
   <url>http://labs.jboss.org/portal/jbosssecurity/</url>

@@ -6,7 +6,6 @@
   <description>PicketLink IDM Integration</description>
   <groupId>org.picketlink.idm</groupId>
   <artifactId>picketlink-idm-integration</artifactId>
-  <version>1.4.0.M03-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <!-- Parent -->

@@ -209,7 +209,7 @@
       <artifactId>hibernate-core</artifactId>
     </dependency>
 
-    <dependency>
+    <!--<dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-c3p0</artifactId>
       <version>3.3.0.GA</version>
@@ -220,6 +220,7 @@
       <artifactId>hibernate-ehcache</artifactId>
       <version>3.3.0.GA</version>
     </dependency>
+    -->
 
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -227,11 +228,13 @@
       <version>1.3.2</version>
     </dependency>
 
+    <!--
     <dependency>
       <groupId>apache-collections</groupId>
       <artifactId>commons-collections</artifactId>
       <version>3.1</version>
     </dependency>
+    -->
 
     <dependency>
       <groupId>junit</groupId>

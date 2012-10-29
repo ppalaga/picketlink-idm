@@ -13,8 +13,7 @@
   </parent>
 
   <properties>
-    <hibernate-commons-annotations>3.1.0.GA</hibernate-commons-annotations>
-    <hibernate-tools-version>3.2.0.ga</hibernate-tools-version>
+    <hibernate-tools-version>4.0.0-CR1</hibernate-tools-version>
     <hsqldb-version>1.8.0.7</hsqldb-version>
     <apache.ant.version>1.7.0</apache.ant.version>
     <mysql.connector.version>5.0.8</mysql.connector.version>
@@ -80,9 +79,8 @@
     </dependency>
                
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.common</groupId>
       <artifactId>hibernate-commons-annotations</artifactId>
-      <version>${hibernate-commons-annotations}</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
@@ -121,6 +119,7 @@
 
   <build>
     <plugins>
+      <!-- TEMPORARY DISABLED AS IT DOESN'T WORK CORRECTLY WITH HIBERNATE4. TODO: Fix and enable it again
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
@@ -140,7 +139,7 @@
           </execution>
         </executions>
       </plugin>
-	      
+	        -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.2-beta-3</version>

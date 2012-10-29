@@ -29,11 +29,11 @@
    <session-factory>
 
 
-       <property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+       <!--<property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>-->
 
        <property name="show_sql">false</property>
-       <property name="cache.use_second_level_cache">true</property>
-       <property name="cache.use_query_cache">true</property>
+       <property name="cache.use_second_level_cache">false</property>
+       <property name="cache.use_query_cache">false</property>
 
 
        <property name="current_session_context_class">thread</property>

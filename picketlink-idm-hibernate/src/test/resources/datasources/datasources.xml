@@ -52,6 +52,13 @@
       <user-name>gateinjcr</user-name>
       <password>gateinjcr</password>
    </datasource>
+   <datasource>
+      <datasource-name>sybase157</datasource-name>
+      <connection-url>jdbc:sybase:Tds:db05.mw.lab.eng.bos.redhat.com:5000/idm</connection-url>
+      <driver-class>com.sybase.jdbc4.jdbc.SybDriver</driver-class>
+      <user-name>idm</user-name>
+      <password>idm</password>
+   </datasource>
 
    <!-- DB2 -->
    <datasource>

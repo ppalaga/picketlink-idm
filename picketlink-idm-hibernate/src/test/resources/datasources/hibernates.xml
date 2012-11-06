@@ -63,12 +63,13 @@
         configuration-name points to name of datasource in datasources.xml
    -->
    <configuration>
-      <configuration-name>sybase-15-0-3_8kb</configuration-name>
-      <properties>
-         <property>
-            <name>hibernate.dialect</name>
-            <value>org.hibernate.dialect.SybaseAnywhereDialect</value>
-         </property>
-      </properties>
+     <configuration-name>sybase157</configuration-name>
+     <properties>
+       <property>
+         <name>hibernate.dialect</name>
+         <value>org.hibernate.dialect.SybaseASE157Dialect</value>
+       </property>
+     </properties>
    </configuration>
+
 </configurations>

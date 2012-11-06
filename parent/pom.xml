@@ -278,6 +278,23 @@
         </dependency>
       </dependencies>
     </profile>
+    <profile>
+      <id>hudson-sybase-15-7</id>
+      <activation>
+        <property>
+          <name>dataSourceName</name>
+          <value>sybase157</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>test.jdbc.eap6</groupId>
+          <artifactId>sybase157</artifactId>
+          <version>EAP_6.0.1</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
 
     <!--DB2-->
 

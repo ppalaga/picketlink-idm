@@ -43,7 +43,7 @@ public class HibernateTestPOJO extends IdentityTestPOJO
       String prefix = "mappings/";
 
       //Sybase support hack
-      if (dataSourceName.startsWith("sybase-"))
+      if (dataSourceName.startsWith("sybase"))
       {
          prefix = "sybase-mappings/";
       }

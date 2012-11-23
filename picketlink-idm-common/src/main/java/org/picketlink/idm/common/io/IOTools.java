@@ -20,7 +20,7 @@
 * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 */
 
-package org.picketlink.idm.test.support;
+package org.picketlink.idm.common.io;
 
 
 import org.apache.log4j.Logger;

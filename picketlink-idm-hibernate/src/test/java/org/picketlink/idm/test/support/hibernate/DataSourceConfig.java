@@ -21,7 +21,7 @@
  */
 package org.picketlink.idm.test.support.hibernate;
 
-import org.picketlink.idm.test.support.IOTools;
+import org.picketlink.idm.common.io.IOTools;
 import org.picketlink.idm.test.support.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.picketlink.idm.api.CredentialEncoder;
 import org.picketlink.idm.api.IdentitySession;
 import org.picketlink.idm.api.Transaction;
 import org.picketlink.idm.api.PersistenceManager;
@@ -62,7 +63,6 @@ import org.picketlink.idm.impl.api.session.managers.PersistenceManagerImpl;
 import org.picketlink.idm.impl.api.session.managers.RelationshipManagerImpl;
 import org.picketlink.idm.impl.api.session.managers.AttributesManagerImpl;
 import org.picketlink.idm.impl.api.session.managers.RoleManagerImpl;
-import org.picketlink.idm.impl.api.session.SimpleTransactionImpl;
 import org.picketlink.idm.impl.api.query.UserQueryImpl;
 import org.picketlink.idm.impl.api.query.GroupQueryImpl;
 import org.picketlink.idm.impl.api.query.RoleQueryImpl;
@@ -107,6 +107,8 @@ public class IdentitySessionImpl implements IdentitySession, Serializable
 
    private final APICacheProvider apiCacheProvider;
 
+   private final CredentialEncoder credentialEncoder;
+
    private final String cacheNS;
 
    public IdentitySessionContext getSessionContext()
@@ -118,10 +120,11 @@ public class IdentitySessionImpl implements IdentitySession, Serializable
                               IdentityStoreRepository repository,
                               IdentityObjectTypeMapper typeMapper,
                               APICacheProvider apiCacheProvider,
+                              CredentialEncoder credentialEncoder,
                               IdentityConfigurationContext configurationContext,
                               Map<String, List<String>> realmOptions) throws IdentityException
    {
-      this(realmName, repository, typeMapper, apiCacheProvider,
+      this(realmName, repository, typeMapper, apiCacheProvider, credentialEncoder,
          configurationContext, realmOptions, null);
    }
 
@@ -129,6 +132,7 @@ public class IdentitySessionImpl implements IdentitySession, Serializable
                               IdentityStoreRepository repository,
                               IdentityObjectTypeMapper typeMapper,
                               APICacheProvider apiCacheProvider,
+                              CredentialEncoder credentialEncoder,
                               IdentityConfigurationContext configurationContext,
                               Map<String, List<String>> realmOptions,
                               Map<String,Object> sessionOptions) throws IdentityException
@@ -166,6 +170,9 @@ public class IdentitySessionImpl implements IdentitySession, Serializable
       {
          cacheNS = null;
       }
+
+      this.credentialEncoder = credentialEncoder;
+      credentialEncoder.setIdentitySession(this);
 
       sessionContext = new IdentitySessionContextImpl(repository, typeMapper, resolver);
 
@@ -578,6 +585,11 @@ public class IdentitySessionImpl implements IdentitySession, Serializable
    public APICacheProvider getApiCacheProvider()
    {
       return apiCacheProvider;
+   }
+
+   public CredentialEncoder getCredentialEncoder()
+   {
+      return credentialEncoder;
    }
 
    public String getCacheNS()

@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.picketlink.idm.api.CredentialEncoder;
 import org.picketlink.idm.spi.repository.IdentityStoreRepository;
 import org.picketlink.idm.spi.configuration.metadata.IdentityConfigurationMetaData;
 import org.picketlink.idm.spi.configuration.IdentityConfigurationContext;
@@ -47,6 +48,7 @@ public class IdentitySessionConfigurationContext implements Serializable
    private final IdentityStoreRepository repository;
    private final IdentityObjectTypeMapper typeMapper;
    private final APICacheProvider apiCacheProvider;
+   private final CredentialEncoder credentialEncoder;
    private final Map<String, List<String>> realmOptions;
 
    public IdentitySessionConfigurationContext(String realmName,
@@ -54,6 +56,7 @@ public class IdentitySessionConfigurationContext implements Serializable
                                               IdentityStoreRepository repository,
                                               IdentityObjectTypeMapper typeMapper,
                                               APICacheProvider apiCacheProvider,
+                                              CredentialEncoder credentialEncoder,
                                               IdentityConfigurationContext identityConfigurationContext,
                                               Map<String, List<String>> realmOptions)
    {
@@ -62,6 +65,7 @@ public class IdentitySessionConfigurationContext implements Serializable
       this.repository = repository;
       this.typeMapper = typeMapper;
       this.apiCacheProvider = apiCacheProvider;
+      this.credentialEncoder = credentialEncoder;
       this.identityConfigurationContext = identityConfigurationContext;
       this.realmOptions = realmOptions;
    }
@@ -89,6 +93,11 @@ public class IdentitySessionConfigurationContext implements Serializable
    public APICacheProvider getApiCacheProvider()
    {
       return apiCacheProvider;
+   }
+
+   public CredentialEncoder getCredentialEncoder()
+   {
+      return credentialEncoder;
    }
 
    public IdentityConfigurationContext getIdentityConfigurationContext()

@@ -539,7 +539,8 @@ public class AttributesManagerImpl extends AbstractManager implements Attributes
       {
          checkNotNullArgument(user, "User");
          checkNotNullArgument(password, "Password");
-         return getRepository().validateCredential(getInvocationContext(), createIdentityObject(user), new PasswordCredential(password));
+         return getRepository().validateCredential(getInvocationContext(), createIdentityObject(user), new PasswordCredential(password,
+               getCredentialEncoder(), user.getKey()));
       }
       catch (IdentityException e)
       {
@@ -558,11 +559,12 @@ public class AttributesManagerImpl extends AbstractManager implements Attributes
          checkNotNullArgument(user, "User");
          checkNotNullArgument(password, "Password");
 
-         preCredentialUpdate(user, new PasswordCredential(password));
+         PasswordCredential passwordCredential = new PasswordCredential(password, getCredentialEncoder(), user.getKey());
+         preCredentialUpdate(user, passwordCredential);
 
-         getRepository().updateCredential(getInvocationContext(), createIdentityObject(user), new PasswordCredential(password));
+         getRepository().updateCredential(getInvocationContext(), createIdentityObject(user), passwordCredential);
 
-         postCredentialUpdate(user, new PasswordCredential(password));
+         postCredentialUpdate(user, passwordCredential);
       }
       catch (IdentityException e)
       {

@@ -115,6 +115,7 @@ public class IdentitySessionFactoryImpl implements IdentitySessionFactory, Seria
             sessionConfigCtx.getRepository(),
             sessionConfigCtx.getTypeMapper(),
             sessionConfigCtx.getApiCacheProvider(),
+            sessionConfigCtx.getCredentialEncoder(),
             sessionConfigCtx.getIdentityConfigurationContext(),
             sessionConfigCtx.getRealmOptions(),
             sessionOptions);

@@ -23,6 +23,8 @@
 package org.picketlink.idm.impl.store.hibernate;
 
 import junit.framework.Assert;
+import org.picketlink.idm.api.CredentialEncoder;
+import org.picketlink.idm.impl.configuration.IdentityConfigurationContextImpl;
 import org.picketlink.idm.spi.model.IdentityObject;
 import org.picketlink.idm.spi.model.IdentityObjectAttribute;
 import org.picketlink.idm.spi.store.IdentityStoreInvocationContext;
@@ -61,6 +63,8 @@ public class HibernateIdentityStoreTestCase extends HibernateTestPOJO
 
    protected CommonIdentityStoreTest commonTest;
 
+   private CredentialEncoder credentialEncoder;
+
    public HibernateIdentityStoreTestCase()
    {
 
@@ -79,6 +83,9 @@ public class HibernateIdentityStoreTestCase extends HibernateTestPOJO
 
       IdentityConfigurationContextRegistry identityConfiguration = (IdentityConfigurationContextRegistry)
          new IdentityConfigurationImpl().configure(configurationMD);
+
+      credentialEncoder = ((IdentityConfigurationImpl)identityConfiguration).createCredentialEncoder(configurationMD.getRealms().get(0),
+            new IdentityConfigurationContextImpl(configurationMD, identityConfiguration));
 
       IdentityStoreConfigurationMetaData storeMD = null;
 
@@ -166,6 +173,12 @@ public class HibernateIdentityStoreTestCase extends HibernateTestPOJO
    {
       return ctx;
    }
+
+   public CredentialEncoder getCredentialEncoder()
+   {
+      return credentialEncoder;
+   }
+
 
    // Tests
 

@@ -22,6 +22,7 @@
 
 package org.picketlink.idm.impl.store;
 
+import org.picketlink.idm.impl.api.model.SimpleUser;
 import org.picketlink.idm.spi.model.IdentityObject;
 import org.picketlink.idm.spi.model.IdentityObjectCredential;
 import org.picketlink.idm.spi.model.IdentityObjectAttribute;
@@ -337,8 +338,10 @@ public class CommonIdentityStoreTest extends Assert
       IdentityObject user1 = testContext.getStore().createIdentityObject(testContext.getCtx(), "Adam", IdentityTypeEnum.USER);
       IdentityObject user2 = testContext.getStore().createIdentityObject(testContext.getCtx(), "Eva", IdentityTypeEnum.USER);
 
-      IdentityObjectCredential passwordCredential1 = new PasswordCredential("Password2000");
-      IdentityObjectCredential passwordCredential2 = new PasswordCredential("Password2001");
+      IdentityObjectCredential passwordCredential1 = new PasswordCredential("Password2000", testContext.getCredentialEncoder(),
+            user1.getName());
+      IdentityObjectCredential passwordCredential2 = new PasswordCredential("Password2001", testContext.getCredentialEncoder(),
+            user2.getName());
 
       // If PASSWORD is supported
       assertTrue(testContext.getStore().getSupportedFeatures().isCredentialSupported(IdentityTypeEnum.USER, passwordCredential1.getType()));

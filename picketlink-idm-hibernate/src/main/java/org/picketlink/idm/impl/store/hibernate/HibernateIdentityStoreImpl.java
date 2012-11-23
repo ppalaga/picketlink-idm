@@ -2609,9 +2609,10 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
 
          Object value = null;
 
-         if (credential.getEncodedValue() != null)
+         Object tmpEncodedValue = credential.getEncodedValue();
+         if (tmpEncodedValue != null)
          {
-            value = credential.getEncodedValue();
+            value = tmpEncodedValue;
          }
          else
          {
@@ -2675,9 +2676,10 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
 
          // Handle generic impl
 
-         if (credential.getEncodedValue() != null)
+         Object tmpEncodedValue = credential.getEncodedValue();
+         if (tmpEncodedValue != null)
          {
-            value = credential.getEncodedValue();
+            value = tmpEncodedValue;
          }
          else
          {

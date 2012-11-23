@@ -22,6 +22,7 @@
 
 package org.picketlink.idm.impl.store;
 
+import org.picketlink.idm.api.CredentialEncoder;
 import org.picketlink.idm.spi.store.IdentityStore;
 import org.picketlink.idm.spi.store.IdentityStoreInvocationContext;
 
@@ -42,4 +43,5 @@ public interface IdentityStoreTestContext
 
    IdentityStoreInvocationContext getCtx();
 
+   CredentialEncoder getCredentialEncoder();
 }

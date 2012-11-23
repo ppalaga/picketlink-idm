@@ -22,6 +22,8 @@
 
 package org.picketlink.idm.impl.store.ldap;
 
+import org.picketlink.idm.api.CredentialEncoder;
+import org.picketlink.idm.impl.configuration.IdentityConfigurationContextImpl;
 import org.picketlink.idm.test.support.ldap.LDAPTestPOJO;
 import org.picketlink.idm.impl.configuration.IdentityConfigurationImpl;
 import org.picketlink.idm.impl.configuration.IdentityStoreConfigurationContextImpl;
@@ -58,6 +60,8 @@ public class LDAPIdentityStoreTestCase extends LDAPTestPOJO
 
    IdentityStore store;
 
+   private CredentialEncoder credentialEncoder;
+
    public LDAPIdentityStoreTestCase()
    {
 
@@ -76,6 +80,9 @@ public class LDAPIdentityStoreTestCase extends LDAPTestPOJO
 
       IdentityConfigurationContextRegistry registry = (IdentityConfigurationContextRegistry) new IdentityConfigurationImpl().
          configure(configurationMD);
+
+      credentialEncoder = ((IdentityConfigurationImpl)registry).createCredentialEncoder(configurationMD.getRealms().get(0),
+            new IdentityConfigurationContextImpl(configurationMD, registry));
 
       IdentityStoreConfigurationMetaData storeMD = null;
 
@@ -138,6 +145,11 @@ public class LDAPIdentityStoreTestCase extends LDAPTestPOJO
    public IdentityStoreInvocationContext getCtx()
    {
       return ctx;
+   }
+
+   public CredentialEncoder getCredentialEncoder()
+   {
+      return credentialEncoder;
    }
 
 

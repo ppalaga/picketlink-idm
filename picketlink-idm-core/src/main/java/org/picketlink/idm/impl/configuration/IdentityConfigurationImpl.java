@@ -22,9 +22,11 @@
 
 package org.picketlink.idm.impl.configuration;
 
+import org.picketlink.idm.api.CredentialEncoder;
 import org.picketlink.idm.api.cfg.IdentityConfiguration;
 import org.picketlink.idm.api.cfg.IdentityConfigurationRegistry;
 import org.picketlink.idm.api.IdentitySessionFactory;
+import org.picketlink.idm.impl.credential.HashingEncoder;
 import org.picketlink.idm.impl.helper.CopyOnWriteRegistry;
 import org.picketlink.idm.impl.configuration.jaxb2.JAXB2IdentityConfiguration;
 import org.picketlink.idm.impl.api.session.mapper.IdentityObjectTypeMapper;
@@ -314,15 +316,92 @@ public class IdentityConfigurationImpl
             provider.initialize(cacheProps, (IdentityConfigurationRegistry)configurationContext.getConfigurationRegistry());
          }
 
+         CredentialEncoder credentialEncoder = createCredentialEncoder(metaData, configurationContext);
 
          //IdentitySession session = new IdentitySessionImpl(realmName, repo, mapper);
          IdentitySessionConfigurationContext sessionConfigCtx =
-            new IdentitySessionConfigurationContext(realmName, configMD, repo, mapper, provider, configurationContext, metaData.getOptions());
+            new IdentitySessionConfigurationContext(realmName, configMD, repo, mapper, provider, credentialEncoder,
+                  configurationContext, metaData.getOptions());
 
          sessionCtxMap.put(realmName, sessionConfigCtx);
       }
 
       return sessionCtxMap;
+   }
+
+   public CredentialEncoder createCredentialEncoder(RealmConfigurationMetaData metaData, IdentityConfigurationContext configurationContext) throws Exception
+   {
+      // Credential encoder
+      Map<String, String> credentialEncoderProps = new HashMap<String, String>();
+      String credentialEncoderClassName = null;
+      String credentialEncoderRegistryName = null;
+
+      // Parse all 'credentialEncoder.' prefixed options
+      if (metaData.getOptions() != null)
+      {
+         for (String key : metaData.getOptions().keySet())
+         {
+            if (key.startsWith(CredentialEncoder.CREDENTIAL_ENCODER_OPTION_PREFIX))
+            {
+               if (metaData.getOptions().get(key).size() > 0)
+               {
+                  credentialEncoderProps.put(key, metaData.getOptions().get(key).get(0));
+               }
+               if (key.equals(CredentialEncoder.OPTION_CREDENTIAL_ENCODER_CLASS) && metaData.getOptions().get(key).size() > 0)
+               {
+                  credentialEncoderClassName = metaData.getOptions().get(key).get(0);
+               }
+
+               if (key.equals(CredentialEncoder.OPTION_CREDENTIAL_ENCODER_REGISTRY_NAME) && metaData.getOptions().get(key).size() > 0)
+               {
+                  credentialEncoderRegistryName = metaData.getOptions().get(key).get(0);
+               }
+            }
+         }
+      }
+
+      // Try to read encoder from configuration registry if provided
+      CredentialEncoder credentialEncoder = null;
+      if (credentialEncoderRegistryName != null)
+      {
+         try
+         {
+            credentialEncoder = (CredentialEncoder)configurationContext.getConfigurationRegistry().getObject(credentialEncoderRegistryName);
+         }
+         catch (Exception e)
+         {
+            throw new IdentityException("Cannot find CredentialEncoder in ConfigurationRegistry using provided name:" + credentialEncoderRegistryName, e);
+         }
+      }
+
+      // Instantiate encoder from provided className
+      if (credentialEncoderClassName != null)
+      {
+         Class encoderClass;
+         try
+         {
+            encoderClass = Class.forName(credentialEncoderClassName);
+         }
+         catch (ClassNotFoundException e)
+         {
+            throw new IdentityException("Cannot instantiate CredentialEncoder of class: " + credentialEncoderClassName, e);
+         }
+
+         Constructor ct = encoderClass.getConstructor();
+
+         credentialEncoder = (CredentialEncoder)ct.newInstance();
+
+         credentialEncoder.initialize(credentialEncoderProps);
+      }
+
+      // Using MD5 hashing by default because of backward compatibility
+      if (credentialEncoder == null)
+      {
+         credentialEncoder = new HashingEncoder();
+         credentialEncoder.initialize(credentialEncoderProps);
+      }
+
+      return credentialEncoder;
    }
 
 }

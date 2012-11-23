@@ -39,6 +39,7 @@ import java.util.Random;
 import java.util.Arrays;
 
 import junit.framework.Assert;
+import org.picketlink.idm.impl.api.session.IdentitySessionImpl;
 
 /**
  * Abstract test mapping real life structures using the API
@@ -417,7 +418,7 @@ public class OrganizationTest extends Assert
 
 
          // #2
-         Credential password = new PasswordCredential("SuperPassword2345");
+         Credential password = new PasswordCredential("SuperPassword2345", ((IdentitySessionImpl)session).getCredentialEncoder(), anotherOne.getKey());
          session.getAttributesManager().updateCredential(anotherOne, password);
          assertTrue(session.getAttributesManager().validateCredentials(anotherOne, new Credential[] {password}));
 

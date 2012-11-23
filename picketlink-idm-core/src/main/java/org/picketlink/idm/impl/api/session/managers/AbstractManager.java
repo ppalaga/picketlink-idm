@@ -58,11 +58,14 @@ public abstract class
 
    protected final String cacheNS;
 
+   private final CredentialEncoder credentialEncoder;
+
    protected AbstractManager(IdentitySessionImpl session)
    {
       this.identitySession = session;
       this.cache = session.getApiCacheProvider();
       this.cacheNS = session.getCacheNS();
+      this.credentialEncoder = session.getCredentialEncoder();
    }
 
    public IdentitySession getIdentitySession()
@@ -92,6 +95,11 @@ public abstract class
    protected IdentityStoreInvocationContext getInvocationContext()
    {
       return getSessionContext().resolveStoreInvocationContext();
+   }
+
+   protected CredentialEncoder getCredentialEncoder()
+   {
+      return credentialEncoder;
    }
 
    protected User createUser(IdentityObject identityObject)

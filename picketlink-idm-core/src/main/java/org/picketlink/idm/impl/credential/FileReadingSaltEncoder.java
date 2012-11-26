@@ -57,7 +57,7 @@ public class FileReadingSaltEncoder extends AbstractHashingWithSaltEncoder
 
       if (fileLocation == null)
       {
-         throw new IllegalStateException("Property " + fileLocation + " needs to be provided");
+         throw new IllegalStateException("Property " + OPTION_CREDENTIAL_ENCODER_FILE_LOCATION + " needs to be provided");
       }
 
       // Try to load from classpath first

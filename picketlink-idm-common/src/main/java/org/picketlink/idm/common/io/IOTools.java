@@ -23,7 +23,6 @@
 package org.picketlink.idm.common.io;
 
 
-import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -35,6 +34,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.io.BufferedOutputStream;
 import java.io.BufferedInputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * IO tools.
@@ -46,7 +47,7 @@ public class IOTools
 {
 
    /** The logger. */
-   private static final Logger log = Logger.getLogger(IOTools.class);
+   private static final Logger log = Logger.getLogger(IOTools.class.getName());
 
    /** . */
    private static final Object[] EMPTY_ARGS = new Object[0];
@@ -73,18 +74,18 @@ public class IOTools
             Method m = closable.getClass().getMethod("close", EMPTY_PARAMETER_TYPES);
             if (Modifier.isStatic(m.getModifiers()))
             {
-               log.warn("close() method on closable object is static");
+               log.log(Level.WARNING, "close() method on closable object is static");
                return;
             }
             m.invoke(closable, EMPTY_ARGS);
          }
          catch (NoSuchMethodException e)
          {
-            log.warn("The closable object does not have a close() method", e);
+            log.log(Level.WARNING, "The closable object does not have a close() method", e);
          }
          catch (IllegalAccessException e)
          {
-            log.warn("Cannot access close() method on closable object", e);
+            log.log(Level.WARNING, "Cannot access close() method on closable object", e);
          }
          catch (InvocationTargetException e)
          {
@@ -93,21 +94,21 @@ public class IOTools
             //
             if (t instanceof RuntimeException)
             {
-               log.error("The close() method threw a runtime exception", t);
+               log.log(Level.SEVERE, "The close() method threw a runtime exception", t);
                throw (RuntimeException)t;
             }
             else if (t instanceof Error)
             {
-               log.error("The close() method threw an error", t);
+               log.log(Level.SEVERE, "The close() method threw an error", t);
                throw (Error)t;
             }
             else if (t instanceof Exception)
             {
-               log.error("The close() method threw an exception", t);
+               log.log(Level.SEVERE, "The close() method threw an exception", t);
             }
             else
             {
-               log.error("The close() method threw an unexpected throwable", t);
+               log.log(Level.SEVERE, "The close() method threw an unexpected throwable", t);
             }
          }
       }
@@ -129,7 +130,7 @@ public class IOTools
          }
          catch (IOException e)
          {
-            log.error("Error while closing outstream", e);
+            log.log(Level.SEVERE, "Error while closing outstream", e);
          }
       }
    }
@@ -150,7 +151,7 @@ public class IOTools
          }
          catch (IOException e)
          {
-            log.error("Error while closing inputstream", e);
+            log.log(Level.SEVERE, "Error while closing inputstream", e);
          }
       }
    }
@@ -171,7 +172,7 @@ public class IOTools
          }
          catch (IOException e)
          {
-            log.error("Error while closing reader", e);
+            log.log(Level.SEVERE, "Error while closing reader", e);
          }
       }
    }
@@ -192,7 +193,7 @@ public class IOTools
          }
          catch (IOException e)
          {
-            log.error("Error while closing writer", e);
+            log.log(Level.SEVERE, "Error while closing writer", e);
          }
       }
    }

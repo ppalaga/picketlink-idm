@@ -257,7 +257,7 @@ public class LDAPIdentityStoreTests extends LDAPIdentityStoreTestBase implements
         for (int i = 0; i < job_number; i++) {
             //System.out.println(i+"s");
             IdentityObject user1 = getStore().createIdentityObject(getCtx(), worker_id+"AsdacmptestCredentials" + i, IdentityTypeEnum.USER);
-            IdentityObjectCredential passwordCredential1 = new PasswordCredential("Psacssword2000" + i);
+            IdentityObjectCredential passwordCredential1 = new PasswordCredential("Psacssword2000" + i, getCredentialEncoder(), user1.getName());
 //            commit();
 //            flush();
             startStopwatch();

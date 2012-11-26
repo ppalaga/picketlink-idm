@@ -262,7 +262,7 @@ public class LDAPIdentityStoreTestCase extends LDAPIdentityStoreTestBase
 
         for (int i = 0; i < user_size; i++) {
             IdentityObject user1 = getStore().createIdentityObject(getCtx(), "AsdacmptestCredentials" + i, IdentityTypeEnum.USER);
-            IdentityObjectCredential passwordCredential1 = new PasswordCredential("Psacssword2000" + i);
+            IdentityObjectCredential passwordCredential1 = new PasswordCredential("Psacssword2000" + i, getCredentialEncoder(), user1.getName());
 //            commit();
 //            flush();
             startStopwatch();

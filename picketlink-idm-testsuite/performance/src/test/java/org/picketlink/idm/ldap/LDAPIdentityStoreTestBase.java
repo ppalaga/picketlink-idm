@@ -21,6 +21,8 @@
 */
 package org.picketlink.idm.ldap;
 
+import org.picketlink.idm.api.CredentialEncoder;
+import org.picketlink.idm.impl.configuration.IdentityConfigurationContextImpl;
 import org.opends.server.tools.LDAPModify;
 import org.picketlink.idm.ldap.*;
 import org.picketlink.idm.impl.store.ldap.*;
@@ -57,6 +59,8 @@ public class LDAPIdentityStoreTestBase extends DBTestBase
 
     public LDAPTestPOJO ldapTestPOJO = new LDAPTestPOJO();
 
+    private CredentialEncoder credentialEncoder;
+
     public LDAPIdentityStoreTestBase() {
     }
 
@@ -70,6 +74,9 @@ public class LDAPIdentityStoreTestBase extends DBTestBase
         IdentityConfigurationMetaData configurationMD = JAXB2IdentityConfiguration.createConfigurationMetaData("test-identity-config.xml");
 
         IdentityConfigurationContextRegistry registry = (IdentityConfigurationContextRegistry) new IdentityConfigurationImpl().configure(configurationMD);
+
+       credentialEncoder = ((IdentityConfigurationImpl)registry).createCredentialEncoder(configurationMD.getRealms().get(0),
+             new IdentityConfigurationContextImpl(configurationMD, registry));
 
         IdentityStoreConfigurationMetaData storeMD = null;
 
@@ -140,6 +147,11 @@ public class LDAPIdentityStoreTestBase extends DBTestBase
    public void commit()
    {
 
+   }
+
+   public CredentialEncoder getCredentialEncoder()
+   {
+      return credentialEncoder;
    }
 
 

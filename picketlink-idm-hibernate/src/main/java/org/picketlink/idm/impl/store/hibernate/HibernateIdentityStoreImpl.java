@@ -22,6 +22,14 @@
 
 package org.picketlink.idm.impl.store.hibernate;
 
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.type.StringType;
 import org.picketlink.idm.common.exception.IdentityException;
 import org.picketlink.idm.impl.helper.Tools;
 import org.picketlink.idm.impl.model.hibernate.*;
@@ -734,48 +742,92 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
 
       try
       {
+         StringBuilder hqlBuilderSelect = new StringBuilder("select distinct io from HibernateIdentityObject io");
+         Map<String, Object> queryParams = new HashMap<String, Object>();
 
-         Criteria hc = hibernateSession.createCriteria(HibernateIdentityObject.class)
-            .setCacheable(true)
-            .add(Restrictions.eq("realm", realm))
-            .add(Restrictions.eq("identityType", hibernateType));
+         StringBuilder hqlBuilderConditions = new StringBuilder(" where io.realm=:realm and io.identityType=:identityType");
+         queryParams.put("realm", realm);
+         queryParams.put("identityType", hibernateType);
+
+         hqlBuilderConditions.append(" and io.name like :ioName");
+         if (criteria != null && criteria.getFilter() != null)
+         {
+            queryParams.put("ioName", criteria.getFilter().replaceAll("\\*", "%"));
+         }
+         else
+         {
+            queryParams.put("ioName", "%");
+         }
+
+         if (criteria != null && criteria.isFiltered() && criteria.getValues() != null)
+         {
+            int i = 0;
+            for (Map.Entry<String, String[]> entry : criteria.getValues().entrySet())
+            {
+               // Resolve attribute name from the store attribute mapping
+               String mappedAttributeName = null;
+               try
+               {
+                  mappedAttributeName = resolveAttributeStoreMapping(hibernateType, entry.getKey());
+               }
+               catch (IdentityException e)
+               {
+                  //Nothing
+               }
+
+               Set<String> given = new HashSet<String>(Arrays.asList(entry.getValue()));
+
+               for (String attrValue : given)
+               {
+                  attrValue = attrValue.replaceAll("\\*", "%");
+
+                  i++;
+                  String attrTableJoinName = "attrs" + i;
+                  String textValuesTableJoinName = "textValues" + i;
+                  String attrParamName = "attr" + i;
+                  String textValueParamName = "textValue" + i;
+
+                  hqlBuilderSelect.append(" join io.attributes as " + attrTableJoinName);
+                  hqlBuilderSelect.append(" join " + attrTableJoinName + ".textValues as " + textValuesTableJoinName);
+                  hqlBuilderConditions.append(" and " + attrTableJoinName + ".name like :" + attrParamName);
+                  hqlBuilderConditions.append(" and " + textValuesTableJoinName + " like :" + textValueParamName);
+
+                  queryParams.put(attrParamName, mappedAttributeName);
+                  queryParams.put(textValueParamName, attrValue);
+               }
+            }
+         }
 
          if (criteria != null && criteria.isSorted())
          {
             if (criteria.isAscending())
             {
-               hc.addOrder(Order.asc("name"));
+               hqlBuilderConditions.append(" order by io.name asc");
             }
             else
             {
-               hc.addOrder(Order.desc("name"));
+               hqlBuilderConditions.append(" order by io.name desc");
             }
          }
 
-         if (criteria != null && criteria.isPaged() && !criteria.isFiltered())
+         Query hibernateQuery = hibernateSession.createQuery(hqlBuilderSelect.toString() + hqlBuilderConditions.toString());
+
+         if (criteria != null && criteria.isPaged())
          {
             if (criteria.getMaxResults() > 0)
             {
-               hc.setMaxResults(criteria.getMaxResults());
+               hibernateQuery.setMaxResults(criteria.getMaxResults());
             }
-            hc.setFirstResult(criteria.getFirstResult());
-
+            hibernateQuery.setFirstResult(criteria.getFirstResult());
          }
 
-         if (criteria != null && criteria.getFilter() != null)
-         {
-            hc.add(Restrictions.like("name", criteria.getFilter().replaceAll("\\*", "%")));
-         }
-         else
-         {
-            hc.add(Restrictions.like("name", "%"));
-         }
+         // Apply parameters to Hibernate query
+         applyQueryParameters(hibernateQuery, queryParams);
 
+         hibernateQuery.setCacheable(true);
 
-
-         results = (List<IdentityObject>)hc.list();
+         results = (List<IdentityObject>)hibernateQuery.list();
          Hibernate.initialize(results);
-
       }
       catch (Exception e)
       {
@@ -785,15 +837,6 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
          }
 
          throw new IdentityException("Cannot find IdentityObjects with type '" + identityType.getName() + "'", e);
-      }
-
-      if (criteria != null && criteria.isFiltered())
-      {
-         filterByAttributesValues(results, criteria.getValues());
-         if (criteria.isPaged())
-         {
-            results = (LinkedList)cutPageFromResults(results, criteria);
-         }
       }
 
       return results;
@@ -3239,6 +3282,14 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
          }
       }
       return results;
+   }
+
+   private void applyQueryParameters(Query hibernateQuery, Map<String, Object> queryParams)
+   {
+      for (Map.Entry<String, Object> entry : queryParams.entrySet())
+      {
+         hibernateQuery.setParameter(entry.getKey(), entry.getValue());
+      }
    }
 
    protected boolean isAllowNotDefinedIdentityObjectTypes()

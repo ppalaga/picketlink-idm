@@ -545,22 +545,77 @@ public class CommonIdentityStoreTest extends Assert
          isSearchCriteriaTypeSupported(IdentityTypeEnum.USER, IdentityObjectSearchCriteriaType.ATTRIBUTE_FILTER))
       {
 
-         IdentityObjectAttribute phone = new SimpleAttribute("phone", new String[] {"777 777 777"});
-         IdentityObjectAttribute description = new SimpleAttribute("description", new String[] {"sample desc"});
+         IdentityObjectAttribute phone1 = new SimpleAttribute("phone", new String[] {"777 777 777", "666 666 666"});
+         IdentityObjectAttribute description1 = new SimpleAttribute("description", new String[] {"sample desc"});
+         IdentityObjectAttribute phone2 = new SimpleAttribute("phone", new String[] {"777 777 772", "666 666 665"});
+         IdentityObjectAttribute description2 = new SimpleAttribute("description", new String[] {"sample desc", "another desc"});
 
-         testContext.getStore().addAttributes(testContext.getCtx(), group1, new IdentityObjectAttribute[]{phone, description});
+         testContext.getStore().addAttributes(testContext.getCtx(), group1, new IdentityObjectAttribute[]{phone1, description1});
+         testContext.getStore().addAttributes(testContext.getCtx(), group2, new IdentityObjectAttribute[]{phone2, description2});
 
          criteria = (IdentityObjectSearchCriteria)new IdentitySearchCriteriaImpl()
             .attributeValuesFilter("phone", new String[] {"777 777 777"})
             .attributeValuesFilter("description", new String[] {"sample desc"});
-
-
-
          results = testContext.getStore().
                findIdentityObject(testContext.getCtx(), IdentityTypeEnum.USER, criteria);
-
          assertEquals(1, results.size());
+         assertEquals("Division1", ((List<IdentityObject>)results).get(0).getName());
 
+         criteria = (IdentityObjectSearchCriteria)new IdentitySearchCriteriaImpl()
+               .attributeValuesFilter("phone", new String[] {"777 777 77*", "666 666 66*"})
+               .attributeValuesFilter("description", new String[] {"sample desc"}).sort(SortOrder.ASCENDING);
+         results = testContext.getStore().
+               findIdentityObject(testContext.getCtx(), IdentityTypeEnum.USER, criteria);
+         assertEquals(2, results.size());
+         assertEquals("Division1", ((List<IdentityObject>)results).get(0).getName());
+         assertEquals("Division2", ((List<IdentityObject>)results).get(1).getName());
+
+         criteria = (IdentityObjectSearchCriteria)new IdentitySearchCriteriaImpl()
+               .attributeValuesFilter("phone", new String[] {"777 777 77*", "666 666 66*"})
+               .attributeValuesFilter("description", new String[] {"sample desc", "another*"}).sort(SortOrder.ASCENDING);
+         results = testContext.getStore().
+               findIdentityObject(testContext.getCtx(), IdentityTypeEnum.USER, criteria);
+         assertEquals(1, results.size());
+         assertEquals("Division2", ((List<IdentityObject>)results).get(0).getName());
+
+
+
+         // Test combination of attribute filter with paging and sorting
+         if (testContext.getStore().getSupportedFeatures().
+               isSearchCriteriaTypeSupported(IdentityTypeEnum.USER, IdentityObjectSearchCriteriaType.PAGE) &&
+             testContext.getStore().getSupportedFeatures().
+               isSearchCriteriaTypeSupported(IdentityTypeEnum.USER, IdentityObjectSearchCriteriaType.SORT))
+         {
+            // Add some attributes first
+            IdentityObjectAttribute phone3 = new SimpleAttribute("phone", new String[] {"777 777 773"});
+            IdentityObjectAttribute phone4 = new SimpleAttribute("phone", new String[] {"777 777 664"});
+            IdentityObjectAttribute phone5 = new SimpleAttribute("phone", new String[] {"777 777 775"});
+
+            testContext.getStore().addAttributes(testContext.getCtx(), group3, new IdentityObjectAttribute[]{phone3});
+            testContext.getStore().addAttributes(testContext.getCtx(), group4, new IdentityObjectAttribute[]{phone4});
+            testContext.getStore().addAttributes(testContext.getCtx(), group5, new IdentityObjectAttribute[]{phone5});
+
+            // Test page1
+            criteria = (IdentityObjectSearchCriteria)new IdentitySearchCriteriaImpl()
+                  .attributeValuesFilter("phone", new String[] {"777 777 77*"}).page(0, 3).sort(SortOrder.ASCENDING);
+
+            results = testContext.getStore().
+                  findIdentityObject(testContext.getCtx(), IdentityTypeEnum.USER, criteria);
+
+            assertEquals(3, results.size());
+            assertEquals("Company2", ((List<IdentityObject>)results).get(0).getName());
+            assertEquals("Division1", ((List<IdentityObject>)results).get(1).getName());
+            assertEquals("Division2", ((List<IdentityObject>)results).get(2).getName());
+
+            // Test page2
+            criteria = (IdentityObjectSearchCriteria)new IdentitySearchCriteriaImpl()
+                  .attributeValuesFilter("phone", new String[] {"777 777 77*"}).page(3, 3).sort(SortOrder.ASCENDING);
+            results = testContext.getStore().
+                  findIdentityObject(testContext.getCtx(), IdentityTypeEnum.USER, criteria);
+
+            assertEquals(1, results.size());
+            assertEquals("Division3", ((List<IdentityObject>)results).get(0).getName());
+         }
       }
 
       testContext.commit();

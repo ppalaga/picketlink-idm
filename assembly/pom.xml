@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.picketlink.idm</groupId>
     <artifactId>picketlink-idm-parent</artifactId>
-    <version>1.4.1.CR01-SNAPSHOT</version>
+    <version>1.4.1.CR01</version>
     <relativePath>../parent</relativePath>
   </parent>
 

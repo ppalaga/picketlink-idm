@@ -114,7 +114,7 @@ public class FallbackIdentityStoreRepository extends AbstractIdentityStoreReposi
 
       if (getIdentityStoreMappings().size() > 0)
       {
-         configuredIdentityStores.addAll(getIdentityStoreMappings().values());
+         configuredIdentityStores.addAll(getMappedIdentityStores());
       }
       
 

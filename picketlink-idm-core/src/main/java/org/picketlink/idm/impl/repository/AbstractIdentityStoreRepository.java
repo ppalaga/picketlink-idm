@@ -336,6 +336,21 @@ public abstract class AbstractIdentityStoreRepository implements IdentityStoreRe
       return firstInTheList;
    }
 
+   public Set<IdentityStore> getMappedIdentityStores()
+   {
+       Set<IdentityStore> allMapped = new HashSet<IdentityStore>();
+
+       for (Map.Entry<String, List<IdentityStore>> entry : identityStoreMappings.entrySet())
+       {
+           for (IdentityStore store : entry.getValue())
+           {
+               allMapped.add(store);
+           }
+       }
+
+       return allMapped;
+   }
+
    public Map<String, AttributeStore> getAttributeStoreMappings()
    {
       Map<String, AttributeStore> firstInTheList = new HashMap<String, AttributeStore>();

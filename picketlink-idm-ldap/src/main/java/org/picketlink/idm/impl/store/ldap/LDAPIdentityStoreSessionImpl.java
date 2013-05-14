@@ -56,10 +56,23 @@ public class LDAPIdentityStoreSessionImpl implements IdentityStoreSession
    private static Logger log = Logger.getLogger(LDAPIdentityStoreSessionImpl.class.getName());
 
    private final LDAPIdentityStoreConfiguration storeConfig;
+   private final PBEEncoder pbeEncoder;
 
    public LDAPIdentityStoreSessionImpl(LDAPIdentityStoreConfiguration storeConfig)
    {
       this.storeConfig = storeConfig;
+
+      // Look if we have configured parameters for password masking
+      if (storeConfig.getEncodingCipherAlgorithm() != null)
+      {
+         this.pbeEncoder = new PBEEncoder(storeConfig.getEncodingKeyStorePassword(), storeConfig.getEncodingCipherAlgorithm(),
+               storeConfig.getEncodingSalt(), storeConfig.getEncodingIterationCount());
+         log.info("Initialized PBEEncoder for decoding of masked password");
+      }
+      else
+      {
+         this.pbeEncoder = null;
+      }
 
    }
 
@@ -106,11 +119,9 @@ public class LDAPIdentityStoreSessionImpl implements IdentityStoreSession
       {
          String credentials = null;
 
-         if (storeConfig.getJaasSecurityDomain() != null)
+         if (pbeEncoder != null)
          {
-            String securityDomain = storeConfig.getJaasSecurityDomain();
-
-            credentials = getPassword(securityDomain, storeConfig.getAdminPassword());
+            credentials = pbeEncoder.decode64(storeConfig.getAdminPassword());
          }
 
          else
@@ -211,29 +222,5 @@ public class LDAPIdentityStoreSessionImpl implements IdentityStoreSession
    {
       return false;
    }
-
-   public String getPassword(String securityDomain, String encoded) throws Exception
-   {
-
-
-      try
-      {
-         ObjectName serviceName = new ObjectName(securityDomain);
-         MBeanServer server = Tools.locateJBoss();
-
-         byte[] secret = (byte[]) server.invoke(serviceName, "decode64", new Object[] {encoded},
-            new String[] {String.class.getName()});
-
-         // Convert to UTF-8 base char array
-         return new String(secret, "UTF-8");
-      }
-      catch (Exception e)
-      {
-         log.log(Level.INFO, "Failed to decode LDAP password from JBoss JAAS Security Domain: " + securityDomain, e);
-         throw new IdentityException("Failed to decode LDAP password from JBoss JAAS Security Domain: " + securityDomain, e);
-      }
-   }
-
-
 
 }

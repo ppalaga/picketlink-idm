@@ -28,6 +28,7 @@ import org.picketlink.idm.spi.configuration.metadata.IdentityObjectTypeMetaData;
 import org.picketlink.idm.impl.types.SimpleIdentityObjectType;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,13 @@ public class SimpleLDAPIdentityStoreConfiguration
 
    private final String adminPassword;
 
-   private final String jaasSecurityDomain;
+   private final String encodingCipherAlgorithm;
+
+   private final char[] encodingKeyStorePassword;
+
+   private final byte[] encodingSalt;
+
+   private final int encodingIterationCount;
 
    private final String authenticationMethod;
 
@@ -106,7 +113,15 @@ public class SimpleLDAPIdentityStoreConfiguration
 
    public static final String ADMIN_PASSWORD = "adminPassword";
 
-   public static final String SECURITY_DOMAIN_OPT = "jaasSecurityDomain";
+   public static final String ENCODING_KEY_STORE_PASSWORD = "encodingKeyStorePassword";
+
+   public static final String ENCODING_KEY_STORE_PASSWORD_DEFAULT =  "somearbitrarycrazystringthatdoesnotmatter";
+
+   public static final String ENCODING_SALT = "encodingSalt";
+
+   public static final String ENCODING_ITERATION_COUNT = "encodingIterationCount";
+
+   public static final String ENCODING_CIPHER_ALGORITHM = "encodingCipherAlgorithm";
 
    public static final String SEARCH_TIME_LIMIT = "searchTimeLimit";
 
@@ -165,7 +180,7 @@ public class SimpleLDAPIdentityStoreConfiguration
       this.adminDN = storeMD.getOptionSingleValue(ADMIN_DN);
       this.authenticationMethod = storeMD.getOptionSingleValue(AUTHENTICATION_METHOD);
       this.adminPassword = storeMD.getOptionSingleValue(ADMIN_PASSWORD);
-      this.jaasSecurityDomain = storeMD.getOptionSingleValue(SECURITY_DOMAIN_OPT);
+      this.encodingCipherAlgorithm = storeMD.getOptionSingleValue(ENCODING_CIPHER_ALGORITHM);
       this.externalJNDIContext = storeMD.getOptionSingleValue(EXTERNAL_JNDI_CONTEXT);
       this.membershipToRelationshipTypeMapping = storeMD.getOptionSingleValue(MEMBERSHIP_TO_RELATIONSHIP_TYPE_MAPPING);
       this.relationshipNameSearchFilter = storeMD.getOptionSingleValue(RELATIONSHIP_NAME_SEARCH_FILTER);
@@ -245,6 +260,37 @@ public class SimpleLDAPIdentityStoreConfiguration
       {
          this.allowNotCaseSensitiveSearch = false;
       }
+
+      String encodingKeyStorePassword = storeMD.getOptionSingleValue(ENCODING_KEY_STORE_PASSWORD);
+      if (encodingKeyStorePassword == null)
+      {
+         encodingKeyStorePassword = ENCODING_KEY_STORE_PASSWORD_DEFAULT;
+      }
+      this.encodingKeyStorePassword = encodingKeyStorePassword.toCharArray();
+
+      String saltParam = storeMD.getOptionSingleValue(ENCODING_SALT);
+      if (saltParam != null)
+      {
+          if (saltParam.length() < 8)
+          {
+             throw new IllegalArgumentException("Salt param needs to have length at least 8. Current value is " + saltParam);
+          }
+          try
+          {
+             this.encodingSalt = saltParam.substring(0, 8).getBytes("UTF-8");
+          }
+          catch (UnsupportedEncodingException uee)
+          {
+             throw new RuntimeException(uee);
+          }
+      }
+      else
+      {
+          this.encodingSalt = null;
+      }
+
+      String iterationCountParam = storeMD.getOptionSingleValue(ENCODING_ITERATION_COUNT);
+      this.encodingIterationCount = iterationCountParam!=null ? Integer.parseInt(iterationCountParam): -1;
 
       Map<String, LDAPIdentityObjectTypeConfiguration> types = new HashMap<String, LDAPIdentityObjectTypeConfiguration>();
 
@@ -430,9 +476,24 @@ public class SimpleLDAPIdentityStoreConfiguration
       return adminPassword;
    }
 
-   public String getJaasSecurityDomain()
+   public char[] getEncodingKeyStorePassword()
    {
-      return jaasSecurityDomain;
+      return encodingKeyStorePassword;
+   }
+
+   public byte[] getEncodingSalt()
+   {
+      return encodingSalt;
+   }
+
+   public int getEncodingIterationCount()
+   {
+      return encodingIterationCount;
+   }
+
+   public String getEncodingCipherAlgorithm()
+   {
+      return encodingCipherAlgorithm;
    }
 
    public int getSearchTimeLimit()

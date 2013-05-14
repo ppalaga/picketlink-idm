@@ -44,7 +44,13 @@ public interface LDAPIdentityStoreConfiguration
 
    String getAdminPassword();
 
-   String getJaasSecurityDomain();
+   String getEncodingCipherAlgorithm();
+
+   char[] getEncodingKeyStorePassword();
+
+   byte[] getEncodingSalt();
+
+   int getEncodingIterationCount();
 
    String getAuthenticationMethod();
 
@@ -93,5 +99,5 @@ public interface LDAPIdentityStoreConfiguration
    int getPagedExtensionSize();
 
    public boolean isAllowNotCaseSensitiveSearch();
-   
+
 }

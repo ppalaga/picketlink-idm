@@ -24,6 +24,8 @@ package org.picketlink.idm.impl.helper;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
+
+import java.lang.management.ManagementFactory;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -241,7 +243,7 @@ public class Tools
       }
    }
 
-   public static MBeanServer locateJBoss()
+   public static MBeanServer locateMBeanServer()
    {
       synchronized (Tools.class)
       {
@@ -250,17 +252,20 @@ public class Tools
             return instance;
          }
       }
-      for (Iterator i = MBeanServerFactory.findMBeanServer(null).iterator(); i.hasNext(); )
+
+      // Try to locate platform mbean server
+      MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
+      if (mbeanServer != null)
       {
-         MBeanServer server = (MBeanServer) i.next();
-         if (server.getDefaultDomain().equals("jboss"))
-         {
-            return server;
-         }
+         return mbeanServer;
       }
 
+      throw new IllegalStateException("No platform MBeanServer found!");
+   }
 
-      throw new IllegalStateException("No 'jboss' MBeanServer found!");
+   public static void setMBeanServerInstance(MBeanServer instance)
+   {
+      Tools.instance = instance;
    }
 
    /**

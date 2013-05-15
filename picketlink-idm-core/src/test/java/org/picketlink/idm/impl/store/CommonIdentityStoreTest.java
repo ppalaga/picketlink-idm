@@ -327,6 +327,16 @@ public class CommonIdentityStoreTest extends Assert
       assertEquals(0, testContext.getStore().findIdentityObject(testContext.getCtx(), group2, RelationshipTypeEnum.JBOSS_IDENTITY_MEMBERSHIP, false, null).size());
       assertEquals(0, testContext.getStore().findIdentityObject(testContext.getCtx(), group2, RelationshipTypeEnum.JBOSS_IDENTITY_MEMBERSHIP, true, null).size());
 
+      testContext.flush();
+
+      // test find methods with relationships and criterias
+
+      IdentityObjectSearchCriteria criteria = (IdentityObjectSearchCriteria)new IdentitySearchCriteriaImpl().sort(SortOrder.ASCENDING).page(0, 0);
+      assertEquals(2, testContext.getStore().findIdentityObject(testContext.getCtx(), group1, RelationshipTypeEnum.JBOSS_IDENTITY_MEMBERSHIP, true, criteria).size());
+      assertEquals(0, testContext.getStore().findIdentityObject(testContext.getCtx(), group1, RelationshipTypeEnum.JBOSS_IDENTITY_MEMBERSHIP, false, criteria).size());
+      assertEquals(1, testContext.getStore().findIdentityObject(testContext.getCtx(), user1, RelationshipTypeEnum.JBOSS_IDENTITY_MEMBERSHIP, false, criteria).size());
+      assertEquals(0, testContext.getStore().findIdentityObject(testContext.getCtx(), group2, RelationshipTypeEnum.JBOSS_IDENTITY_MEMBERSHIP, true, criteria).size());
+
       testContext.commit();
 
    }
@@ -409,7 +419,7 @@ public class CommonIdentityStoreTest extends Assert
       Collection<IdentityObject> results = null;
       IdentityObjectSearchCriteria criteria = null;
 
-      // TODO: by RelationshipType
+      // TODO: by RelationshipType (some tests with criterias+relationships are in testRelationships() )
 
       if (testContext.getStore().getSupportedFeatures().
          isSearchCriteriaTypeSupported(IdentityTypeEnum.USER, IdentityObjectSearchCriteriaType.NAME_FILTER))

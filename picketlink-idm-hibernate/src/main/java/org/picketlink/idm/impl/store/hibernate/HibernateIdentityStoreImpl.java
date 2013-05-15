@@ -994,24 +994,24 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
 
             if (count)
             {
-               hqlString.append("select count(distinct ior.toIdentityObject) from HibernateIdentityObjectRelationship ior where ");
+               hqlString.append("select count(distinct toio) from HibernateIdentityObjectRelationship ior join ior.toIdentityObject toio where ");
 
             }
             else
             {
-               hqlString.append("select distinct ior.toIdentityObject from HibernateIdentityObjectRelationship ior where ");
+               hqlString.append("select distinct toio from HibernateIdentityObjectRelationship ior join ior.toIdentityObject toio where ");
             }
 
-            hqlString.append("ior.toIdentityObject.realm = :realm and ior.fromIdentityObject.realm = :realm and ");
+            hqlString.append("toio.realm = :realm and ior.fromIdentityObject.realm = :realm and ");
 
             if (relationshipType != null)
             {
 
-               hqlString.append("ior.toIdentityObject.name like :nameFilter and ior.type.name = :relType and ior.fromIdentityObject = :identity");
+               hqlString.append("toio.name like :nameFilter and ior.type.name = :relType and ior.fromIdentityObject = :identity");
             }
             else
             {
-               hqlString.append("ior.toIdentityObject.name like :nameFilter and ior.fromIdentityObject = :identity");
+               hqlString.append("toio.name like :nameFilter and ior.fromIdentityObject = :identity");
             }
 
             if (excludes != null && excludes.size() > 0)
@@ -1020,14 +1020,14 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
                int i = 0;
                for (IdentityObjectType exclude : excludes)
                {
-                  hqlString.append(" and ior.toIdentityObject.identityType.id <> ")
+                  hqlString.append(" and toio.identityType.id <> ")
                   .append(":exclude" + i++);
                }
             }
 
             if (orderByName)
             {
-               hqlString.append(" order by ior.toIdentityObject.name");
+               hqlString.append(" order by toio.name");
                if (ascending)
                {
                   hqlString.append(" asc");
@@ -1039,24 +1039,24 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
 
             if (count)
             {
-               hqlString.append("select count(distinct ior.fromIdentityObject) from HibernateIdentityObjectRelationship ior where ");
+               hqlString.append("select count(distinct fromio) from HibernateIdentityObjectRelationship ior join ior.fromIdentityObject fromio where ");
 
             }
             else
             {
-               hqlString.append("select distinct ior.fromIdentityObject from HibernateIdentityObjectRelationship ior where ");
+               hqlString.append("select distinct fromio from HibernateIdentityObjectRelationship ior join ior.fromIdentityObject fromio where ");
             }
 
-            hqlString.append("ior.toIdentityObject.realm = :realm and ior.fromIdentityObject.realm = :realm and ");
+            hqlString.append("ior.toIdentityObject.realm = :realm and fromio.realm = :realm and ");
 
 
             if (relationshipType != null)
             {
-               hqlString.append("ior.fromIdentityObject.name like :nameFilter and ior.type.name = :relType and ior.toIdentityObject = :identity");
+               hqlString.append("fromio.name like :nameFilter and ior.type.name = :relType and ior.toIdentityObject = :identity");
             }
             else
             {
-              hqlString.append("ior.fromIdentityObject.name like :nameFilter and ior.toIdentityObject = :identity");
+              hqlString.append("fromio.name like :nameFilter and ior.toIdentityObject = :identity");
             }
 
             if (excludes != null && excludes.size() > 0)
@@ -1064,14 +1064,14 @@ public class HibernateIdentityStoreImpl implements IdentityStore, Serializable
                int i = 0;
                for (IdentityObjectType exclude : excludes)
                {
-                  hqlString.append(" and ior.fromIdentityObject.identityType.id <> ")
+                  hqlString.append(" and fromio.identityType.id <> ")
                   .append(":exclude" + i++);
                }
             }
 
             if (orderByName)
             {
-               hqlString.append(" order by ior.fromIdentityObject.name");
+               hqlString.append(" order by fromio.name");
                if (ascending)
                {
                   hqlString.append(" asc");

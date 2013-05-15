@@ -10,7 +10,7 @@
   <parent>
     <groupId>org.picketlink.idm</groupId>
     <artifactId>picketlink-idm-integration</artifactId>
-    <version>1.4.2.Final-SNAPSHOT</version>
+    <version>1.4.2.CR01</version>
   </parent>
 
   <properties>

@@ -256,18 +256,18 @@
    </datasource>
    <datasource>
       <datasource-name>mysql5-local</datasource-name>
-      <connection-url>jdbc:mysql://localhost:3306/jbid?useServerPrepStmts=false&amp;jdbcCompliantTruncation=false
+      <connection-url>jdbc:mysql://localhost:3306/plidm_test?useServerPrepStmts=false&amp;jdbcCompliantTruncation=false
       </connection-url>
       <driver-class>com.mysql.jdbc.Driver</driver-class>
       <user-name>root</user-name>
-      <password></password>
+      <password>password</password>
    </datasource>
    <datasource>
-      <datasource-name>postgresql8-local</datasource-name>
-      <connection-url>jdbc:postgresql://192.168.1.101:5432:jbid</connection-url>
+      <datasource-name>postgresql9-local</datasource-name>
+      <connection-url>jdbc:postgresql://localhost:5432:mydb3-plidmtest</connection-url>
       <driver-class>org.postgresql.Driver</driver-class>
       <user-name>postgres</user-name>
-      <password>password</password>
+      <password>postgres</password>
    </datasource>
 
 </datasources>

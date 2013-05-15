@@ -447,6 +447,23 @@
         </dependency>
       </dependencies>
      </profile>
+     <profile>
+      <id>local-postgresql9-1</id>
+      <activation>
+        <property>
+          <name>dataSourceName</name>
+          <value>postgresql9-local</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>9.1-901.jdbc4</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+     </profile>
 
     <!--MySQL-->
 
@@ -524,6 +541,23 @@
         <property>
           <name>dataSourceName</name>
           <value>mysql5-5</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>5.1.21</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>local-mysql5</id>
+      <activation>
+        <property>
+          <name>dataSourceName</name>
+          <value>mysql5-local</value>
         </property>
       </activation>
       <dependencies>

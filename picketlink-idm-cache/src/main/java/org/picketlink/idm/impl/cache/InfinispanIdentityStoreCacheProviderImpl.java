@@ -22,9 +22,9 @@
 
 package org.picketlink.idm.impl.cache;
 
-import org.infinispan.tree.Fqn;
 import org.picketlink.idm.common.exception.IdentityException;
 import org.picketlink.idm.impl.api.SimpleAttribute;
+import org.picketlink.idm.impl.tree.Fqn;
 import org.picketlink.idm.impl.tree.Node;
 import org.picketlink.idm.impl.tree.TreeCache;
 import org.picketlink.idm.impl.types.SimpleIdentityObject;

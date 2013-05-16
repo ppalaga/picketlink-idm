@@ -3,13 +3,11 @@ package org.picketlink.idm.impl.tree;
 
 import org.infinispan.AdvancedCache;
 import org.infinispan.atomic.AtomicMap;
-import org.infinispan.tree.Fqn;
 import org.infinispan.util.Immutables;
 import org.infinispan.util.logging.Log;
 import org.infinispan.util.logging.LogFactory;
 import org.picketlink.idm.impl.cache.InfinispanAPICacheProviderImpl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**

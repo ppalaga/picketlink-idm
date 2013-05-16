@@ -1,9 +1,5 @@
 package org.picketlink.idm.impl.tree;
 
-import org.infinispan.tree.Fqn;
-
-import java.io.Serializable;
-
 /**
  * Representation of Node in cache. Node can be either path node (node which contains other subnodes) or leaf node (node without subnodes).
  * Leaf node can contain either single value or multiple values (currently our impl supports only single value)

@@ -1,6 +1,5 @@
 package org.picketlink.idm.impl.tree;
 
-import org.infinispan.tree.Fqn;
 import org.picketlink.idm.impl.cache.InfinispanAPICacheProviderImpl;
 
 import java.util.ArrayList;

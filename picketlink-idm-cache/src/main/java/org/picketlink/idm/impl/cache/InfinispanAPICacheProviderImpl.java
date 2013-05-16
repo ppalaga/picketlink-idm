@@ -22,7 +22,6 @@
 
 package org.picketlink.idm.impl.cache;
 
-import org.infinispan.tree.Fqn;
 import org.picketlink.idm.api.Attribute;
 import org.picketlink.idm.api.Group;
 import org.picketlink.idm.api.IdentitySearchCriteria;
@@ -41,6 +40,7 @@ import org.picketlink.idm.cache.RoleTypeSearch;
 import org.picketlink.idm.cache.UserSearch;
 import org.picketlink.idm.common.exception.IdentityException;
 import org.picketlink.idm.impl.api.model.GroupKey;
+import org.picketlink.idm.impl.tree.Fqn;
 import org.picketlink.idm.impl.tree.Node;
 import org.picketlink.idm.impl.tree.TreeCache;
 

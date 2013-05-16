@@ -7,12 +7,10 @@ import org.infinispan.atomic.AtomicMapLookup;
 import org.infinispan.batch.AutoBatchSupport;
 import org.infinispan.config.ConfigurationException;
 import org.infinispan.executors.DefaultScheduledExecutorFactory;
-import org.infinispan.tree.Fqn;
 import org.infinispan.util.Immutables;
 import org.infinispan.util.logging.Log;
 import org.infinispan.util.logging.LogFactory;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;

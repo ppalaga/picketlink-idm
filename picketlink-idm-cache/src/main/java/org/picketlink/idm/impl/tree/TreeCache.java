@@ -1,7 +1,6 @@
 package org.picketlink.idm.impl.tree;
 
 import org.infinispan.Cache;
-import org.infinispan.tree.Fqn;
 
 /**
  * Implementation of tree cache
@@ -20,7 +19,7 @@ public interface TreeCache
 
    /**
     * Return transient node, which is not synced (persisted) in underlying infinispan cache. It will be persisted to cache when method
-    * {@link IDMTreeCacheImpl#addLeafNode(org.infinispan.tree.Fqn, Object)} will be called.
+    * {@link IDMTreeCacheImpl#addLeafNode(Fqn, Object)} will be called.
     *
     * @param nodeFqn FQN of particular leaf transient node
     * @return Node, which is not transient and may not be presented in infinispan cache at the moment of method return

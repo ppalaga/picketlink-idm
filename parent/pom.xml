@@ -278,7 +278,9 @@
         </dependency>
       </dependencies>
     </profile>
-    <profile>
+
+    <!-- Commented out. Profile is not needed anymore as it's dynamically added by QE config tool -->
+    <!--<profile>
       <id>hudson-sybase-15-7</id>
       <activation>
         <property>
@@ -294,7 +296,7 @@
           <scope>test</scope>
         </dependency>
       </dependencies>
-    </profile>
+    </profile>-->
 
     <!--DB2-->
 

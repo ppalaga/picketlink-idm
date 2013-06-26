@@ -25,6 +25,8 @@ package org.picketlink.idm.api;
 
 import java.util.Map;
 
+import org.picketlink.idm.api.cfg.IdentityConfigurationRegistry;
+
 /**
  * Provides API for encoding credentials/passwords before saving them to Identity storage. Implementations could provide password encoding
  * based on hashing passwords or hashing+salting
@@ -43,8 +45,9 @@ public interface CredentialEncoder
     * Initialize encoder with properties
     *
     * @param credentialEncoderProps
+    * @param configurationRegistry
     */
-   public void initialize(Map<String, String> credentialEncoderProps);
+   public void initialize(Map<String, String> credentialEncoderProps, IdentityConfigurationRegistry configurationRegistry);
 
    /**
     * Provide identity session object. Some encoder implementations may need it (For example if they need to access

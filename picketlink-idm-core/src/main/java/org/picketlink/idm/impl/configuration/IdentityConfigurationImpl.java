@@ -391,14 +391,14 @@ public class IdentityConfigurationImpl
 
          credentialEncoder = (CredentialEncoder)ct.newInstance();
 
-         credentialEncoder.initialize(credentialEncoderProps);
+         credentialEncoder.initialize(credentialEncoderProps, (IdentityConfigurationRegistry)configurationContext.getConfigurationRegistry());
       }
 
       // Using MD5 hashing by default because of backward compatibility
       if (credentialEncoder == null)
       {
          credentialEncoder = new HashingEncoder();
-         credentialEncoder.initialize(credentialEncoderProps);
+         credentialEncoder.initialize(credentialEncoderProps, (IdentityConfigurationRegistry)configurationContext.getConfigurationRegistry());
       }
 
       return credentialEncoder;

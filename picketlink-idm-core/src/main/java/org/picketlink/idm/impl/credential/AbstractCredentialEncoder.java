@@ -25,6 +25,7 @@ package org.picketlink.idm.impl.credential;
 
 import org.picketlink.idm.api.CredentialEncoder;
 import org.picketlink.idm.api.IdentitySession;
+import org.picketlink.idm.api.cfg.IdentityConfigurationRegistry;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -38,12 +39,14 @@ public abstract class AbstractCredentialEncoder implements CredentialEncoder
 {
    private Map<String, String> credentialEncoderProps;
    private IdentitySession identitySession;
+   private IdentityConfigurationRegistry configurationRegistry;
 
    protected final Logger log = Logger.getLogger(getClass().getName());
 
-   public final void initialize(Map<String, String> credentialEncoderProps)
+   public final void initialize(Map<String, String> credentialEncoderProps, IdentityConfigurationRegistry configurationRegistry)
    {
       this.credentialEncoderProps = credentialEncoderProps;
+      this.configurationRegistry = configurationRegistry;
       afterInitialize();
    }
 
@@ -62,7 +65,12 @@ public abstract class AbstractCredentialEncoder implements CredentialEncoder
       return identitySession;
    }
 
-   /**
+   protected IdentityConfigurationRegistry getConfigurationRegistry()
+   {
+      return configurationRegistry;
+   }
+
+    /**
     * In this method we can read properties via {@link #getEncoderProperty(String)} but identitySession may not be yet initialized
     */
    protected abstract void afterInitialize();

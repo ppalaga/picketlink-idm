@@ -23,10 +23,17 @@
 
 package org.picketlink.idm.impl.store.hibernate;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 import junit.framework.Assert;
 import org.picketlink.idm.api.IdentitySession;
 import org.picketlink.idm.api.IdentitySessionFactory;
+import org.picketlink.idm.api.SecureRandomProvider;
 import org.picketlink.idm.api.User;
+import org.picketlink.idm.api.cfg.IdentityConfiguration;
+import org.picketlink.idm.api.cfg.IdentityConfigurationRegistry;
+import org.picketlink.idm.common.exception.IdentityException;
 import org.picketlink.idm.impl.api.session.IdentitySessionImpl;
 import org.picketlink.idm.impl.configuration.IdentityConfigurationImpl;
 import org.picketlink.idm.impl.credential.DatabaseReadingSaltEncoder;
@@ -47,9 +54,6 @@ public class SaltCredentialsEncoderTestCase extends HibernateTestPOJO
       super.start();
       setIdentityConfig("salt-test-config.xml");
       setRealmName("realm://SaltTestRealm");
-
-      identitySessionFactory = new IdentityConfigurationImpl().
-            configure(getIdentityConfig()).buildIdentitySessionFactory();
    }
 
    public void tearDown() throws Exception
@@ -58,9 +62,32 @@ public class SaltCredentialsEncoderTestCase extends HibernateTestPOJO
    }
 
    /**
-    * Unit test for {@link DatabaseReadingSaltEncoder}
+    * Unit test for {@link DatabaseReadingSaltEncoder} without usage of SecureRandomProvider
     */
    public void testDatabaseSaltEncoder() throws Exception
+   {
+       identitySessionFactory = new IdentityConfigurationImpl().
+               configure(getIdentityConfig()).buildIdentitySessionFactory();
+
+       _testImpl();
+   }
+
+   /**
+    * Unit test for {@link DatabaseReadingSaltEncoder} without usage of SecureRandomProvider
+    */
+   public void testDatabaseSaltEncoderWithRegisteredSecureRandom() throws Exception
+   {
+      // Add SecureRandomProvider into IdentityRegistry
+      IdentityConfiguration identityConfiguration = new IdentityConfigurationImpl().configure(getIdentityConfig());
+      IdentityConfigurationRegistry registry = identityConfiguration.getIdentityConfigurationRegistry();
+      registry.register(new TestSecureRandomProvider(), DatabaseReadingSaltEncoder.DEFAULT_SECURE_RANDOM_PROVIDER_REGISTRY_NAME);
+
+      this.identitySessionFactory = identityConfiguration.buildIdentitySessionFactory();
+
+      _testImpl();
+   }
+
+   private void _testImpl() throws Exception
    {
       begin();
 
@@ -91,5 +118,21 @@ public class SaltCredentialsEncoderTestCase extends HibernateTestPOJO
       Assert.assertTrue(session.getAttributesManager().validatePassword(demo, "password123"));
 
       commit();
+   }
+
+   private class TestSecureRandomProvider implements SecureRandomProvider
+   {
+
+      public SecureRandom getSecureRandom()
+      {
+         try
+         {
+            return SecureRandom.getInstance("SHA1PRNG");
+         }
+         catch (NoSuchAlgorithmException nsae)
+         {
+            throw new RuntimeException(nsae);
+         }
+      }
    }
 }

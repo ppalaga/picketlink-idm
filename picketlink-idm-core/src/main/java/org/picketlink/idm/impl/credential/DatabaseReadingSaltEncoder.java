@@ -26,6 +26,10 @@ package org.picketlink.idm.impl.credential;
 import org.picketlink.idm.api.Attribute;
 import org.picketlink.idm.api.AttributesManager;
 import org.picketlink.idm.api.CredentialEncoder;
+import org.picketlink.idm.api.SecureRandomProvider;
+import org.picketlink.idm.common.exception.IdentityException;
+
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
@@ -39,15 +43,44 @@ public class DatabaseReadingSaltEncoder extends AbstractHashingWithSaltEncoder
    public static final String PASSWORD_SALT_USER_ATTRIBUTE = "passwordSalt";
 
    private static final String OPTION_CREDENTIAL_ENCODER_SECURE_RANDOM_ALGORITHM = CredentialEncoder.CREDENTIAL_ENCODER_OPTION_PREFIX + "secureRandomAlgorithm";
-
    private static final String OPTION_DEFAULT_SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
 
+   public static final String OPTION_SECURE_RANDOM_PROVIDER_REGISTRY_NAME = CredentialEncoder.CREDENTIAL_ENCODER_OPTION_PREFIX + "secureRandom.providerRegistryName";
+   public static final String DEFAULT_SECURE_RANDOM_PROVIDER_REGISTRY_NAME = "secureRandomProvider";
+
+   // Instance of SecureRandomProvider provided via Identity Registry
+   private SecureRandomProvider registeredSecureRandomProvider;
+
+   // Secure Random Algorithm to use (for example SHA1PRNG). This variable is used only if registeredSecureRandomProvider is null (not provided in IdentityRegistry)
    private String secureRandomAlgorithm;
 
    @Override
    protected void afterInitialize()
    {
       super.afterInitialize();
+
+      String registeredName = getEncoderProperty(OPTION_SECURE_RANDOM_PROVIDER_REGISTRY_NAME);
+      if (registeredName == null)
+      {
+         registeredName = DEFAULT_SECURE_RANDOM_PROVIDER_REGISTRY_NAME;
+      }
+
+      // Look if instance of secureRandomProvider is available in IdentityRegistry
+      try
+      {
+         if (getConfigurationRegistry() != null)
+         {
+            registeredSecureRandomProvider = (SecureRandomProvider)getConfigurationRegistry().getObject(registeredName);
+            log.info("Registered SecureRandomProvider will be used for random generating of password salts");
+            return;
+         }
+      }
+      catch (IdentityException ie)
+      {
+         log.fine("SecureRandomProvider not registered. We will always create new SecureRandom");
+      }
+
+      // If it's not available, we will fallback and always create our own SecureRandom instance
       secureRandomAlgorithm = getEncoderProperty(OPTION_CREDENTIAL_ENCODER_SECURE_RANDOM_ALGORITHM);
       if (secureRandomAlgorithm == null)
       {
@@ -68,7 +101,7 @@ public class DatabaseReadingSaltEncoder extends AbstractHashingWithSaltEncoder
          // User does not have salt attribute in DB. Let's generate a fresh one and save it to DB.
          if (salt == null)
          {
-            SecureRandom pseudoRng = SecureRandom.getInstance(secureRandomAlgorithm);
+            SecureRandom pseudoRng = getSecureRandomInstance();
             String saltStr = String.valueOf(pseudoRng.nextLong());
             am.addAttribute(username, PASSWORD_SALT_USER_ATTRIBUTE, saltStr);
 
@@ -84,6 +117,18 @@ public class DatabaseReadingSaltEncoder extends AbstractHashingWithSaltEncoder
       catch (Exception ie)
       {
          throw new RuntimeException(ie);
+      }
+   }
+
+   protected SecureRandom getSecureRandomInstance() throws NoSuchAlgorithmException
+   {
+      if (registeredSecureRandomProvider != null)
+      {
+         return registeredSecureRandomProvider.getSecureRandom();
+      }
+      else
+      {
+         return SecureRandom.getInstance(secureRandomAlgorithm);
       }
    }
 }

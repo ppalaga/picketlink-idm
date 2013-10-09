@@ -39,7 +39,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -76,7 +76,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -131,7 +131,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         for (int i = 0; i < n; i++) {
@@ -165,7 +165,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         Collection<Group> groupCol = new ArrayList<Group>();
@@ -206,7 +206,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -257,7 +257,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().findGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -307,7 +307,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
         
         Group group = identitySession.getPersistenceManager().findGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -340,7 +340,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -387,7 +387,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -424,7 +424,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -470,7 +470,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -517,7 +517,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -572,7 +572,7 @@ public class IDMMethodsTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
     }

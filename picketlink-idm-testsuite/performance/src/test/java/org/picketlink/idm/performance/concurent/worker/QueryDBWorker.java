@@ -18,6 +18,8 @@ import org.picketlink.idm.api.User;
  */
 public class QueryDBWorker extends PerformanceWorker {
 
+    private static final String REALM_NAME = "realm::JBossIdentityExample_SampleRealm";
+
     public enum TestMethod {
 
         FIND_GROUP, FIND_USER, FIND_USER_ROLETYPES, FIND_GROUP_ROLETYPES, FIND_GROUP_WITH_RELATED_ROLE, FIND_ROLE_TYPES, FIND_ROLES
@@ -94,7 +96,7 @@ public class QueryDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
 
 
         identitySession.beginTransaction();
@@ -143,7 +145,7 @@ public class QueryDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
 
 
         identitySession.beginTransaction();
@@ -192,7 +194,7 @@ public class QueryDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
 
 
         identitySession.beginTransaction();
@@ -243,7 +245,7 @@ public class QueryDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
 
 
         identitySession.beginTransaction();
@@ -292,7 +294,7 @@ public class QueryDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
 
 
         identitySession.beginTransaction();
@@ -344,7 +346,7 @@ public class QueryDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
 
 
         identitySession.beginTransaction();
@@ -396,7 +398,7 @@ public class QueryDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
 
 
         identitySession.beginTransaction();

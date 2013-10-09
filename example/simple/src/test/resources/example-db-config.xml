@@ -4,7 +4,7 @@
                 xsi:schemaLocation="urn:picketlink:idm:config:v1_0_0_ga identity-config.xsd">
     <realms>
         <realm>
-            <id>realm://JBossIdentityExample/SampleRealm</id>
+            <id>realm::JBossIdentityExample_SampleRealm</id>
             <repository-id-ref>Sample Repository</repository-id-ref>
             <identity-type-mappings>
                 <user-mapping>USER</user-mapping>

@@ -78,7 +78,7 @@ public class InjectSFTestCase extends TestBase
 
          IdentitySessionFactory identitySessionFactory = identityConfiguration.buildIdentitySessionFactory();
 
-         IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+         IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
          identitySession.beginTransaction();
 
          Collection<User> users = identitySession

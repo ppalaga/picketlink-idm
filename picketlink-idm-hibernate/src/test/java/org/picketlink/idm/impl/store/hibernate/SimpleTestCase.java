@@ -48,7 +48,7 @@ public class SimpleTestCase extends HibernateTestPOJO
    {
       super.start();
 
-      setRealmName("realm://RedHat/DB");
+      setRealmName("realm::RedHat_DB");
 
 
       identitySessionFactory = new IdentityConfigurationImpl().

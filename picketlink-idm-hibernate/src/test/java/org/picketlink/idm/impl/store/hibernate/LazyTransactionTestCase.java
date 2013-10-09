@@ -45,7 +45,7 @@ public class LazyTransactionTestCase extends MinimalFlexibleConfigTestCase
    public void testLazyTransaction() throws IdentityException
    {
       // Obtain some needed PL objects
-      IdentitySessionImpl identitySession = (IdentitySessionImpl)identitySessionFactory.getCurrentIdentitySession("realm://FlexibleRealm");
+      IdentitySessionImpl identitySession = (IdentitySessionImpl)identitySessionFactory.getCurrentIdentitySession("realm::FlexibleRealm");
       RepositoryIdentityStoreSessionImpl repositoryStoreSession = (RepositoryIdentityStoreSessionImpl)identitySession.
             getSessionContext().resolveStoreInvocationContext().getIdentityStoreSession();
       HibernateIdentityStoreSessionImpl hbStoreSession = (HibernateIdentityStoreSessionImpl)repositoryStoreSession.

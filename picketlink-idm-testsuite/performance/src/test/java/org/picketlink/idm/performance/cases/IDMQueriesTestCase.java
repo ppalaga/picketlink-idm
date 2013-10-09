@@ -36,7 +36,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -87,7 +87,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -139,7 +139,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -190,7 +190,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -241,7 +241,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -298,7 +298,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -354,7 +354,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -413,7 +413,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -470,7 +470,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -525,7 +525,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -578,7 +578,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();
@@ -639,7 +639,7 @@ public class IDMQueriesTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
 
         identitySession.beginTransaction();

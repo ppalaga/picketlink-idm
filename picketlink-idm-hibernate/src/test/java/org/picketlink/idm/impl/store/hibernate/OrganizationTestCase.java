@@ -39,13 +39,13 @@ public class OrganizationTestCase extends HibernateTestPOJO
 
    private IdentitySessionFactory identitySessionFactory;
 
-   private String samplePortalRealmName = "realm://portal/SamplePortal/DB";
+   private String samplePortalRealmName = "realm::portal_SamplePortal_DB";
 
-   private String samplePortalRealmCloneName = "realm://portal/SamplePortal/DB-clone";
+   private String samplePortalRealmCloneName = "realm::portal_SamplePortal_DB-clone";
 
-   private String sampleOrganizationRealmName = "realm://RedHat/DB";
+   private String sampleOrganizationRealmName = "realm::RedHat_DB";
 
-   private String sampleOrganizationRealmCloneName = "realm://RedHat/DB-clone";
+   private String sampleOrganizationRealmCloneName = "realm::RedHat_DB-clone";
 
 
    public void setUp() throws Exception

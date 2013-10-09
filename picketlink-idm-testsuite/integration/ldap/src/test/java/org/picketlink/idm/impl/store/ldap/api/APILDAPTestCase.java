@@ -82,7 +82,7 @@ public class APILDAPTestCase extends IdentityTestPOJO
       groupQueryTest = new GroupQueryTest(this);
       roleQueryTest = new RoleQueryTest(this);
 
-      setRealmName("realm://RedHat/DB_LDAP");
+      setRealmName("realm::RedHat_DB_LDAP");
 
       ldapTestPOJO.populateClean();
 

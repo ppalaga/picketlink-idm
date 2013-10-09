@@ -41,9 +41,9 @@ public class OrganizationLDAPTestCase extends IdentityTestPOJO
 
    private IdentitySessionFactory identitySessionFactory;
 
-   private String samplePortalRealmName = "realm://portal/SamplePortal/DB_LDAP";
+   private String samplePortalRealmName = "realm::portal_SamplePortal_DB_LDAP";
 
-   private String sampleOrganizationRealmName = "realm://RedHat/DB_LDAP";
+   private String sampleOrganizationRealmName = "realm::RedHat_DB_LDAP";
 
    HibernateTestPOJO hibernateTest = new HibernateTestPOJO();
 

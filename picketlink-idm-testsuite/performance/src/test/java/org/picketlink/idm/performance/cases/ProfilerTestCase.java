@@ -32,7 +32,7 @@ public class ProfilerTestCase extends DBTestBase {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
 
         identitySession.beginTransaction();
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -50,7 +50,7 @@ public class ProfilerTestCase extends DBTestBase {
 
         System.gc();
         for (User u : userList) {
-            identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+            identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
             identitySession.beginTransaction();
             identitySession.getRelationshipManager().associateUser(group, u);
             identitySession.getTransaction().commit();

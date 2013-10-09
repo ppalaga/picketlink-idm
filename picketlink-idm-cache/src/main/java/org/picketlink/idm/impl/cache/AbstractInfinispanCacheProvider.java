@@ -226,14 +226,7 @@ public abstract class AbstractInfinispanCacheProvider
       {
          return NULL_NS_NODE;
       }
-      else
-      {
-         // Better to check with indexOf first because of performance reasons, as replaceAll is expensive and '/' is used only in unit tests
-         if (ns.indexOf('/') != -1)
-         {
-            ns = ns.replaceAll("/", "_");
-         }
-      }
+
       return ns;
    }
 

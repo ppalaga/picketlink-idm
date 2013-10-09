@@ -53,7 +53,7 @@ public class SaltCredentialsEncoderTestCase extends HibernateTestPOJO
    {
       super.start();
       setIdentityConfig("salt-test-config.xml");
-      setRealmName("realm://SaltTestRealm");
+      setRealmName("realm::SaltTestRealm");
    }
 
    public void tearDown() throws Exception

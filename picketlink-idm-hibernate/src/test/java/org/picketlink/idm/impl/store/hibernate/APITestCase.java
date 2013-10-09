@@ -67,7 +67,7 @@ public class APITestCase extends HibernateTestPOJO
       groupQueryTest = new GroupQueryTest(this);
       roleQueryTest = new RoleQueryTest(this);
 
-      setRealmName("realm://RedHat/DB");
+      setRealmName("realm::RedHat_DB");
 
 
       identitySessionFactory = new IdentityConfigurationImpl().

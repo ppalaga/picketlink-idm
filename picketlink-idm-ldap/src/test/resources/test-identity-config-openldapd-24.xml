@@ -4,28 +4,28 @@
                 xsi:schemaLocation="urn:picketlink:idm:config:v1_0_0_ga identity-config.xsd">
    <realms>
       <realm>
-         <id>realm://RedHat/DB</id>
+         <id>realm::RedHat_DB</id>
          <repository-id-ref>RedHat Repository DB</repository-id-ref>
          <identity-type-mappings>
             <user-mapping>USER</user-mapping>
          </identity-type-mappings>
       </realm>
       <realm>
-         <id>realm://portal/SamplePortal/DB</id>
+         <id>realm::portal_SamplePorta_DB</id>
          <repository-id-ref>Sample Portal Repository DB</repository-id-ref>
          <identity-type-mappings>
             <user-mapping>USER</user-mapping>
          </identity-type-mappings>
       </realm>
       <realm>
-         <id>realm://RedHat/DB_LDAP</id>
+         <id>realm::RedHat_DB_LDAP</id>
          <repository-id-ref>RedHat Repository DB+LDAP</repository-id-ref>
          <identity-type-mappings>
             <user-mapping>USER</user-mapping>
          </identity-type-mappings>
       </realm>
       <realm>
-         <id>realm://portal/SamplePortal/DB_LDAP</id>
+         <id>realm::portal_SamplePortal_DB_LDAP</id>
          <repository-id-ref>Sample Portal Repository DB+LDAP</repository-id-ref>
          <identity-type-mappings>
             <user-mapping>USER</user-mapping>

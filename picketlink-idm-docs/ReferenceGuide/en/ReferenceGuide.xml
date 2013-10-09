@@ -613,7 +613,7 @@ member: uid=admin,ou=People,o=test,dc=portal,dc=example,dc=com
                 xsi:schemaLocation="urn:picketlink:idm:config:v1_0_0_ga identity-config.xsd">
     <realms>
         <realm>
-            <id>realm://JBossIdentityExample/SampleRealm</id>
+            <id>realm::JBossIdentityExample_SampleRealm</id>
             <repository-id-ref>Sample Repository</repository-id-ref>
             <identity-type-mappings>
                 <user-mapping>USER</user-mapping>
@@ -1152,7 +1152,7 @@ member: uid=admin,ou=People,o=test,dc=portal,dc=example,dc=com
             <programlisting>
                 <![CDATA[
 <realm>
-  <id>realm://RedHat/DB</id>
+  <id>realm::RedHat_DB</id>
   <repository-id-ref>RedHat Repository DB</repository-id-ref>
   <identity-type-mappings>
      <identity-mapping>IDENTITY</identity-mapping>
@@ -1811,7 +1811,7 @@ member: uid=admin,ou=People,o=test,dc=portal,dc=example,dc=com
                 xsi:schemaLocation="urn:picketlink:idm:config:v1_0_0_ga identity-config.xsd">
    <realms>
       <realm>
-         <id>realm://FlexibleRealm</id>
+         <id>realm::FlexibleRealm</id>
          <repository-id-ref>Flexible Repo</repository-id-ref>
          <identity-type-mappings>
             <user-mapping>USER</user-mapping>
@@ -2229,7 +2229,7 @@ assertTrue(session.getAttributesManager().validateCredentials(anotherOne, new Cr
             <![CDATA[
 IdentitySessionFactory identitySessionFactory = new IdentityConfigurationImpl().
    configure(new File("src/test/resources/example-db-config.xml")).buildIdentitySessionFactory();
-IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");            
+IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
             ]]>
          </programlisting>
          <para>

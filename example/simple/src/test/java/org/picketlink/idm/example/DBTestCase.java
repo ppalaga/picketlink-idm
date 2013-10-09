@@ -73,7 +73,7 @@ public class DBTestCase extends TestBase
       IdentitySessionFactory identitySessionFactory = new IdentityConfigurationImpl().
          configure(new File("src/test/resources/example-db-config.xml")).buildIdentitySessionFactory();
 
-      IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+      IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
       identitySession.beginTransaction();
 
       Collection<User> users = identitySession

@@ -67,7 +67,7 @@ public class MixedTestCase extends TestBase
       IdentitySessionFactory identitySessionFactory = new IdentityConfigurationImpl().
          configure(new File("src/test/resources/example-mixed-config.xml")).buildIdentitySessionFactory();
 
-      IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+      IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
       identitySession.getTransaction().start();
 
       User johnDoe = identitySession.getPersistenceManager().createUser("John Doe");

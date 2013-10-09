@@ -4,6 +4,7 @@
  */
 package org.picketlink.idm.performance.concurent.worker;
 
+import java.lang.String;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.picketlink.idm.api.Group;
@@ -17,6 +18,8 @@ import org.picketlink.idm.api.User;
  * @author vrockai
  */
 public class InsertDBWorker extends PerformanceWorker {
+
+    private static final String REALM_NAME = "realm::JBossIdentityExample_SampleRealm";
 
     public enum TestMethod {
 
@@ -101,7 +104,7 @@ public class InsertDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
         identitySession.beginTransaction();
 
         String grpName = pfxGrp + "GROUP" + n;
@@ -140,7 +143,7 @@ public class InsertDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -193,7 +196,7 @@ public class InsertDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
         identitySession.beginTransaction();
 
         for (int i = 0; i < n; i++) {
@@ -225,7 +228,7 @@ public class InsertDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
         identitySession.beginTransaction();
 
         Collection<Group> groupCol = new ArrayList<Group>();
@@ -265,7 +268,7 @@ public class InsertDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -314,7 +317,7 @@ public class InsertDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -358,7 +361,7 @@ public class InsertDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -393,7 +396,7 @@ public class InsertDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -437,7 +440,7 @@ public class InsertDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);
@@ -482,7 +485,7 @@ public class InsertDBWorker extends PerformanceWorker {
 
         String ORGANIZATION = "ORGANIZATION";
 
-        IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+        IdentitySession identitySession = identitySessionFactory.createIdentitySession(REALM_NAME);
         identitySession.beginTransaction();
 
         Group group = identitySession.getPersistenceManager().createGroup(pfxGrp + "GROUP" + n, ORGANIZATION);

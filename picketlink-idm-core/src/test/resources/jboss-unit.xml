@@ -13,29 +13,29 @@
         <!--Without LDAP-->
         <test >
             <class name="org.picketlink.idm.impl.store.hibernate.OrganizationTestCase"/>
-            <parameter name="sampleOrganizationRealmName" value="realm://RedHat/DB"/>
-            <parameter name="samplePortalRealmName" value="realm://portal/SamplePortal/DB"/>
+            <parameter name="sampleOrganizationRealmName" value="realm::RedHat_DB"/>
+            <parameter name="samplePortalRealmName" value="realm::portal_SamplePortal_DB"/>
         </test>
 
         <!--With LDAP-->
         <test >
             <class name="org.picketlink.idm.impl.store.ldap.OrganizationLDAPTestCase"/>
             <parameter name="directoryName" value="EmbeddedOpenDS"/>
-            <parameter name="sampleOrganizationRealmName" value="realm://RedHat/DB_LDAP"/>
-            <parameter name="samplePortalRealmName" value="realm://portal/SamplePortal/DB_LDAP"/>
+            <parameter name="sampleOrganizationRealmName" value="realm::RedHat_DB_LDAP"/>
+            <parameter name="samplePortalRealmName" value="realm::portal_SamplePortal_DB_LDAP"/>
         </test>
 
         <!--Without LDAP-->
         <test >
             <class name="org.picketlink.idm.impl.store.hibernate.APITestCase"/>
-            <parameter name="realmName" value="realm://RedHat/DB"/>
+            <parameter name="realmName" value="realm::RedHat_DB"/>
         </test>
 
         <!--With LDAP-->
         <test >
             <class name="org.picketlink.idm.impl.store.ldap.APILDAPTestCase"/>
             <parameter name="directoryName" value="EmbeddedOpenDS"/>
-            <parameter name="realmName" value="realm://RedHat/DB_LDAP"/>
+            <parameter name="realmName" value="realm::RedHat_DB_LDAP"/>
         </test>
 
         <!--Without LDAP-->

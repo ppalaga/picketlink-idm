@@ -4,7 +4,7 @@
                 xsi:schemaLocation="urn:picketlink:idm:config:v1_0_0_ga identity-config.xsd">
     <realms>
         <realm>
-            <id>realm://jbpmIdentity</id>
+            <id>realm::jbpmIdentity</id>
             <repository-id-ref>jbpm_Identity_Repository</repository-id-ref>
             <identity-type-mappings>
                 <user-mapping>USER</user-mapping>

@@ -57,7 +57,7 @@ public class SimplePopulationService
       Context ctx = new InitialContext();
       IdentitySessionFactory ids = (IdentitySessionFactory)ctx.lookup(getIdmSessionFactoryJNDI());
 
-      IdentitySession is = ids.getCurrentIdentitySession("realm://JBossIdentity");
+      IdentitySession is = ids.getCurrentIdentitySession("realm::JBossIdentity");
       is.beginTransaction();
 
       if (is.getPersistenceManager().getUserCount() == 0 && is.getPersistenceManager().getGroupTypeCount("GROUP") == 0)

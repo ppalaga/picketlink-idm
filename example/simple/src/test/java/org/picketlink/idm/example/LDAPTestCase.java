@@ -71,7 +71,7 @@ public class LDAPTestCase extends TestBase
       IdentitySessionFactory identitySessionFactory = new IdentityConfigurationImpl().
          configure(new File("src/test/resources/example-ldap-config.xml")).buildIdentitySessionFactory();
 
-      IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm://JBossIdentityExample/SampleRealm");
+      IdentitySession identitySession = identitySessionFactory.createIdentitySession("realm::JBossIdentityExample_SampleRealm");
       identitySession.beginTransaction();
 
       User johnDoe = identitySession.getPersistenceManager().createUser("John Doe");

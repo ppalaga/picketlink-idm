@@ -69,7 +69,7 @@ public class APICacheIntegrationTestCase extends HibernateTestPOJO
    private APICacheProvider apiCacheProvider;
 
    // Realm name is used also as cache namespace
-   private static final String REALM_NAME = "realm://FlexibleRealm";
+   private static final String REALM_NAME = "realm::FlexibleRealm";
 
    public void setUp() throws Exception
    {

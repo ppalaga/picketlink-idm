@@ -64,7 +64,7 @@ public class MinimalFlexibleConfigTestCase extends HibernateTestPOJO
       super.start();
 
       setIdentityConfig(identityConfigLocation);
-      setRealmName("realm://FlexibleRealm");
+      setRealmName("realm::FlexibleRealm");
 
       orgTest = new OrganizationTest(this);
 

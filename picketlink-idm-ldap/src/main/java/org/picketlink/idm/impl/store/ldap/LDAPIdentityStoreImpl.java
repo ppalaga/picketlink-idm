@@ -371,6 +371,7 @@ public class LDAPIdentityStoreImpl implements IdentityStore
       checkIOType(type);
 
       LdapContext ldapContext = getLDAPContext(invocationCtx);
+      LdapContext subContext = null;
 
       String dn = null;
 
@@ -380,7 +381,7 @@ public class LDAPIdentityStoreImpl implements IdentityStore
          // Escape JNDI special characters
          Name jndiName = new CompositeName().add(getTypeConfiguration(invocationCtx, type).getCtxDNs()[0]);
 
-         LdapContext ctx = (LdapContext)ldapContext.lookup(jndiName);
+         subContext = (LdapContext)ldapContext.lookup(jndiName);
 
          //We store new entry using set of attributes. This should give more flexibility then
          //extending identity object from ContextDir - configure what objectClass place there
@@ -440,13 +441,14 @@ public class LDAPIdentityStoreImpl implements IdentityStore
          {
             log.finer("creating ldap entry for: " + validLDAPName + "; " + attrs);
          }
-         DirContext entry = ctx.createSubcontext(validLDAPName, attrs);
+         DirContext entry = subContext.createSubcontext(validLDAPName, attrs);
 
          invalidateCache();
 
          if (entry != null)
          {
             dn = entry.getNameInNamespace();
+            closeContext(entry);
          }
       }
       catch (Exception e)
@@ -460,19 +462,8 @@ public class LDAPIdentityStoreImpl implements IdentityStore
       }
       finally
       {
-         try
-         {
-            ldapContext.close();
-         }
-         catch (NamingException e)
-         {
-            if (log.isLoggable(Level.FINER))
-            {
-               log.log(Level.FINER, "Exception occurred: ", e);
-            }
-
-            throw new IdentityException("Failed to close LDAP connection", e);
-         }
+          closeContext(subContext);
+          closeContext(ldapContext);
       }                                                                  
 
       IdentityObject result = new SimpleIdentityObject(name, dn, type);
@@ -651,7 +642,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
             });
       }
 
-      Context ctx = null;
       checkIOType(type);
       try
       {
@@ -739,25 +729,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
          }
 
          throw new IdentityException("IdentityObject search failed.", e);
-      }
-      finally
-      {
-         try
-         {
-            if (ctx != null)
-            {
-               ctx.close();
-            }
-         }
-         catch (NamingException e)
-         {
-            if (log.isLoggable(Level.FINER))
-            {
-               log.log(Level.FINER, "Exception occurred: ", e);
-            }
-
-            throw new IdentityException("Failed to close LDAP connection", e);
-         }
       }
 
       if (log.isLoggable(Level.FINER))
@@ -941,9 +912,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
       }
 
 
-      LdapContext ctx = getLDAPContext(invocationCtx);
-
-
       checkIOType(type);
 
       LinkedList<IdentityObject> objects = new LinkedList<IdentityObject>();
@@ -1046,10 +1014,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
                objects.add(createIdentityObjectInstance(invocationCtx, type, res.getAttributes(), dn));
             }
          }
-
-         ctx.close();
-
-
       }
       catch (NoSuchElementException e)
       {
@@ -1063,25 +1027,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
          }
 
          throw new IdentityException("IdentityObject search failed.", e);
-      }
-      finally
-      {
-         try
-         {
-            if (ctx != null)
-            {
-               ctx.close();
-            }
-         }
-         catch (NamingException e)
-         {
-            if (log.isLoggable(Level.FINER))
-            {
-               log.log(Level.FINER, "Exception occurred: ", e);
-            }
-
-            throw new IdentityException("Failed to close LDAP connection", e);
-         }
       }
 
       // In case sort extension is not supported
@@ -2379,6 +2324,8 @@ public class LDAPIdentityStoreImpl implements IdentityStore
       }
 
       LdapContext ldapContext = getLDAPContext(invocationCtx);
+      LdapContext subContext = null;
+      DirContext createdSubContext = null;
 
       try
       {
@@ -2386,7 +2333,7 @@ public class LDAPIdentityStoreImpl implements IdentityStore
          //  If there are many contexts specified in the configuration the first one is used
          //  Escape JNDI special characters
          Name jndiName = new CompositeName().add(getConfiguration(invocationCtx).getRelationshipNamesCtxDNs()[0]);
-         LdapContext ctx = (LdapContext)ldapContext.lookup(jndiName);
+         subContext = (LdapContext)ldapContext.lookup(jndiName);
 
          Attributes attrs = new BasicAttributes(true);
 
@@ -2420,7 +2367,7 @@ public class LDAPIdentityStoreImpl implements IdentityStore
          {
             log.finer("creating ldap entry for: " + validLDAPName + "; " + attrs);
          }
-         ctx.createSubcontext(validLDAPName, attrs);
+         createdSubContext = subContext.createSubcontext(validLDAPName, attrs);
 
          invalidateCache();
       }
@@ -2435,19 +2382,9 @@ public class LDAPIdentityStoreImpl implements IdentityStore
       }
       finally
       {
-         try
-         {
-            ldapContext.close();
-         }
-         catch (NamingException e)
-         {
-            if (log.isLoggable(Level.FINER))
-            {
-               log.log(Level.FINER, "Exception occurred: ", e);
-            }
-
-            throw new IdentityException("Failed to close LDAP connection", e);
-         }
+          closeContext(createdSubContext);
+          closeContext(subContext);
+          closeContext(ldapContext);
       }
 
       return name;
@@ -2461,7 +2398,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
       }
 
       LdapContext ldapCtx = getLDAPContext(invocationCtx);
-      Context ctx = null;
 
       try
       {
@@ -2524,7 +2460,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
 
          invalidateCache();
 
-         ctx.close();
          return null;
 
       }
@@ -2543,22 +2478,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
       }
       finally
       {
-         try
-         {
-            if (ctx != null)
-            {
-               ctx.close();
-            }
-         }
-         catch (NamingException e)
-         {
-            if (log.isLoggable(Level.FINER))
-            {
-               log.log(Level.FINER, "Exception occurred: ", e);
-            }
-
-            throw new IdentityException("Failed to close LDAP connection", e);
-         }
          try
          {
             if (ldapCtx != null)
@@ -2593,9 +2512,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
       {
          nameFilter = criteria.getFilter();
       }
-
-
-      LdapContext ctx = getLDAPContext(invocationCtx);
 
 
       Set<String> names = new HashSet<String>();
@@ -2647,10 +2563,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
             names.add(parts[1]);
 
          }
-
-         ctx.close();
-
-
       }
       catch (NoSuchElementException e)
       {
@@ -2663,25 +2575,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
          }
 
          throw new IdentityException("relationship names search failed.", e);
-      }
-      finally
-      {
-         try
-         {
-            if (ctx != null)
-            {
-               ctx.close();
-            }
-         }
-         catch (NamingException e)
-         {
-            if (log.isLoggable(Level.FINER))
-            {
-               log.log(Level.FINER, "Exception occurred: ", e);
-            }
-
-            throw new IdentityException("Failed to close LDAP connection", e);
-         }
       }
 
 //      if (criteria != null && criteria.isPaged())
@@ -3635,10 +3528,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
 
       String nameFilter = "*";
 
-
-      LdapContext ctx = getLDAPContext(invocationCtx);
-
-
       checkIOType(type);
 
       LinkedList<IdentityObject> objects = new LinkedList<IdentityObject>();
@@ -3697,10 +3586,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
             String dn = res.getNameInNamespace();
             objects.add(createIdentityObjectInstance(invocationCtx, type, res.getAttributes(), dn));
          }
-
-         ctx.close();
-
-
       }
       catch (NoSuchElementException e)
       {
@@ -3714,25 +3599,6 @@ public class LDAPIdentityStoreImpl implements IdentityStore
          }
 
          throw new IdentityException("IdentityObject search failed.", e);
-      }
-      finally
-      {
-         try
-         {
-            if (ctx != null)
-            {
-               ctx.close();
-            }
-         }
-         catch (NamingException e)
-         {
-            if (log.isLoggable(Level.FINER))
-            {
-               log.log(Level.FINER, "Exception occurred: ", e);
-            }
-
-            throw new IdentityException("Failed to close LDAP connection", e);
-         }
       }
 
       if (objects.size() == 0)
@@ -3882,7 +3748,8 @@ public class LDAPIdentityStoreImpl implements IdentityStore
                searchControls.setSearchScope(SearchControls.OBJECT_SCOPE);
             }
          }
-         searchControls.setReturningObjFlag(true);
+         // Set returningObjFlag to false as returned objects from SearchResult.getObject is never used anyway
+         searchControls.setReturningObjFlag(false);
          searchControls.setTimeLimit(getConfiguration(ctx).getSearchTimeLimit());
 
 
@@ -4496,6 +4363,27 @@ public class LDAPIdentityStoreImpl implements IdentityStore
       if (getCache() != null)
       {
          getCache().invalidate(getNamespace());
+      }
+   }
+
+    // TODO: Change other methods to use this one
+   private void closeContext(DirContext context) throws IdentityException
+   {
+      try
+      {
+         if (context != null)
+         {
+            context.close();
+         }
+      }
+      catch (NamingException e)
+      {
+         if (log.isLoggable(Level.FINER))
+         {
+            log.log(Level.FINER, "Exception occurred: ", e);
+         }
+
+         throw new IdentityException("Failed to close DirContext", e);
       }
    }
 

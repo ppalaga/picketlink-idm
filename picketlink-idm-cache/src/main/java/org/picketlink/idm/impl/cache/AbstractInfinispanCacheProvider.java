@@ -237,7 +237,8 @@ public abstract class AbstractInfinispanCacheProvider
          o = "null";
       }
 
-      Object[] fqnElements = new Object[] { getRootNode(), getNamespaceForFqn(ns), node, o};
+      // Use o.toString() to allow direct invalidation via JMX
+      Object[] fqnElements = new Object[] { getRootNode(), getNamespaceForFqn(ns), node, o.toString() };
       return Fqn.fromElements(fqnElements);
    }
 

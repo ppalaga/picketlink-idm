@@ -104,7 +104,7 @@ public class InfinispanAPICacheProviderImpl extends AbstractInfinispanCacheProvi
 
    public static final String NODE_ROLE_TYPE_SEARCHES = "NODE_ROLE_TYPE_SEARCHES";
 
-   public static final String NODE_RELATIONSHIP_SEARCHES = "NODE_ROLE_TYPE_SEARCHES";
+   public static final String NODE_RELATIONSHIP_SEARCHES = "NODE_RELATIONSHIP_SEARCHES";
 
    public static final String MAIN_ROOT_API = "NODE_MAIN_ROOT_API";
 

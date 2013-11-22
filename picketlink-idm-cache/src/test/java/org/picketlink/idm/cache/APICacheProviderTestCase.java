@@ -25,20 +25,32 @@ package org.picketlink.idm.cache;
 import junit.framework.TestCase;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 
 import org.infinispan.Cache;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
+import org.picketlink.idm.api.Attribute;
 import org.picketlink.idm.api.Group;
+import org.picketlink.idm.api.IdentityType;
+import org.picketlink.idm.api.Role;
+import org.picketlink.idm.api.RoleType;
 import org.picketlink.idm.api.cfg.IdentityConfigurationRegistry;
 import org.picketlink.idm.common.exception.IdentityException;
 import org.picketlink.idm.impl.api.model.SimpleGroup;
+import org.picketlink.idm.impl.api.model.SimpleRole;
+import org.picketlink.idm.impl.api.model.SimpleRoleType;
 import org.picketlink.idm.impl.api.model.SimpleUser;
 import org.picketlink.idm.api.User;
 import org.picketlink.idm.impl.cache.AbstractInfinispanCacheProvider;
+import org.picketlink.idm.impl.cache.GroupSearchImpl;
 import org.picketlink.idm.impl.cache.InfinispanAPICacheProviderImpl;
+import org.picketlink.idm.impl.cache.RelationshipSearchImpl;
+import org.picketlink.idm.impl.cache.RoleSearchImpl;
+import org.picketlink.idm.impl.cache.RoleTypeSearchImpl;
 import org.picketlink.idm.impl.configuration.IdentityConfigurationImpl;
 import org.picketlink.idm.impl.tree.IDMTreeCacheImpl;
 import org.picketlink.idm.impl.tree.TreeCache;
@@ -127,6 +139,108 @@ public class APICacheProviderTestCase extends TestCase
 
       assertNull(cache.getGroup(ns, "t1", "g1"));
       assertNull(cache.getGroup(ns, "t2", "g2"));
+   }
+
+   public void testDirectInvalidation()
+   {
+      APICacheProvider cache = initCacheFromRegistry();
+      String ns = "toto";
+
+      // Create some objects
+      User user = new SimpleUser("u1");
+      RoleType roleType = new SimpleRoleType("member");
+      Group group = new SimpleGroup("g1", "t1");
+      Role role = new SimpleRole(roleType, user, group);
+      Map<String, Attribute> attribs = new HashMap<String, Attribute>();
+
+      GroupSearchImpl gs = new GroupSearchImpl();
+      gs.setGroupId("g1");
+      gs.setParent(true);
+
+      RoleTypeSearchImpl rts = new RoleTypeSearchImpl();
+      rts.setUser(new SimpleUser("u1"));
+
+      RoleSearchImpl rs = new RoleSearchImpl();
+      rs.setRoleType(new SimpleRoleType("member"));
+
+      RelationshipSearchImpl rsi = new RelationshipSearchImpl();
+      rsi.setMembers(Arrays.asList(new IdentityType[] { new SimpleUser("u1") }));
+
+      // Put them to cache
+      cache.putUser(ns, user);
+      cache.putRoleType(ns, roleType);
+      cache.putGroup(ns, group);
+      cache.putRole(ns, role);
+      cache.putAttributes(ns, "u1", attribs);
+      cache.putGroupSearch(ns, gs, Collections.EMPTY_SET);
+      cache.putRoleTypeSearch(ns, rts, Collections.EMPTY_SET);
+      cache.putRoleSearch(ns, rs, Collections.EMPTY_SET);
+      cache.putRelationshipSearch(ns, rsi, false);
+
+      // System.out.println(cache.printContent());
+
+      // Assert they are in the cache
+      assertNotNull(cache.getUser(ns, "u1"));
+      assertNotNull(cache.getRoleType(ns, new SimpleRoleType("member")));
+      assertNotNull(cache.getGroup(ns, "t1", "g1"));
+      assertNotNull(cache.getRole(ns, new SimpleRole(roleType, user, group)));
+      assertNotNull(cache.getAttributes(ns, "u1"));
+      gs = new GroupSearchImpl();
+      gs.setGroupId("g1");
+      gs.setParent(true);
+      assertNotNull(cache.getGroupSearch(ns, gs));
+      rts = new RoleTypeSearchImpl();
+      rts.setUser(new SimpleUser("u1"));
+      assertNotNull(cache.getRoleTypeSearch(ns, rts));
+      rs = new RoleSearchImpl();
+      rs.setRoleType(new SimpleRoleType("member"));
+      assertNotNull(cache.getRoleSearch(ns, rs));
+      rsi = new RelationshipSearchImpl();
+      rsi.setMembers(Arrays.asList(new IdentityType[] { new SimpleUser("u1") }));
+      assertNotNull(cache.getRelationshipSearch(ns, rsi));
+
+
+      // Invalidate them via direct call similarly like JMX is doing
+      cache.invalidate("toto/USERS/u1");
+      cache.invalidate("toto/ROLE_TYPES/member");
+      cache.invalidate("toto/GROUPS/jbpid_group_id_._._t1_._._g1");
+      cache.invalidate("toto/ROLES/" + new SimpleRole(roleType, user, group).hashCode());
+      cache.invalidate("toto/ATTRIBUTES/u1");
+      gs = new GroupSearchImpl();
+      gs.setGroupId("g1");
+      gs.setParent(true);
+      cache.invalidate("toto/GROUPS_SEARCHES/" + gs.hashCode());
+      rts = new RoleTypeSearchImpl();
+      rts.setUser(new SimpleUser("u1"));
+      cache.invalidate("toto/NODE_ROLE_TYPE_SEARCHES/" + rts.hashCode());
+      rs = new RoleSearchImpl();
+      rs.setRoleType(new SimpleRoleType("member"));
+      cache.invalidate("toto/NODE_ROLE_SEARCHES/" + rs.hashCode());
+      rsi = new RelationshipSearchImpl();
+      rsi.setMembers(Arrays.asList(new IdentityType[] { new SimpleUser("u1") }));
+      cache.invalidate("toto/NODE_RELATIONSHIP_SEARCHES/" + rsi.hashCode());
+
+      // System.out.println(cache.printContent());
+
+      // Assert they are not in the cache now
+      assertNull(cache.getUser(ns, "u1"));
+      assertNull(cache.getRoleType(ns, new SimpleRoleType("member")));
+      assertNull(cache.getGroup(ns, "t1", "g1"));
+      assertNull(cache.getRole(ns, new SimpleRole(roleType, user, group)));
+      assertNull(cache.getAttributes(ns, "u1"));
+      gs = new GroupSearchImpl();
+      gs.setGroupId("g1");
+      gs.setParent(true);
+      assertNull(cache.getGroupSearch(ns, gs));
+      rts = new RoleTypeSearchImpl();
+      rts.setUser(new SimpleUser("u1"));
+      assertNull(cache.getRoleTypeSearch(ns, rts));
+      rs = new RoleSearchImpl();
+      rs.setRoleType(new SimpleRoleType("member"));
+      assertNull(cache.getRoleSearch(ns, rs));
+      rsi = new RelationshipSearchImpl();
+      rsi.setMembers(Arrays.asList(new IdentityType[] { new SimpleUser("u1") }));
+      assertNull(cache.getRelationshipSearch(ns, rsi));
    }
 
    private APICacheProvider initCacheFromRegistry()

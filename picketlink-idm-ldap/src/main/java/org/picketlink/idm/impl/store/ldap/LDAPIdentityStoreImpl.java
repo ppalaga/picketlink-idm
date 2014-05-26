@@ -1589,8 +1589,14 @@ public class LDAPIdentityStoreImpl implements IdentityStore
                      {
                         //TODO: use direct LDAP query instaed of other find method and add attributesFilter
 
-                        relationships.add(new LDAPIdentityObjectRelationshipImpl(MEMBERSHIP_TYPE, ldapIO, findIdentityObject(ctx, memberRef)));
-
+                        try {
+                          IdentityObject object = findIdentityObject(ctx, memberRef);
+                          if(object != null) {
+                            relationships.add(new LDAPIdentityObjectRelationshipImpl(MEMBERSHIP_TYPE, ldapIO, object));
+                           }
+                        } catch (Exception e) {
+                          log.warning(e.getMessage());
+                        }
                      }
                      else
                      {

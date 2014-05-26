@@ -128,18 +128,12 @@ public class HibernateIdentityStoreSessionImpl implements IdentityStoreSession
    {
       if (lazyStartOfHibernateTransaction)
       {
-         try
-         {
-            Boolean hbTxStatus = hibernateTxStatus.get();
+         Boolean hbTxStatus = hibernateTxStatus.get();
 
-            // Commit hibernate transaction only if it has really been started
-            if (hbTxStatus != null && hbTxStatus)
-            {
-               commitHibernateTransaction();
-            }
-         }
-         finally
+         // Commit hibernate transaction only if it has really been started
+         if (hbTxStatus != null && hbTxStatus)
          {
+            commitHibernateTransaction();
             hibernateTxStatus.set(null);
          }
       }
@@ -154,16 +148,10 @@ public class HibernateIdentityStoreSessionImpl implements IdentityStoreSession
       if (lazyStartOfHibernateTransaction)
       {
          Boolean hbTxStatus = hibernateTxStatus.get();
-         try
+         // Rollback hibernate transaction only if it has really been started
+         if (hbTxStatus != null && hbTxStatus)
          {
-            // Rollback hibernate transaction only if it has really been started
-            if (hbTxStatus != null && hbTxStatus)
-            {
-               rollbackHibernateTransaction();
-            }
-         }
-         finally
-         {
+            rollbackHibernateTransaction();
             hibernateTxStatus.set(null);
          }
       }

@@ -202,7 +202,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
                   + ";namespace=" + ns);
          }
 
-         return results;
+         return safeCopyIO(results);
       }
 
       return null;
@@ -251,7 +251,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
                   + ";namespace=" + ns);
          }
 
-         return results;
+         return safeCopyIOR(results);
       }
 
       return null;
@@ -274,7 +274,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
       if (ioNode != null)
       {
-         ioNode.put(NODE_OBJECT_KEY, results);
+         ioNode.put(NODE_OBJECT_KEY, new HashSet<String>(results));
 
          if (log.isLoggable(Level.FINER))
          {
@@ -300,7 +300,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
                   + ";namespace=" + ns);
          }
 
-         return results;
+         return new HashSet<String>(results);
       }
 
       return null;
@@ -323,7 +323,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
       if (ioNode != null)
       {
-         ioNode.put(NODE_OBJECT_KEY, properties);
+         ioNode.put(NODE_OBJECT_KEY, new HashMap<String, String>(properties));
 
          if (log.isLoggable(Level.FINER))
          {
@@ -358,7 +358,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
                   "; relationship=" + relationship + ";namespace=" + ns);
          }
 
-         return props;
+         return new HashMap<String,String>(props);
       }
 
       return null;
@@ -391,7 +391,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
 
       if (ioNode != null)
       {
-         ioNode.put(NODE_OBJECT_KEY, properties);
+         ioNode.put(NODE_OBJECT_KEY, new HashMap<String, String>(properties));
 
          if (log.isLoggable(Level.FINER))
          {
@@ -417,7 +417,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
                   "; name=" + name + ";namespace=" + ns);
          }
 
-         return props;
+         return new HashMap<String, String>(props);
       }
 
       return null;
@@ -478,7 +478,7 @@ public class InfinispanIdentityStoreCacheProviderImpl extends AbstractInfinispan
                   "; io=" + io + ";namespace=" + ns);
          }
 
-         return props;
+         return safeCopyAttr(props);
       }
 
       return null;

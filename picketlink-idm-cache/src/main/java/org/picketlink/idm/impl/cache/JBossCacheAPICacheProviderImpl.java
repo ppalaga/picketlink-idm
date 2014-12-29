@@ -943,7 +943,7 @@ public class JBossCacheAPICacheProviderImpl implements APICacheProvider
 
       Node ioNode = getCache().getRoot().addChild(nodeFqn);
 
-      if (ioNode == null)
+      if (ioNode != null)
       {
          setExpiration(ioNode);
          ioNode.put(NODE_OBJECT_KEY, result);

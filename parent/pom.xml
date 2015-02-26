@@ -26,7 +26,7 @@
   
     <!-- maven-release-plugin -->
     <useReleaseProfile>false</useReleaseProfile>
-    <arguments>-Prelease</arguments>
+    <arguments>-Pjboss-release</arguments>
     <version.release.plugin>2.2.1</version.release.plugin>
     <pushChanges>false</pushChanges>
     <autoVersionSubmodules>true</autoVersionSubmodules>

@@ -2,7 +2,7 @@
   <parent>
     <groupId>org.picketlink.idm</groupId>
     <artifactId>picketlink-idm-parent</artifactId>
-    <version>1.4.6.Final</version>
+    <version>1.4.7.Final-SNAPSHOT</version>
     <relativePath>parent</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -17,7 +17,7 @@
       <connection>scm:git:git://github.com/picketlink/picketlink-idm.git</connection>
       <developerConnection>scm:git:ssh://git@github.com/picketlink/picketlink-idm.git</developerConnection>
       <url>https://github.com/picketlink/picketlink-idm</url>
-     <tag>1.4.6.Final</tag>
+     <tag>HEAD</tag>
   </scm>
 
 

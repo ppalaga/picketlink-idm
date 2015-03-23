@@ -59,6 +59,20 @@ public class HibernateIdentityStoreSessionImpl implements IdentityStoreSession
 
    public void close() throws IdentityException
    {
+      if (lazyStartOfHibernateTransaction)
+      {
+         if (log.isLoggable(Level.FINER))
+         {
+            log.log(Level.FINER, "Closing lazy hibernate session, leaving hibernateTxStatus = "
+                    + hibernateTxStatus.get() + " which is "
+                    + (hibernateTxStatus.get() != null ? "unexpected" : "expected"));
+         }
+      } else {
+          if (log.isLoggable(Level.FINER))
+          {
+             log.log(Level.FINER, "Closing non-lazy hibernate session");
+          }
+      }
       sessionFactory.getCurrentSession().close();
    }
 
@@ -76,6 +90,10 @@ public class HibernateIdentityStoreSessionImpl implements IdentityStoreSession
 
       if (flushNeeded)
       {
+          if (log.isLoggable(Level.FINER))
+          {
+             log.log(Level.FINER, "About to flush the hibernate session");
+          }
          sessionFactory.getCurrentSession().flush();
       }
    }
@@ -95,6 +113,11 @@ public class HibernateIdentityStoreSessionImpl implements IdentityStoreSession
       if (clearNeeded)
       {
          sessionFactory.getCurrentSession().clear();
+         if (log.isLoggable(Level.FINER))
+         {
+            log.log(Level.FINER, "Cleared hibernate session, leaving hibernateTxStatus = "
+                    + hibernateTxStatus.get());
+         }
       }
    }
 
@@ -113,6 +136,12 @@ public class HibernateIdentityStoreSessionImpl implements IdentityStoreSession
       // Init ThreadLocal but don't start real Hibernate transaction if option lazyStartOfHibernateTransaction is enabled
       if (lazyStartOfHibernateTransaction)
       {
+         if (log.isLoggable(Level.FINER))
+         {
+            log.log(Level.FINER, "Asked to start transaction lazily, previous hibernateTxStatus = "
+                    + hibernateTxStatus.get() + " which is "
+                    + (hibernateTxStatus.get() != null ? "unexpected" : "expected"));
+         }
          if (hibernateTxStatus.get() == null)
          {
             hibernateTxStatus.set(Boolean.FALSE);
@@ -133,8 +162,23 @@ public class HibernateIdentityStoreSessionImpl implements IdentityStoreSession
          // Commit hibernate transaction only if it has really been started
          if (hbTxStatus != null && hbTxStatus)
          {
-            commitHibernateTransaction();
-            hibernateTxStatus.set(null);
+            try {
+                commitHibernateTransaction();
+                hibernateTxStatus.set(null);
+            }
+            catch (Exception e)
+            {
+               if (log.isLoggable(Level.FINER))
+               {
+                  log.log(Level.FINER, "Hibernate commit has thrown an exception, hibernateTxStatus = "
+                          + hibernateTxStatus.get(), e);
+               }
+            }
+         }
+         else if (log.isLoggable(Level.FINER))
+         {
+            log.log(Level.FINER, "Nothing to commit for hibernateTxStatus = "
+                    + hibernateTxStatus.get());
          }
       }
       else
@@ -151,8 +195,24 @@ public class HibernateIdentityStoreSessionImpl implements IdentityStoreSession
          // Rollback hibernate transaction only if it has really been started
          if (hbTxStatus != null && hbTxStatus)
          {
-            rollbackHibernateTransaction();
-            hibernateTxStatus.set(null);
+            try {
+                rollbackHibernateTransaction();
+                hibernateTxStatus.set(null);
+            }
+            catch (RuntimeException e)
+            {
+               if (log.isLoggable(Level.FINER))
+               {
+                  log.log(Level.FINER, "Hibernate rollback has thrown an exception, hibernateTxStatus = "
+                          + hibernateTxStatus.get(), e);
+               }
+               throw e;
+            }
+         }
+         else if (log.isLoggable(Level.FINER))
+         {
+            log.log(Level.FINER, "Nothing to rollback for hibernateTxStatus = "
+                    + hibernateTxStatus.get());
          }
       }
       else
@@ -175,13 +235,29 @@ public class HibernateIdentityStoreSessionImpl implements IdentityStoreSession
 
    void startHibernateTransactionIfNotStartedYet()
    {
+      if (log.isLoggable(Level.FINER))
+      {
+         log.log(Level.FINER, "Instructed to startHibernateTransactionIfNotStartedYet() hibernateTxStatus = "
+                 + hibernateTxStatus.get() +", lazyStartOfHibernateTransaction = "+ lazyStartOfHibernateTransaction);
+      }
       Boolean txStatus = hibernateTxStatus.get();
 
       // Now we really need to start Hibernate transaction at this point if not already started
       if (txStatus == null || !txStatus)
       {
-         startHibernateTransaction();
-         hibernateTxStatus.set(Boolean.TRUE);
+         try {
+             startHibernateTransaction();
+             hibernateTxStatus.set(Boolean.TRUE);
+         }
+         catch (RuntimeException e)
+         {
+            if (log.isLoggable(Level.FINER))
+            {
+               log.log(Level.FINER, "Start of Hibernate transaction has thrown an exception, hibernateTxStatus = "
+                       + hibernateTxStatus.get(), e);
+            }
+            throw e;
+         }
       }
    }
 
